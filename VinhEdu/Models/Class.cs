@@ -1,35 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
-
 namespace VinhEdu.Models
 {
-    public class Class
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    [Table("Class")]
+    public partial class Class
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Class()
         {
-
+            Attendances = new HashSet<Attendance>();
+            ClassMembers = new HashSet<ClassMember>();
+            PointBoards = new HashSet<PointBoard>();
         }
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public int ClassID { get; set; }
 
         [Required]
-        [StringLength(20)]
+        [StringLength(100)]
         public string ClassName { get; set; }
 
-        [Required]
-        [ForeignKey("School")]
         public int SchoolID { get; set; }
-        public virtual  School School { get; set; }
 
-        [Required]
-        [ForeignKey("HomeRoomTeacher")]
         public int HomeRoomTeacherID { get; set; }
-        public virtual User HomeRoomTeacher { get; set; }
+
+        [StringLength(500)]
+        public string StudentList { get; set; }
+
+        [StringLength(500)]
+        public string TeacherList { get; set; }
+
+        public int ConfigureID { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Attendance> Attendances { get; set; }
+
+        public virtual Configure Configure { get; set; }
+
+        public virtual School School { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ClassMember> ClassMembers { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PointBoard> PointBoards { get; set; }
     }
 }
