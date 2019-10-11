@@ -20,7 +20,7 @@ namespace VinhEdu.Models
         public virtual DbSet<School> Schools { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<User> Users { get; set; }
-
+        public virtual DbSet<BaseClassList> BaseClassLists { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Class>()
@@ -63,6 +63,14 @@ namespace VinhEdu.Models
             modelBuilder.Entity<User>()
                 .Property(e => e.Email)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(e => e.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(e => e.StudentID)
+                .IsUnique();
 
             modelBuilder.Entity<User>()
                 .Property(e => e.Role)

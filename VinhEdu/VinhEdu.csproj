@@ -138,9 +138,18 @@
     <Compile Include="Migrations\201910101120155_initial.Designer.cs">
       <DependentUpon>201910101120155_initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910110805169_enumerating.cs" />
+    <Compile Include="Migrations\201910110805169_enumerating.Designer.cs">
+      <DependentUpon>201910110805169_enumerating.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910110835020_unique.cs" />
+    <Compile Include="Migrations\201910110835020_unique.Designer.cs">
+      <DependentUpon>201910110835020_unique.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdditionalDefinition.cs" />
     <Compile Include="Models\Attendance.cs" />
+    <Compile Include="Models\BaseClassList.cs" />
     <Compile Include="Models\Class.cs" />
     <Compile Include="Models\ClassMember.cs" />
     <Compile Include="Models\Configure.cs" />
@@ -244,6 +253,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201910101120155_initial.resx">
       <DependentUpon>201910101120155_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910110805169_enumerating.resx">
+      <DependentUpon>201910110805169_enumerating.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910110835020_unique.resx">
+      <DependentUpon>201910110835020_unique.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

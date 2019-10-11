@@ -5,6 +5,7 @@ namespace VinhEdu.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using static VinhEdu.Models.AdditionalDefinition;
 
     [Table("User")]
     public partial class User
@@ -23,7 +24,7 @@ namespace VinhEdu.Models
         [StringLength(50)]
         public string FullName { get; set; }
 
-        [StringLength(20)]
+        [StringLength(50)]
         public string StudentID { get; set; }
 
         [StringLength(100)]
@@ -34,10 +35,23 @@ namespace VinhEdu.Models
         [Required]
         [StringLength(15)]
         public string Role { get; set; }
+        [Required]
+        [StringLength(500)]
+        public string Password { get; set; }
 
-        public int Type { get; set; }
+        [Required]
+        public UserType Type { get; set; }
 
-        public int Gender { get; set; }
+        [Required]
+        public Gender Gender { get; set; }
+
+        [Required]
+        public UserStatus Status { get; set; }
+
+        [Required]
+        public DateTime DateOfBirth { get; set; }
+
+        public DateTime CreateDate { get; set; } = DateTime.Now;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Attendance> Attendances { get; set; }
