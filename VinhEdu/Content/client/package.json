@@ -1,0 +1,9 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "client-vinh",
+  "main": "index.js",
+  "author": "kiendinh",
+  "license": "MIT",
+  "private": true
+}

@@ -8,6 +8,13 @@ namespace VinhEdu.Models
 {
     public class AdditionalDefinition
     {
+        public enum LoginType
+        {
+            [Display(Name = "Giáo Viên")]
+            Teacher = 0,
+            [Display(Name = "Học Sinh")]
+            Student = 1,
+        }
         public enum Gender
         {
             [Display(Name = "Nam")]
