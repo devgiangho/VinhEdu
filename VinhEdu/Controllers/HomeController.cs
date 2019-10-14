@@ -10,7 +10,7 @@ namespace VinhEdu.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Login", "Auth");
         }
 
         public ActionResult About()

@@ -5,6 +5,7 @@ namespace VinhEdu.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using static VinhEdu.Models.AdditionalDefinition;
 
     [Table("Attendance")]
     public partial class Attendance
@@ -16,6 +17,10 @@ namespace VinhEdu.Models
         public int ClassID { get; set; }
 
         public int? Status { get; set; }
+        public int ConfigureID { get; internal set; }
+        public virtual Configure Configure { get; set; }
+
+        public Semmester Semmester { get; set; }
 
         public DateTime AttendanceDate { get; set; }
 

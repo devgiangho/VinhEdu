@@ -3,40 +3,252 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Vinh Education</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-</head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+    <style>
+        .login-box {
+            position: relative;
+            max-width: 520px;
+            margin: auto;
+            margin-top: 10%;
+        }
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+            .login-box .login-box-top {
+                background: url(https://solienlacdientu.hanoi.gov.vn/Content/imgs/login-box-top.png) no-repeat center;
+                margin: 0 22px;
+                height: 63px;
+            }
+
+            .login-box .login-box-left, .login-box .login-box-right {
+                position: absolute;
+                width: 22px;
+                background-color: rgba(255,255,255,0.062);
+                border: 1px solid rgba(255,255,255,0.25);
+                top: 27px;
+                bottom: 0;
+            }
+
+            .login-box .login-box-left {
+                left: 0;
+                border-right: 0;
+                border-radius: 6px 0 0 6px;
+                -webkit-box-shadow: -3px 2px 5px -4px rgba(0,0,0,0.3);
+                -moz-box-shadow: -3px 2px 5px -4px rgba(0,0,0,0.3);
+                box-shadow: -3px 2px 5px -4px rgba(0,0,0,0.3);
+            }
+
+            .login-box .login-box-right {
+                right: 0;
+                border-left: 0;
+                border-radius: 0 6px 6px 0;
+                -webkit-box-shadow: 3px 2px 5px -4px rgba(0,0,0,0.3);
+                -moz-box-shadow: 3px 2px 5px -4px rgba(0,0,0,0.3);
+                box-shadow: 3px 2px 5px -4px rgba(0,0,0,0.3);
+            }
+
+            .login-box .login-box-cont {
+                background-color: rgba(255,255,255,0.055);
+                border-bottom: 1px solid rgba(255,255,255,0.25);
+                padding: 0 0 14px;
+                margin: 0 22px;
+                -webkit-box-shadow: 0px 4px 5px -5px rgba(0,0,0,0.3);
+                -moz-box-shadow: 0px 4px 5px -5px rgba(0,0,0,0.3);
+                box-shadow: 0px 4px 5px -5px rgba(0,0,0,0.3);
+            }
+
+        .login-box-body {
+            position: relative;
+            background-color: rgba(255,255,255,0.75);
+            padding: 40px 14% 35px;
+        }
+
+        .login-box .login-box-cont-left, .login-box .login-box-cont-right {
+            position: absolute;
+            width: 11px;
+            background-color: rgba(255,255,255,0.75);
+            border: 1px solid rgba(255,255,255,0.25);
+            top: -25px;
+            bottom: 0;
+        }
+
+        .login-box .login-box-cont-left {
+            left: -11px;
+            border-right: 0;
+            border-radius: 4px 0 0 4px;
+            -webkit-box-shadow: -3px 2px 5px -4px rgba(0,0,0,0.3);
+            -moz-box-shadow: -3px 2px 5px -4px rgba(0,0,0,0.3);
+            box-shadow: -3px 2px 5px -4px rgba(0,0,0,0.3);
+        }
+
+        .login-box .login-box-cont-right {
+            right: -11px;
+            border-left: 0;
+            border-radius: 0 4px 4px 0;
+            -webkit-box-shadow: 3px 2px 5px -4px rgba(0,0,0,0.3);
+            -moz-box-shadow: 3px 2px 5px -4px rgba(0,0,0,0.3);
+            box-shadow: 3px 2px 5px -4px rgba(0,0,0,0.3);
+        }
+
+        .login-box .input-group {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+            .login-box .input-group .input-group-addon {
+                padding: 7px 11px;
+                text-align: center;
+                border: 1px solid #fff;
+                border-radius: 4px 0 0 4px;
+                background-color: rgba(228,231,234,0.5);
+                border-right: 0;
+                width: 38px;
+                text-align: center;
+            }
+
+        .login-box .form-control {
+            background-color: #f5f5f5;
+            border: 1px solid #fff;
+            border-radius: 0;
+            height: 38px;
+            font-size: 14px;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+
+        .login-box .support-info {
+            font-size: 14px;
+            color: #d8d8d8;
+            text-align: center;
+            padding: 14px 15px;
+        }
+
+            .login-box .support-info strong {
+                font-size: 18px;
+                color: #fff;
+                font-weight: 700;
+                white-space: nowrap;
+            }
+
+            .login-box .support-info .icon {
+                margin-right: 5px;
+            }
+
+        .login-box .has-error.input-group {
+            border: 1px solid #cb6261;
+        }
+
+        .login-box .has-error .form-control {
+            border: 1px solid #fff;
+            background-color: #e8d9d9;
+            color: #ff3131;
+        }
+
+        .login-box .btn {
+            padding: 8px 25px;
+        }
+
+        .index .sign-up-info {
+            font-size: 15px;
+            float: left;
+            margin: 1px 0;
+        }
+
+            .index .sign-up-info a {
+                font-weight: 700;
+            }
+
+        .index.logged {
+            background-image: url(../imgs/login-bg.jpg);
+            background-position: center right;
+        }
+
+            .index.logged .main-wrapper {
+                background: none;
+                min-height: 600px;
+                height: 100%;
+                width: 100%;
+                margin: auto;
+                position: absolute;
+                top: 0;
+            }
+
+            .index.logged .main-content {
+                padding-bottom: 4%;
+                padding-top: 0;
+            }
+
+            .index.logged .left-info {
+                margin-top: 28%;
+            }
+
+                .index.logged .left-info h4 {
+                    font-weight: 300;
+                    font-size: 20px;
+                    color: #fff;
+                    line-height: 40px;
+                    text-shadow: 0 0 3px rgba(0,0,0,0.45);
+                }
+
+                .index.logged .left-info h3 {
+                    font-weight: 300;
+                    font-size: 25px;
+                    color: #fff;
+                    line-height: 40px;
+                    text-shadow: 0 0 3px rgba(0,0,0,0.45);
+                }
+
+                .index.logged .left-info h2 {
+                    font-weight: 700;
+                    font-size: 18px;
+                    color: #f0d56e;
+                    text-transform: uppercase;
+                    margin-bottom: 22px;
+                    text-shadow: 0 0 3px rgba(0,0,0,0.45);
+                }
+
+        .left-info {
+            margin-top: 28%
+        }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+</head>
+
+<body style="background-image: url(/Content/images/login-bg.jpg);background-position: center right;">
+    
+    <div class="container body-content">
+            <nav class="navbar">
+                <div class="container">
+                    <div class="col-sm-12" style="height:50px">
+                        <div class="col-lg-6 col-md-12" style="height:50px">
+                            <h1 class="main-logo">
+                                <a style="height:34px" href="/"><img src="~/Content/images/main-logo.png"></a>
+
+                            </h1>
+                        </div>
+                        <div class="col-lg-6 col-md-12" style="height:50px">
+
+                            <h1 class="main-logo">
+
+                                @*<a href="http://huongdangiaoducdientu.hnegov.vn/phu_huynh.htm?ms=CQAAAAAAIAI%3D&st=MA%3D%3D&sct=MA%3D%3D&mw=MjQw" target="_blank" style="width:auto">
+                                    <i class="fa icon-question-circle" style="color:#3f72bf;height:34px;" id="iQuestion" title="Hướng dẫn sử dụng" onmouseover="Question_mouseOver()" onmouseout="Question_mouseOut()"></i> <strong class="support-info " style="font-size:15px;color:#3f72bf" id="txtQuestion" onmouseover="Question_mouseOver()" onmouseout="Question_mouseOut()" title="Hướng dẫn sử dụng">Hướng dẫn SD</strong> <h class="borderright">|</h>
+                                </a>*@
+                            </h1>
+
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Vinh Edu</p>
+            </footer>
+        </div>
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
 </body>
 </html>

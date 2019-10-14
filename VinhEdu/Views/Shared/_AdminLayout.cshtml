@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <style>
+        /*//Notify*/
+        [data-notify="progressbar"] {
+            margin-bottom: 0px;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+            height: 5px;
+        }
+
+        @@import url(http://fonts.googleapis.com/css?family=Old+Standard+TT:400,700);
+
+        [data-notify="container"][class*="alert-pastel-"] {
+            background-color: rgb(255, 255, 238);
+            border-width: 0px;
+            border-left: 15px solid rgb(255, 240, 106);
+            border-radius: 0px;
+            box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.3);
+            font-family: /*-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",Arial,*/ 'Old Standard TT', serif;
+            letter-spacing: 1px;
+        }
+
+        [data-notify="container"].alert-pastel-info {
+            border-left-color: rgb(255, 179, 40);
+        }
+
+        [data-notify="container"].alert-pastel-danger {
+            border-left-color: rgb(255, 103, 76);
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="title"] {
+            color: rgb(80, 80, 57);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        [data-notify="container"][class*="alert-pastel-"] > [data-notify="message"] {
+            font-weight: 400;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - Sổ Liên Lạc Điện Tử</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Content/AdminLTE/plugins/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    @*<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Content/AdminLTE/dist/css/adminlte.min.css">
+    <link href="~/Content/animate.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/Site.css" />
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <link rel="stylesheet" href="~/Content/sweetalert/sweet-alert.css" />
+    <script src="~/Scripts/sweetalert.min.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <div id="overlay" style="display:none;">
+            <div class="spinner"></div>
+            <br />
+            Loading...
+        </div>
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/" class="nav-link">Trang chủ</a>
+                </li>
+
+            </ul>
+
+            @*<form class="form-inline ml-3" action="/Admin/ListPost">
+                <div class="input-group input-group-sm">
+                    <input name="titleStr" value="@(ViewBag.titleStr as string)" class="form-control form-control-navbar" type="search" placeholder="Tìm bài viết" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-navbar" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>*@
+
+        </nav>
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="/" class="brand-link">
+                <img src="~/Content/images/apple-icon-120x120.png" alt=" Logo" class="brand-image img-circle elevation-3"
+                     style="opacity: .8">
+                <span class="brand-text font-weight-light">Vinh Edu</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="~/Content/images/user.png" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block">@Session["Name"]</a>
+                    </div>
+                </div>
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                        <li class="nav-item">
+                            <a href="/Admin" class="nav-link">
+                                <i class="nav-icon fa fa-home"></i>
+                                <p>
+                                    Dashboard
+                                </p>
+                            </a>
+                        </li>
+                        @if (User.IsInRole("admin"))
+                        {
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fa fa-edit"></i>
+                                    <p>
+                                        Quản Lý
+                                        <i class="right fa fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/Admin/CreateStudent" class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon text-success"></i>
+                                            <p>Thêm học sinh</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/AllStudent" class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon text-info"></i>
+                                            <p>Tất cả học sinh</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/CreateUser" class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon text-success"></i>
+                                            <p>Thêm giáo viên</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/AllUser" class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon text-info"></i>
+                                            <p>Tất cả giáo viên</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/Admin/Configure" class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon text-info"></i>
+                                            <p>Quản lý thông tin</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-edit"></i>
+                                <p>
+                                    Kho đề thi
+                                    <i class="right fa fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                @if (User.IsInRole("admin") || User.IsInRole("teacher"))
+                                {
+                                    <li class="nav-item">
+                                        <a href="/QuizTest/Create" class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon text-success"></i>
+                                            <p>Thêm đề thi mới</p>
+                                        </a>
+                                    </li>
+                                    if (User.IsInRole("admin"))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="/QuizTest/AllQuizTest" class="nav-link">
+                                                <i class="fa fa-circle-o nav-icon text-info"></i>
+                                                <p>Tất cả đề thi</p>
+                                            </a>
+                                        </li>
+                                    }
+                                    <li class="nav-item">
+                                        <a href="/QuizTest/MyQuizTest" class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon text-info"></i>
+                                            <p>Đề thi của tôi</p>
+                                        </a>
+                                    </li>
+                                }
+                                @if (User.IsInRole("student"))
+                                {
+                                    <li class="nav-item">
+                                        <a href="/Test/TestList" class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon text-info"></i>
+                                            <p>Danh sách bài thi</p>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-user-circle"></i>
+                                <p>
+                                    Người dùng
+                                    <i class="fa fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/Auth/ChangePass" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon text-danger"></i>
+                                        <p>Đổi mật khẩu</p>
+                                    </a>
+                                </li>
+                                @{ if (User.IsInRole("admin"))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="/User/Manage" class="nav-link">
+                                                <i class="fa fa-circle-o nav-icon text-success"></i>
+                                                <p>Quản lý người dùng</p>
+                                            </a>
+                                        </li>
+                                    }
+                                }
+
+                            </ul>
+                        </li>
+                        <li class="nav-header" style="font-size:1.1rem">Công cụ</li>
+                        @*@if (User.IsInRole("admin"))
+                        {
+                            <li class="nav-item">
+                                <a href="/Admin/InfoChange" class="nav-link">
+                                    <i class="nav-icon fa fa-circle-o text-success"></i>
+                                    <p>Thông tin website</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/Admin/HotPostManager" class="nav-link">
+                                    <i class="nav-icon fa fa-circle-o text-success"></i>
+                                    <p>Quản lý bài ghim</p>
+                                </a>
+                            </li>
+                        }*@
+                        <li class="nav-item">
+                            <a href="/Auth/Logout" class="nav-link">
+                                <i class="nav-icon fa fa-sign-out text-danger"></i>
+                                <p>Đăng xuất</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+    </div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="background-color:white">
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                @RenderBody()
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+
+
+    </div>
+
+
+
+    @Scripts.Render("~/bundles/modernizr")
+
+    @RenderSection("scripts", required: false)
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- AdminLTE App -->
+
+    <script src="~/Scripts/bootstrap-notify.min.js"></script>
+    <script src="~/Content/AdminLTE/dist/js/adminlte.js"></script>
+    <link rel="stylesheet" href="~/Content/jqueryui.css"/>
+</body>
+</html>

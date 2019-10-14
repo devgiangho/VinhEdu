@@ -17,16 +17,12 @@ namespace VinhEdu.App_Start
             if (HttpContext.Current.User.Identity.IsAuthenticated && HttpContext.Current.Session["UserID"] == null)
             {
                 UnitOfWork db = new UnitOfWork();
-                User user = null;
-                if (HttpContext.Current.User.IsInRole("student"))
+                var user = db.UserRepository.FindByIdentifier(HttpContext.Current.User.Identity.Name);
+                if(user != null)
                 {
-                    user = db.UserRepository.FindByStudentID(HttpContext.Current.User.Identity.Name);
+                    HttpContext.Current.Session["UserID"] = user.ID;
+                    HttpContext.Current.Session["Name"] = user.FullName;
                 }
-                else
-                {
-                    user = db.UserRepository.FindByEmail(HttpContext.Current.User.Identity.Name);
-                }
-                HttpContext.Current.Session["UserID"] = user.ID;
             }
             base.OnActionExecuting(filterContext);
         }

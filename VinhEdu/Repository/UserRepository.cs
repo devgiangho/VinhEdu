@@ -15,27 +15,31 @@ namespace VinhEdu.Repository
             this.context = context;
         }
 
-        public User FindByStudentID(string id)
+        public User FindByIdentifier(string id)
         {
-            User u = context.Users.Where(e => e.StudentID.ToLower() == id.ToLower()).FirstOrDefault();
+            User u = context.Users.Where(e => e.Identifier.ToLower() == id.ToLower()).FirstOrDefault();
             return u;
         }
-        public bool CheckExistByStudentID(string id)
+        public bool CheckExistByIdentifier(string id)
         {
-            return context.Users.Any(e => e.StudentID.ToLower() == id.ToLower());
+            return context.Users.Any(e => e.Identifier.ToLower() == id.ToLower());
         }
-        public User FindByEmail(string email)
-        {
-            User u = context.Users.Where(e => e.Email.ToLower() == email.ToLower()).FirstOrDefault();
-            return u;
-        }
-        public bool CheckExistByEmail(string email)
-        {
-            return context.Users.Any(e => e.Email.ToLower() == email.ToLower());
-        }
+        //public User FindByEmail(string email)
+        //{
+        //    User u = context.Users.Where(e => e.Email.ToLower() == email.ToLower()).FirstOrDefault();
+        //    return u;
+        //}
+        //public bool CheckExistByEmail(string email)
+        //{
+        //    return context.Users.Any(e => e.Email.ToLower() == email.ToLower());
+        //}
         public void AddUser(User model)
         {
             context.Users.Add(model);
+        }
+        public void AddRangeUser(IEnumerable<User> model)
+        {
+            context.Users.AddRange(model);
         }
         public IQueryable<User> AllUser()
         {

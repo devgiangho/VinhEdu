@@ -24,11 +24,11 @@ namespace VinhEdu.Models
         [StringLength(50)]
         public string FullName { get; set; }
 
-        [StringLength(50)]
-        public string StudentID { get; set; }
+        //[StringLength(50)]
+        //public string StudentID { get; set; }
 
         [StringLength(100)]
-        public string Email { get; set; }
+        public string Identifier { get; set; }
 
         public int? SubjectID { get; set; }
 

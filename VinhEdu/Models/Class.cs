@@ -25,20 +25,18 @@ namespace VinhEdu.Models
 
         public int SchoolID { get; set; }
 
-        public int HomeRoomTeacherID { get; set; }
+        //public int HomeRoomTeacherID { get; set; }
 
-        [StringLength(500)]
-        public string StudentList { get; set; }
+        //[StringLength(500)]
+        //public string StudentList { get; set; }
 
-        [StringLength(500)]
-        public string TeacherList { get; set; }
-
-        public int ConfigureID { get; set; }
+        //[StringLength(500)]
+        //public string TeacherList { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Attendance> Attendances { get; set; }
 
-        public virtual Configure Configure { get; set; }
+        ////public virtual Configure Configure { get; set; }
 
         public virtual School School { get; set; }
 

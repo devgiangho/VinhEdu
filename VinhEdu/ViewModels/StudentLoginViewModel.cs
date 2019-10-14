@@ -7,7 +7,7 @@ using static VinhEdu.Models.AdditionalDefinition;
 
 namespace VinhEdu.ViewModels
 {
-    public class StudentLoginViewModel
+    public class LoginViewModel
     {
         public LoginType LoginType { get; set; } = LoginType.Student;
         public string Identify { get; set; }

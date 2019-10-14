@@ -19,6 +19,11 @@ namespace VinhEdu.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int UserID { get; set; }
 
+        [Key]
+        [Column(Order = 2)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int ConfigureID { get; internal set; }
+
         public bool IsCurrent { get; set; }
 
         public bool? IsHomeTeacher { get; set; }
@@ -26,5 +31,6 @@ namespace VinhEdu.Models
         public virtual Class Class { get; set; }
 
         public virtual User User { get; set; }
+        public virtual Configure Configure { get; set; }
     }
 }

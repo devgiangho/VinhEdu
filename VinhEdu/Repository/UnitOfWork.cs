@@ -10,7 +10,9 @@ namespace VinhEdu.Repository
     {
         private EduVinhContext context = new EduVinhContext();
         private UserRepository userRepository;
-        private UnitOfWork Instance;
+        private SchoolRepository schoolRepository;
+        private GenericRepository<Class> classRepository;
+        //private UnitOfWork Instance;
         //public UnitOfWork GetInstance()
         //{
         //    if (Instance == null)
@@ -30,7 +32,28 @@ namespace VinhEdu.Repository
                 return userRepository;
             }
         }
-
+        public SchoolRepository SchoolRepository
+        {
+            get
+            {
+                if (schoolRepository == null)
+                {
+                    schoolRepository = new SchoolRepository(context);
+                }
+                return schoolRepository;
+            }
+        }
+        public GenericRepository<Class> ClassRepository
+        {
+            get
+            {
+                if (classRepository == null)
+                {
+                    classRepository = new GenericRepository<Class>(context);
+                }
+                return classRepository;
+            }
+        }
         internal void SaveChanges()
         {
             context.SaveChanges();

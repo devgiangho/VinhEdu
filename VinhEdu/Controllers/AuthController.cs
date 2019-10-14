@@ -50,46 +50,33 @@ namespace VinhEdu.Controllers
         }
 
         [HttpPost]
-        public ActionResult StudentLogin(StudentLoginViewModel model, string ReturnUrl)
+        public ActionResult Login(LoginViewModel model, string ReturnUrl)
         {
 
             if (ModelState.IsValid)
             {
-                var exist = db.UserRepository.CheckExistByStudentID(model.Identify);
+                var exist = db.UserRepository.CheckExistByIdentifier(model.Identify);
                 if (exist)
                 {
-                    var user = db.UserRepository.FindByStudentID(model.Identify);
+                    var user = db.UserRepository.FindByIdentifier(model.Identify);
                     if (user.Password == Common.CalculateMD5Hash(model.Password) && (user.Status == UserStatus.Activated || user.Status == UserStatus.NotActivated))
                     {
-                        setCookie(user.StudentID, model.RememberMe, user.Role);
+                        setCookie(user.Identifier, model.RememberMe, user.Role);
+                        Session["UserID"] = user.ID;
+                        Session["Name"] = user.FullName;
                         if (ReturnUrl != null)
+                        {
                             return Redirect(ReturnUrl);
-                        return RedirectToAction("Index", "Admin");
-                    }
-                    ViewBag.Error = "Sai tài khoản hoặc mật khẩu!";
-                    return View();
-                }
+                        }
 
-            }
-
-            ViewBag.Error = "Sai tài khoản hoặc mật khẩu!";
-            return View();
-        }
-        [HttpPost]
-        public ActionResult TeacherLogin(TeacherLoginViewModel model, string ReturnUrl)
-        {
-
-            if (ModelState.IsValid)
-            {
-                var exist = db.UserRepository.CheckExistByEmail(model.Identify);
-                if (exist)
-                {
-                    var user = db.UserRepository.FindByEmail(model.Identify);
-                    if (user.Password == Common.CalculateMD5Hash(model.Password) && (user.Status == UserStatus.Activated || user.Status == UserStatus.NotActivated))
-                    {
-                        setCookie(user.Email, model.RememberMe, user.Role);
-                        if (ReturnUrl != null)
-                            return Redirect(ReturnUrl);
+                        if (User.IsInRole("student"))
+                        {
+                            return RedirectToAction("Index", "Student");
+                        }
+                        if (User.IsInRole("teacher") || User.IsInRole("headmaster"))
+                        {
+                            return RedirectToAction("Index", "Teacher");
+                        }
                         return RedirectToAction("Index", "Admin");
                     }
                     ViewBag.Error = "Sai tài khoản hoặc mật khẩu!";
@@ -120,14 +107,8 @@ namespace VinhEdu.Controllers
                 else
                 {
                     User user = null;
-                    if(User.IsInRole("student"))
-                    {
-                        user = db.UserRepository.FindByStudentID(User.Identity.Name);
-                    }
-                    else
-                    {
-                        user = db.UserRepository.FindByEmail(User.Identity.Name);
-                    }
+                    user = db.UserRepository.FindByIdentifier(User.Identity.Name);
+                    
                     if (user != null)
                     {
                         user.Password = Common.CalculateMD5Hash(model.password);

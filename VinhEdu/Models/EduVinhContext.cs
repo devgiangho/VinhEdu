@@ -23,13 +23,13 @@ namespace VinhEdu.Models
         public virtual DbSet<BaseClassList> BaseClassLists { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Class>()
-                .Property(e => e.StudentList)
-                .IsUnicode(false);
+            //modelBuilder.Entity<Class>()
+            //    .Property(e => e.StudentList)
+            //    .IsUnicode(false);
 
-            modelBuilder.Entity<Class>()
-                .Property(e => e.TeacherList)
-                .IsUnicode(false);
+            //modelBuilder.Entity<Class>()
+            //    .Property(e => e.TeacherList)
+            //    .IsUnicode(false);
 
             modelBuilder.Entity<Class>()
                 .HasMany(e => e.Attendances)
@@ -47,8 +47,9 @@ namespace VinhEdu.Models
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Configure>()
-                .HasMany(e => e.Classes)
+                .HasMany(e => e.Attendances)
                 .WithRequired(e => e.Configure)
+                .HasForeignKey(e => e.ConfigureID)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<School>()
@@ -57,19 +58,11 @@ namespace VinhEdu.Models
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<User>()
-                .Property(e => e.StudentID)
+                .Property(e => e.Identifier)
                 .IsUnicode(false);
 
             modelBuilder.Entity<User>()
-                .Property(e => e.Email)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<User>()
-                .HasIndex(e => e.Email)
-                .IsUnique();
-
-            modelBuilder.Entity<User>()
-                .HasIndex(e => e.StudentID)
+                .HasIndex(e => e.Identifier)
                 .IsUnique();
 
             modelBuilder.Entity<User>()
