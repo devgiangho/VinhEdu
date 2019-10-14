@@ -12,15 +12,8 @@ namespace VinhEdu.Repository
         private UserRepository userRepository;
         private SchoolRepository schoolRepository;
         private GenericRepository<Class> classRepository;
-        //private UnitOfWork Instance;
-        //public UnitOfWork GetInstance()
-        //{
-        //    if (Instance == null)
-        //    {
-        //        Instance = new UnitOfWork();
-        //    }
-        //    return Instance;
-        //}
+        private GenericRepository<Configure> configRepository;
+        private GenericRepository<ClassMember> memberRepository;
         public UserRepository UserRepository
         {
             get
@@ -52,6 +45,28 @@ namespace VinhEdu.Repository
                     classRepository = new GenericRepository<Class>(context);
                 }
                 return classRepository;
+            }
+        }
+        public GenericRepository<Configure> ConfigRepository
+        {
+            get
+            {
+                if (configRepository == null)
+                {
+                    configRepository = new GenericRepository<Configure>(context);
+                }
+                return configRepository;
+            }
+        }
+        public GenericRepository<ClassMember> MemberRepository
+        {
+            get
+            {
+                if (memberRepository == null)
+                {
+                    memberRepository = new GenericRepository<ClassMember>(context);
+                }
+                return memberRepository;
             }
         }
         internal void SaveChanges()

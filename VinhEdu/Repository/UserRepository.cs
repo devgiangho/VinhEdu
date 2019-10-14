@@ -20,6 +20,11 @@ namespace VinhEdu.Repository
             User u = context.Users.Where(e => e.Identifier.ToLower() == id.ToLower()).FirstOrDefault();
             return u;
         }
+        public User FindByID(int id)
+        {
+            User u = context.Users.Find(id);
+            return u;
+        }
         public bool CheckExistByIdentifier(string id)
         {
             return context.Users.Any(e => e.Identifier.ToLower() == id.ToLower());

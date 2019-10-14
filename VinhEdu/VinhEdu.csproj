@@ -1175,6 +1175,7 @@
     <Content Include="Views\Admin\CreateStudent.cshtml" />
     <Content Include="Views\Shared\_PartialGrid.cshtml" />
     <Content Include="Views\Sweet\Alert.cshtml" />
+    <Content Include="Views\Admin\AllStudent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
