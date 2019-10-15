@@ -996,6 +996,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\aggrid\DateEditor.js" />
+    <Content Include="Scripts\axios.js" />
+    <Content Include="Scripts\axios.min.js" />
     <Content Include="Scripts\bootstrap-notify.js" />
     <Content Include="Scripts\bootstrap-notify.min.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -1116,11 +1118,9 @@
     <Content Include="Content\sweetalert\sweet-alert-animations.less" />
     <Content Include="Content\bootstrap\variables.less" />
     <Content Include="Content\bootstrap\mixins.less" />
+    <Content Include="Scripts\axios.min.map" />
+    <Content Include="Scripts\axios.map" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Scripts\handsontable\handsontable.full.js" />
-    <Content Include="Scripts\handsontable\handsontable.full.min.js" />
-    <Content Include="Scripts\handsontable\handsontable.js" />
-    <Content Include="Scripts\handsontable\handsontable.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -1136,7 +1136,6 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="Scripts\Pikaday\pikaday.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />

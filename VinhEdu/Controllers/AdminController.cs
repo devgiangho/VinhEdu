@@ -42,20 +42,20 @@ namespace VinhEdu.Controllers
         }
         public JsonResult GetStudent(int ClassID, int ConfigureID)
         {
-            var q = from u in Context.Users
-                    join a in Context.ClassMembers
-                    on u.ID equals a.UserID
-                    where a.ConfigureID == ConfigureID && u.Type == AdditionalDefinition.UserType.Student
-                    && u.Status == AdditionalDefinition.UserStatus.Activated
-                    select new User
-                    {
-                        Identifier = u.Identifier,
-                        DateOfBirth = u.DateOfBirth,
-                        FullName = u.FullName,
-                        Gender = u.Gender,
-                    };
+            var q = (from u in Context.Users
+                     join a in Context.ClassMembers
+                     on u.ID equals a.UserID
+                     where a.ConfigureID == ConfigureID && u.Type == AdditionalDefinition.UserType.Student &&a.ClassID == ClassID
+                     && u.Status == AdditionalDefinition.UserStatus.Activated
+                     select new StudentList
+                     {
+                         Identifier = u.Identifier,
+                         DateOfBirth = u.DateOfBirth,
+                         FullName = u.FullName,
+                         Gender = u.Gender,
+                     }).ToList();
 
-            return Json(q.ToList(), JsonRequestBehavior.AllowGet);
+            return Json(q, JsonRequestBehavior.AllowGet);
         }
         public JsonResult DeleteStudent(string Identifier)
         {
@@ -105,19 +105,31 @@ namespace VinhEdu.Controllers
                 List<User> lst = new List<User>();
                 foreach(StudentList item in students)
                 {
-                    User std = new User
+                    User std = null;
+                    bool checkExist = db.UserRepository.CheckExistByIdentifier(item.Identifier.ToLower());
+                    if (checkExist)
                     {
-                        DateOfBirth = item.DateOfBirth,
-                        CreateDate = DateTime.Now,
-                        FullName = item.FullName,
-                        Identifier = item.Identifier,
-                        Password = Common.CalculateMD5Hash(item.Password),
-                        Role = "student",
-                        Status = AdditionalDefinition.UserStatus.Activated,
-                        Type = AdditionalDefinition.UserType.Student,
-                        Gender = item.Gender,
-                    };
-                    lst.Add(std);
+                        ///  throw new Exception();
+                        Response.StatusCode = 500;
+                        return Json("Tài khoản với Mã: " + item.Identifier + " đã tồn tại trên hệ thống.", JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        std = new User
+                        {
+                            DateOfBirth = item.DateOfBirth,
+                            CreateDate = DateTime.Now,
+                            FullName = item.FullName,
+                            Identifier = item.Identifier.ToLower(),
+                            Password = Common.CalculateMD5Hash(item.Password),
+                            Role = "student",
+                            Status = AdditionalDefinition.UserStatus.Activated,
+                            Type = AdditionalDefinition.UserType.Student,
+                            Gender = item.Gender,
+                        };
+                        lst.Add(std);
+                    }
+                    
                 }
                 db.UserRepository.AddRangeUser(lst);
                 //Thêm vào lớp

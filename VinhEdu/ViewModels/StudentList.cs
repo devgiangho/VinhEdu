@@ -22,6 +22,8 @@ namespace VinhEdu.ViewModels
         public string FullName { get; set; }
         [Required]
         public DateTime DateOfBirth { get; set; }
+
+        public string StrDateOfBirth { get; set; }
         [Required]
         public Gender Gender { get; set; }
         [Required]
