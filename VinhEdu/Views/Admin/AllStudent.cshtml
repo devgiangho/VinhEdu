@@ -21,7 +21,7 @@
                 @Html.DropDownList("ConfigureID", (IEnumerable<SelectListItem>)ViewBag.Config, new { @class = "form-control" })
             </div>
             <div class="col-md-5 pt-4">
-                <button class="btn btn-outline-danger" onclick="WarnDelete()">Xóa dòng đã chọn</button>
+                <button class="btn btn-outline-danger" onclick="WarnDelete()">Xóa</button>
                 <button class="btn btn-outline-warning float-right" onclick="Submit()">Cập nhật</button>
             </div>
         </div>
@@ -55,6 +55,7 @@
     <script src="~/Scripts/aggrid/DateEditor.js"></script>
     <script>
         var Student = {};
+        var CurrentData = [];
         // specify the columns
         var columnDefs = [
             { headerName: "Mã tài khoản", field: "Identifier", editable: false, resizable: true },
@@ -78,9 +79,7 @@
         ];
 
         // specify the data
-        var rowData = [
-           //{ Identifier: 'STD001', FullName: 'Đinh Trung Kiên', DateOfBirth: '08/10/2019', Gender: 'Nam', Password: '' },
-        ];
+        var rowData = [];
 
         // let the grid know which columns and what data to use
         var gridOptions = {
@@ -123,15 +122,17 @@
             GetData();
         });
         $('#ClassID').change(() => {
+            classID = $('#ClassID').children("option:selected").val();
             GetData();
         })
         $('#ConfigureID').change(() => {
             GetData();
         })
         $('#SchoolID').change(() => {
+            ClearData();
             schoolID = $('#SchoolID').children("option:selected").val();
             GetClass(schoolID);
-            GetData();
+            classID = $('#ClassID').children("option:selected").val();
         })
         var GetClass = function (id) {
             $.ajax({
@@ -143,10 +144,13 @@
                 success: function (data) {
                     $('#ClassID').empty();
                     if (data.length > 0) {
+                        var count = 1;
                         data.forEach((e) => {
-                            $('#ClassID').append('<option value=' + e.ClassID + '>' + e.ClassName + '</option>');
+                            $('#ClassID').append('<option value=' + e.ClassID + ' ' + (count === 1 ? 'selected' : '') +'>' + e.ClassName + '</option>');
+                            count++;
                         });
                     }
+                    GetData();
                 },
                 error: function () {
                     var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
@@ -165,9 +169,10 @@
                 let newdata = [];
                 resp.data.forEach((e) => {
                     newRow = { Identifier: e.Identifier, FullName: e.FullName, DateOfBirth: ToJavaScriptDate(e.DateOfBirth), Gender: e.Gender == 0 ? 'Nam' : 'Nữ' };
-                    //newdata.push(newRow);
+                    newdata.push({...newRow, Gender: newRow.Gender == 'Nam' ? 0 : 1});
                     gridOptions.api.updateRowData({ add: [newRow] });
                 });
+                CurrentData = newdata;
                 gridOptions.api.sizeColumnsToFit();
             }).catch((err) => {
                 //swal("Lỗi", "Lỗi hệ thống", "error");
@@ -180,67 +185,79 @@
            
         }
         function WarnDelete() {
-            swal({
-                title: "Bạn chắc chứ ?",
-                text: "Bạn có chắc muốn xóa học sinh: " + Student.FullName,
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        type: "POST",
-                        url: '/Admin/DeleteStudent',
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify({ Identifier: Student.Identifier }),
-                        dataType: "json",
-                        success: function (data) {
-                            ClearData();
-                            swal("Thành công", data, "success");
-                            GetData();
-                        },
-                        error: function () {
-                            swal("Lỗi", "Lỗi hệ thống", "error");
-                        }
-                    });
+            if (!Student.FullName) {
+                swal('Lỗi', 'Bạn chưa chọn học sinh', 'warning');
+            }
+            else {
+                swal({
+                    title: "Bạn chắc chứ ?",
+                    text: "Bạn có chắc muốn xóa học sinh: " + Student.FullName,
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            type: "POST",
+                            url: '/Admin/DeleteStudent',
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({ Identifier: Student.Identifier }),
+                            dataType: "json",
+                            success: function (data) {
+                                ClearData();
+                                swal("Thành công", data, "success");
+                                GetData();
+                            },
+                            error: function () {
+                                swal("Lỗi", "Lỗi hệ thống", "error");
+                            }
+                        });
 
-                } else {
-                }
-            });
+                    } else {
+                    }
+                });
+            }
         }
-        function ToJavaScriptDate(value) {
-            // Trả về chuỗi ngày tháng dạng MM//DD/YYYY TỪ dạng /Date(1525730400000)//
-            var pattern = /Date\(([^)]+)\)/;
-            var results = pattern.exec(value);
-            var dt = new Date(parseFloat(results[1]));
-            return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
-        }
+        
     </script>
     <script>
         //Submit
         function getAllRows() {
             let rowData = [];
             gridOptions.api.forEachNode(node => rowData.push(node.data));
-            return rowData;
+            return rowData.map((e) => {
+                return { ...e, Gender: e.Gender === 'Nam' ? 0 : 1 }
+            });
+        }
+        function compareData(arr1, arr2) {
+
+            let diff = arr1.filter((e) => {
+                return arr2.some((e2) => e2.Identifier === e.Identifier && e2.FullName === e.FullName
+                    && e2.DateOfBirth === e.DateOfBirth && e2.Gender === e.Gender
+                )
+            });
+            return diff.length === arr1.length;
         }
         var Submit = function () {
             $('#overlay').fadeIn();
             var checkFill = Validate(getAllRows());
-            var checkDuplicate = ValidateKey(getAllRows());
-            if (gridOptions.rowData.length > 0 && checkFill === true && !checkDuplicate) {
+            var isUpdated = !compareData(CurrentData, getAllRows());
+            if (getAllRows().length > 0 && checkFill === true && isUpdated === true) {
                 Config = $('#ConfigureID').children("option:selected").val();
                 classID = $('#ClassID').children("option:selected").val();
+                
+                $('#overlay').fadeOut();
             }
             else {
-                if (gridOptions.rowData.length === 0) {
-                     swal("Lỗi", "Dữ liệu chưa đầy đủ", "error");
+                if (getAllRows().length === 0) {
+                     swal("Lỗi", "Chưa có học sinh để cập nhật", "error");
                 }
-                if (!checkFill) {
-                    swal("Lỗi", "Dữ liệu chưa đầy đủ", "error");
+                else if (!isUpdated) {
+                    swal("Lỗi", "Bạn chưa chỉnh sửa gì", "warning");
                 }
-                else {
-                    swal("Lỗi", "Bạn nhập trùng mã tài khoản", "error");
+                else if (!checkFill) {
+                    swal("Lỗi", "Bạn nhập chưa đủ thông tin", "warning");
                 }
                 $('#overlay').fadeOut();
             }
@@ -250,22 +267,17 @@
             let re = dat.every((e) => {
                 return Object.values(e).every((sub) => {
                         //console.log(sub);
-                        return sub ? true : false;
+                        return (sub || sub === 0) ? true : false;
                     })
             });
             return re;
         }
-        function ValidateKey(dat) {
-            if (dat.length == 1) {
-                return true;
-            }
-            //Lấy array identifiers
-            var valueArr = dat.map(function (item) { return item.Identifier });
-            // check có trùng lặp hay ko
-            var isDuplicate = valueArr.some(function (item, idx) {
-                return valueArr.indexOf(item) != idx
-            });
-            return isDuplicate;
+        function ToJavaScriptDate(value) {
+            // Trả về chuỗi ngày tháng dạng MM//DD/YYYY TỪ dạng /Date(1525730400000)//
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
         }
     </script>
 </div>

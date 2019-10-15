@@ -120,7 +120,7 @@ namespace VinhEdu.Controllers
                             DateOfBirth = item.DateOfBirth,
                             CreateDate = DateTime.Now,
                             FullName = item.FullName,
-                            Identifier = item.Identifier.ToLower(),
+                            Identifier = item.Identifier.ToUpper(),
                             Password = Common.CalculateMD5Hash(item.Password),
                             Role = "student",
                             Status = AdditionalDefinition.UserStatus.Activated,
