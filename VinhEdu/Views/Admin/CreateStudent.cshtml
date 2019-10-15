@@ -203,7 +203,9 @@
         function getAllRows() {
             let rowData = [];
             gridOptions.api.forEachNode(node => rowData.push(node.data));
-            return rowData;
+            return rowData.map((e) => {
+                return { ...e, Gender: e.Gender === 'Nam' ? 0 : 1 }
+            });
         }
         var Config;
         var Submit = function () {
@@ -261,7 +263,7 @@
         }
         function ValidateKey(dat) {
             if (dat.length == 1) {
-                return true;
+                return false;
             }
             //Lấy array identifiers
             var valueArr = dat.map(function (item) { return item.Identifier });
