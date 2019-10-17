@@ -52,7 +52,10 @@ namespace VinhEdu.Controllers
         [HttpPost]
         public ActionResult Login(LoginViewModel model, string ReturnUrl)
         {
-
+            if (Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Admin");
+            }
             if (ModelState.IsValid)
             {
                 var exist = db.UserRepository.CheckExistByIdentifier(model.Identify);

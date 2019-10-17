@@ -14,7 +14,6 @@ namespace VinhEdu.Models
 
         public int StudentID { get; set; }
 
-        public int ClassID { get; set; }
 
         public int? Status { get; set; }
         public int ConfigureID { get; internal set; }
@@ -24,7 +23,6 @@ namespace VinhEdu.Models
 
         public DateTime AttendanceDate { get; set; }
 
-        public virtual Class Class { get; set; }
 
         public virtual User User { get; set; }
     }

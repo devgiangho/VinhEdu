@@ -148,10 +148,13 @@
     <Compile Include="Migrations\201910170313221_deleteclassbas.Designer.cs">
       <DependentUpon>201910170313221_deleteclassbas.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910170903246_fixquanhe-classmember.cs" />
+    <Compile Include="Migrations\201910170903246_fixquanhe-classmember.Designer.cs">
+      <DependentUpon>201910170903246_fixquanhe-classmember.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdditionalDefinition.cs" />
     <Compile Include="Models\Attendance.cs" />
-    <Compile Include="Models\BaseClassList.cs" />
     <Compile Include="Models\Class.cs" />
     <Compile Include="Models\ClassMember.cs" />
     <Compile Include="Models\Configure.cs" />
@@ -1213,6 +1216,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910170313221_deleteclassbas.resx">
       <DependentUpon>201910170313221_deleteclassbas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910170903246_fixquanhe-classmember.resx">
+      <DependentUpon>201910170903246_fixquanhe-classmember.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

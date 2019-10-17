@@ -5,7 +5,7 @@
 }
 @Html.Partial("_PartialGrid")
 <div class="container-fluid" style="margin-top:15px;padding-top:15px;">
-    <h3>Thêm học sinh</h3>
+    <h3>Quản lý học sinh</h3>
     <div class="card-header">
         <div class="row mb-2">
             <div class="col-md-4">
@@ -22,30 +22,39 @@
             </div>
             <div class="col-md-5 pt-4">
                 <button class="btn btn-outline-danger" onclick="WarnDelete()">Xóa</button>
+                <button class="btn btn-outline-primary" onclick="SwitchClass()">Chuyển Lớp</button>
                 <button class="btn btn-outline-warning float-right" onclick="Submit()">Cập nhật</button>
             </div>
         </div>
     </div>
     <div id="myGrid" style="height: 600px;width:100%;" class="ag-theme-balham"></div>
 
-    <div class="modal fade" id="deleteModal">
+    <div class="modal fade" id="SwitchClassModal">
         <div class="modal-dialog">
             <div class="modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">Bạn có muốn xóa ?</h4>
+                    <h4 class="modal-title">Chuyển lớp: </h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
                 <!-- Modal body -->
                 <div class="modal-body">
-                    Modal body..
+                    <p id="stdShow" class="align-content-center"></p>
+                    <div class="row mb-2">
+                        <p class="col-2 pt-1">Trường: </p>
+                        <select id="SchoolSwitch" class="form-control col-10"></select>
+                    </div>
+                    <div class="row">
+                        <p class="col-2 pt-1">Lớp</p>
+                        <select  id="ClassSwitch" class="form-control col-10" ></select>
+                    </div>
                 </div>
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" id="DeleteBtn" class="btn btn-danger">Xóa</button>
+                    <button type="button" onclick="Switch()" class="btn btn-danger">Chuyển</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                 </div>
 
@@ -55,6 +64,7 @@
     <script>
         var Student = {};
         var CurrentData = [];
+        var SwitchModal = $('#SwitchClassModal');
         // specify the columns
         var columnDefs = [
             { headerName: "Mã tài khoản", field: "Identifier", editable: false, resizable: true },
@@ -74,7 +84,14 @@
                     values: ['Nam', 'Nữ']
                 }
             },
-            ///{ headerName: "Mật khẩu", field: "Password", editable: true,resizable: true },
+            {
+                headerName: "Trạng thái", field: "Status",
+                editable: true, resizable: true,
+                cellEditor: 'agSelectCellEditor',
+                cellEditorParams: {
+                    values: ['Non-Active', 'Active']
+                }
+            },
         ];
 
         // specify the data
@@ -86,6 +103,7 @@
             rowData: rowData,
             rowSelection: 'single',
             onSelectionChanged: onSelectionChanged,
+            headerHeight: '28px'
         };
         function onSelectionChanged() {
             var selectedRows = gridOptions.api.getSelectedRows();
@@ -107,9 +125,7 @@
             var res = gridOptions.api.updateRowData({remove: selectedData});
             console.log(res);
         }
-        function ClearData() {
-             gridOptions.api.setRowData([]);
-        }
+        
     </script>
     <script>
         var schoolID, classID, Config;
@@ -123,16 +139,66 @@
         $('#ClassID').change(() => {
             classID = $('#ClassID').children("option:selected").val();
             GetData();
-        })
+        });
         $('#ConfigureID').change(() => {
             GetData();
-        })
+        });
         $('#SchoolID').change(() => {
             ClearData();
             schoolID = $('#SchoolID').children("option:selected").val();
             GetClass(schoolID);
             classID = $('#ClassID').children("option:selected").val();
-        })
+        });
+        $('#SchoolSwitch').change(() => {
+            let sID = $('#SchoolSwitch').children("option:selected").val();
+            GetClassModal(sID);
+        });
+    </script>
+    <script>
+        // Các function utilities
+        function getAllRows() {
+            let rowData = [];
+            gridOptions.api.forEachNode(node => rowData.push(node.data));
+            return rowData.map((e) => {
+                return { ...e, Gender: e.Gender == 'Nam' ? 0 : 1, Status: e.Status == 'Non-Active' ? 0 : 1}
+            });
+        }
+        function compareData(arr1, arr2) {
+            console.log(arr1);
+            console.log(arr2);
+            let diff = arr1.filter((e) => {
+                return arr2.some((e2) => e2.Identifier === e.Identifier
+                    && e2.FullName === e.FullName
+                    && e2.DateOfBirth === e.DateOfBirth
+                    && e2.Gender === e.Gender
+                    && e2.Status === e.Status
+                )
+            });
+            return diff.length === arr1.length;
+        }
+        
+        //Check ko bỏ trống trường nào
+        function Validate(dat) {
+            let re = dat.every((e) => {
+                return Object.values(e).every((sub) => {
+                        //console.log(sub);
+                        return (sub || sub === 0) ? true : false;
+                    })
+            });
+            return re;
+        }
+        function ToJavaScriptDate(value) {
+            // Trả về chuỗi ngày tháng dạng MM//DD/YYYY TỪ dạng /Date(1525730400000)//
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+        }
+    </script>
+    <script>
+        function ClearData() {
+             gridOptions.api.setRowData([]);
+        }
         var GetClass = function (id) {
             $.ajax({
                 type: "POST",
@@ -160,6 +226,24 @@
                 }
             });
         }
+        var GetClassModal = function (id) {
+            axios.post('/Admin/GetClassBySchoolID', { id: id }).then(resp => {
+                $('#ClassSwitch').empty();
+                if (resp.data.length > 0) {
+                    var check = true;
+                    resp.data.forEach((e) => {
+                        $('#ClassSwitch').append('<option value=' + e.ClassID + ' ' + (check === true ? 'selected' : '') + '>' + e.ClassName + '</option>');
+                        check = false;
+                    });
+                }
+            }).catch((e) => {
+                var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
+                        type: 'pastel-danger',
+                        allow_dismiss: false,
+                        timer: 1000,
+                    });
+            });
+        }
         function GetData() {
             classID = $('#ClassID').children("option:selected").val();
             Config = $('#ConfigureID').children("option:selected").val();
@@ -167,8 +251,14 @@
                 ClearData();
                 let newdata = [];
                 resp.data.forEach((e) => {
-                    newRow = { Identifier: e.Identifier, FullName: e.FullName, DateOfBirth: ToJavaScriptDate(e.DateOfBirth), Gender: e.Gender == 0 ? 'Nam' : 'Nữ' };
-                    newdata.push({...newRow, Gender: newRow.Gender == 'Nam' ? 0 : 1});
+                    newRow = {
+                        Identifier: e.Identifier,
+                        FullName: e.FullName,
+                        DateOfBirth: ToJavaScriptDate(e.DateOfBirth),
+                        Gender: e.Gender == 0 ? 'Nam' : 'Nữ',
+                        Status: e.Status == 0 ? 'Non-Active' : 'Active'
+                    };
+                    newdata.push({...e,DateOfBirth: ToJavaScriptDate(e.DateOfBirth)});
                     gridOptions.api.updateRowData({ add: [newRow] });
                 });
                 CurrentData = newdata;
@@ -218,29 +308,11 @@
                 });
             }
         }
-        
-    </script>
-    <script>
-        //Submit
-        function getAllRows() {
-            let rowData = [];
-            gridOptions.api.forEachNode(node => rowData.push(node.data));
-            return rowData.map((e) => {
-                return { ...e, Gender: e.Gender == 'Nam' ? 0 : 1 }
-            });
-        }
-        function compareData(arr1, arr2) {
-            let diff = arr1.filter((e) => {
-                return arr2.some((e2) => e2.Identifier === e.Identifier && e2.FullName === e.FullName
-                    && e2.DateOfBirth === e.DateOfBirth && e2.Gender === e.Gender
-                )
-            });
-            return diff.length === arr1.length;
-        }
         var Submit = function () {
             $('#overlay').fadeIn();
             var data = getAllRows();
             var checkFill = Validate(data);
+            //Check đã sửa gì hay chưa
             var isUpdated = !compareData(CurrentData, data);
             if (data.length > 0 && checkFill === true && isUpdated === true) {
                 Config = $('#ConfigureID').children("option:selected").val();
@@ -267,22 +339,34 @@
                 $('#overlay').fadeOut();
             }
         }
-        //Check ko bỏ trống trường nào
-        function Validate(dat) {
-            let re = dat.every((e) => {
-                return Object.values(e).every((sub) => {
-                        //console.log(sub);
-                        return (sub || sub === 0) ? true : false;
-                    })
-            });
-            return re;
+        function SwitchClass() {
+            if (!Student.FullName) {
+                swal('Lỗi', 'Bạn chưa chọn học sinh', 'warning');
+            }
+            else {
+                $('#SchoolSwitch').empty();
+                var options = $("#SchoolID > option").clone();
+                $('#SchoolSwitch').append(options);
+
+                $('#ClassSwitch').empty();
+                var op2 = $("#ClassID > option").clone();
+                $('#ClassSwitch').append(op2);
+
+                SwitchModal.find('#stdShow').text(Student.FullName);
+                SwitchModal.modal('show');
+            }
         }
-        function ToJavaScriptDate(value) {
-            // Trả về chuỗi ngày tháng dạng MM//DD/YYYY TỪ dạng /Date(1525730400000)//
-            var pattern = /Date\(([^)]+)\)/;
-            var results = pattern.exec(value);
-            var dt = new Date(parseFloat(results[1]));
-            return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+        function Switch() {
+            var cID = $('#ClassSwitch').children("option:selected").val();
+            axios.post('Admin/SwitchClass', { ClassID: cID, Identifier: Student.Identifier }).then(resp => {
+                
+            }).catch((e) => {
+                var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
+                        type: 'pastel-danger',
+                        allow_dismiss: false,
+                        timer: 1000,
+                    });
+            });
         }
     </script>
 </div>

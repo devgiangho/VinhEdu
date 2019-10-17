@@ -22,6 +22,17 @@ namespace VinhEdu.Models
             [Display(Name = "Học Sinh")]
             Student = 1,
         }
+        public enum LearnStatus
+        {
+            [Display(Name = "Đã học xong")]
+            Finished = 0,
+            [Display(Name = "Đang học")]
+            Learning = 1,
+            [Display(Name = "Đã chuyển lớp")]
+            Switched = 2,
+            [Display(Name = "Học lại")]
+            Duplicated = 3,
+        }
         public enum Gender
         {
             [Display(Name = "Nam")]

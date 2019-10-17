@@ -5,6 +5,7 @@ namespace VinhEdu.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using static VinhEdu.Models.AdditionalDefinition;
 
     [Table("ClassMember")]
     public partial class ClassMember
@@ -27,6 +28,7 @@ namespace VinhEdu.Models
         public bool IsCurrent { get; set; }
 
         public bool? IsHomeTeacher { get; set; }
+        public LearnStatus LearnStatus { get; set; }
 
         public virtual Class Class { get; set; }
 

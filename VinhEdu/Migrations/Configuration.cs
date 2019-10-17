@@ -355,6 +355,7 @@
                 IsHomeTeacher = false,
                 IsCurrent = true,
                 ConfigureID = 1,
+                LearnStatus = LearnStatus.Learning,
             });
             context.ClassMembers.AddOrUpdate(e => e.ClassID, new ClassMember
             {
@@ -363,6 +364,7 @@
                 IsHomeTeacher = false,
                 IsCurrent = true,
                 ConfigureID = 1,
+                LearnStatus = LearnStatus.Learning,
             });
             context.ClassMembers.AddOrUpdate(e => e.ClassID, new ClassMember
             {
@@ -371,6 +373,7 @@
                 IsHomeTeacher = false,
                 IsCurrent = true,
                 ConfigureID = 1,
+                LearnStatus = LearnStatus.Learning,
             });
             context.ClassMembers.AddOrUpdate(e => e.ClassID, new ClassMember
             {
@@ -378,6 +381,7 @@
                 UserID = 11,
                 IsHomeTeacher = false,
                 IsCurrent = true,
+                LearnStatus = LearnStatus.Learning,
                 ConfigureID = 1,
             });
             context.ClassMembers.AddOrUpdate(e => e.ClassID, new ClassMember
@@ -387,6 +391,7 @@
                 IsHomeTeacher = false,
                 IsCurrent = true,
                 ConfigureID = 1,
+                LearnStatus = LearnStatus.Learning,
             });
         }
         

@@ -23,7 +23,7 @@ namespace VinhEdu.ViewModels
         [Required]
         public DateTime DateOfBirth { get; set; }
 
-        public string StrDateOfBirth { get; set; }
+        public UserStatus Status { get; set; }
         [Required]
         public Gender Gender { get; set; }
         [Required]

@@ -8,6 +8,7 @@ using VinhEdu.Models;
 using VinhEdu.Repository;
 using VinhEdu.Utilities;
 using VinhEdu.ViewModels;
+using static VinhEdu.Models.AdditionalDefinition;
 
 namespace VinhEdu.Controllers
 {
@@ -46,13 +47,14 @@ namespace VinhEdu.Controllers
                      join a in Context.ClassMembers
                      on u.ID equals a.UserID
                      where a.ConfigureID == ConfigureID && u.Type == AdditionalDefinition.UserType.Student &&a.ClassID == ClassID
-                     && u.Status == AdditionalDefinition.UserStatus.Activated
+                     && u.Status != AdditionalDefinition.UserStatus.Deleted
                      select new StudentList
                      {
                          Identifier = u.Identifier,
                          DateOfBirth = u.DateOfBirth,
                          FullName = u.FullName,
                          Gender = u.Gender,
+                         Status = u.Status
                      }).ToList();
 
             return Json(q, JsonRequestBehavior.AllowGet);
@@ -163,6 +165,7 @@ namespace VinhEdu.Controllers
                     u.DateOfBirth = item.DateOfBirth;
                     u.FullName = item.FullName;
                     u.Gender = item.Gender;
+                    u.Status = item.Status;
                     db.SaveChanges();
                 }
                 return Json(new { message = "Cập nhật thành công!" }, JsonRequestBehavior.AllowGet);
@@ -173,6 +176,50 @@ namespace VinhEdu.Controllers
                 return Json(e.Message, JsonRequestBehavior.AllowGet);
             }
 
+        }
+        public JsonResult SwitchClass(int ClassID, string Identifier)
+        {
+            try
+            {
+                // Lấy niên khóa
+                Configure configure = db.ConfigRepository.GetAll().Where(e => e.IsActive).FirstOrDefault();
+                //Nếu chuyển ở năm học hiện tại thì cho phép, còn lại thì không
+                User student = db.UserRepository.FindByIdentifier(Identifier);
+                bool IsLearning = db.MemberRepository.GetAll().Any(e => e.IsCurrent == true && e.ConfigureID == configure.ID);
+                if(!IsLearning)
+                {
+                    return Json(new { message = "Học sinh này đã tốt nghiệp", success = false }, JsonRequestBehavior.AllowGet);
+                }
+                List<ClassMember> old_member = db.MemberRepository.GetAll().Where(e=> e.UserID == student.ID).ToList();
+                LearnStatus status = LearnStatus.Learning;
+                //Bỏ các lớp khác
+                old_member.ForEach(e =>
+                {
+                    if(e.IsCurrent)
+                    {
+                        status = e.LearnStatus;
+                        e.IsCurrent = false;
+                        //Đánh dấu đã chuyển
+                        e.LearnStatus = LearnStatus.Switched;
+                    }
+
+                });
+                ClassMember new_member = new ClassMember
+                {
+                    UserID = student.ID,
+                    ClassID = ClassID,
+                    IsCurrent = true,
+                    ConfigureID = configure.ID,
+                    LearnStatus = status,
+                };
+                db.SaveChanges();
+                return Json(new { message = "Chuyển lớp thành công!", success = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception e)
+            {
+                Response.StatusCode = 500;
+                return Json(e.Message, JsonRequestBehavior.AllowGet);
+            }
         }
     }
     
