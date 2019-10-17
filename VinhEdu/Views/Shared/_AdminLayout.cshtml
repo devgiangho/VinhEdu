@@ -61,7 +61,7 @@
     <link rel="stylesheet" href="~/Content/sweetalert/sweet-alert.css" />
     <script src="~/Scripts/sweetalert.min.js"></script>
     <script src="~/Scripts/jquery-ui.js"></script>
-    <script src="~/Scripts/lodashcore.js"></script>
+    @*<script src="~/Scripts/lodashcore.js"></script>*@
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -172,50 +172,6 @@
                                 </ul>
                             </li>
                         }
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fa fa-edit"></i>
-                                <p>
-                                    Kho đề thi
-                                    <i class="right fa fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                @if (User.IsInRole("admin") || User.IsInRole("teacher"))
-                                {
-                                    <li class="nav-item">
-                                        <a href="/QuizTest/Create" class="nav-link">
-                                            <i class="fa fa-circle-o nav-icon text-success"></i>
-                                            <p>Thêm đề thi mới</p>
-                                        </a>
-                                    </li>
-                                    if (User.IsInRole("admin"))
-                                    {
-                                        <li class="nav-item">
-                                            <a href="/QuizTest/AllQuizTest" class="nav-link">
-                                                <i class="fa fa-circle-o nav-icon text-info"></i>
-                                                <p>Tất cả đề thi</p>
-                                            </a>
-                                        </li>
-                                    }
-                                    <li class="nav-item">
-                                        <a href="/QuizTest/MyQuizTest" class="nav-link">
-                                            <i class="fa fa-circle-o nav-icon text-info"></i>
-                                            <p>Đề thi của tôi</p>
-                                        </a>
-                                    </li>
-                                }
-                                @if (User.IsInRole("student"))
-                                {
-                                    <li class="nav-item">
-                                        <a href="/Test/TestList" class="nav-link">
-                                            <i class="fa fa-circle-o nav-icon text-info"></i>
-                                            <p>Danh sách bài thi</p>
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        </li>
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fa fa-user-circle"></i>

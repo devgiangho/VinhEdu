@@ -106,15 +106,10 @@ namespace VinhEdu.Controllers
                 }
                 else
                 {
-                    User user = null;
-                    user = db.UserRepository.FindByIdentifier(User.Identity.Name);
-                    
-                    if (user != null)
-                    {
-                        user.Password = Common.CalculateMD5Hash(model.password);
-                        db.SaveChanges();
-                        return RedirectToAction("Logout");
-                    }
+                    User user = db.UserRepository.FindByID((int)Session["UserID"]);
+                    user.Password = Common.CalculateMD5Hash(model.password);
+                    db.SaveChanges();
+                    return RedirectToAction("Logout");
                 }
             }
             return View();

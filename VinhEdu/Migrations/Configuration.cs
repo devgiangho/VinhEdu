@@ -62,17 +62,6 @@
         }
         private void SeedData(VinhEdu.Models.EduVinhContext context)
         {
-            //Base class
-            context.BaseClassLists.AddOrUpdate(e => e.ID, new BaseClassList
-            {
-                ID = 1,
-                ClassName = "6A"
-            });
-            context.BaseClassLists.AddOrUpdate(e => e.ID, new BaseClassList
-            {
-                ID = 2,
-                ClassName = "6B"
-            });
             //Thêm môn học
             context.Subjects.AddOrUpdate(e => e.ID, new Subject
             {
@@ -226,7 +215,7 @@
                 Gender = Gender.Female,
 
             });
-            // Thêm Lớp 1 -4
+            // Thêm Lớp 1 - 4
             context.Classes.AddOrUpdate(e => e.ClassID, new Class
             {
                 ClassID = 1,
@@ -240,12 +229,12 @@
                 SchoolID = 1,
                 ClassName = "6B",
             });
-            context.Classes.AddOrUpdate(e => e.ClassID, new Class
+            context.Classes.AddOrUpdate(e => e.ClassID, new Class 
             {
                 ClassID = 3,
                 SchoolID = 2,
                 //HomeRoomTeacherID = 4,
-                ClassName = "6A",
+                ClassName = "6C",
             });
             context.Classes.AddOrUpdate(e => e.ClassID, new Class
             {

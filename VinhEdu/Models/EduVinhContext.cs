@@ -20,7 +20,6 @@ namespace VinhEdu.Models
         public virtual DbSet<School> Schools { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<BaseClassList> BaseClassLists { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<Class>()

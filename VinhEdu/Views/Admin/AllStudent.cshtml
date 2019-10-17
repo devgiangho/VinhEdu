@@ -52,7 +52,6 @@
             </div>
         </div>
     </div>
-    <script src="~/Scripts/aggrid/DateEditor.js"></script>
     <script>
         var Student = {};
         var CurrentData = [];
@@ -227,11 +226,10 @@
             let rowData = [];
             gridOptions.api.forEachNode(node => rowData.push(node.data));
             return rowData.map((e) => {
-                return { ...e, Gender: e.Gender === 'Nam' ? 0 : 1 }
+                return { ...e, Gender: e.Gender == 'Nam' ? 0 : 1 }
             });
         }
         function compareData(arr1, arr2) {
-
             let diff = arr1.filter((e) => {
                 return arr2.some((e2) => e2.Identifier === e.Identifier && e2.FullName === e.FullName
                     && e2.DateOfBirth === e.DateOfBirth && e2.Gender === e.Gender
@@ -241,13 +239,20 @@
         }
         var Submit = function () {
             $('#overlay').fadeIn();
-            var checkFill = Validate(getAllRows());
-            var isUpdated = !compareData(CurrentData, getAllRows());
-            if (getAllRows().length > 0 && checkFill === true && isUpdated === true) {
+            var data = getAllRows();
+            var checkFill = Validate(data);
+            var isUpdated = !compareData(CurrentData, data);
+            if (data.length > 0 && checkFill === true && isUpdated === true) {
                 Config = $('#ConfigureID').children("option:selected").val();
                 classID = $('#ClassID').children("option:selected").val();
-                
-                $('#overlay').fadeOut();
+                axios.post('/Admin/UpdateBatchStudent', {students:data}).then(resp => {
+                    swal('Thành công', resp.data.message, 'success');
+                    GetData();
+                    $('#overlay').fadeOut();
+                }).catch((e) => {
+                    swal('Lỗi', 'Đã xảy ra lỗi', 'error');
+                    $('#overlay').fadeOut();
+                });
             }
             else {
                 if (getAllRows().length === 0) {

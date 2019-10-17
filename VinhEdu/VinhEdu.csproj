@@ -144,6 +144,10 @@
     <Compile Include="Migrations\201910120924063_initial.Designer.cs">
       <DependentUpon>201910120924063_initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910170313221_deleteclassbas.cs" />
+    <Compile Include="Migrations\201910170313221_deleteclassbas.Designer.cs">
+      <DependentUpon>201910170313221_deleteclassbas.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdditionalDefinition.cs" />
     <Compile Include="Models\Attendance.cs" />
@@ -984,7 +988,10 @@
     <Content Include="Content\images\default-avatar.jpg" />
     <Content Include="Content\images\login-bg.jpg" />
     <Content Include="Content\images\main-logo.png" />
+    <Content Include="Content\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\images\ui-icons_555555_256x240.png" />
     <Content Include="Content\images\user.png" />
+    <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\jqueryui.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\Pikaday\pikaday.css" />
@@ -995,6 +1002,11 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\aggrid\ag-grid-community.min.noStyle.js" />
+    <Content Include="Scripts\aggrid\ag-grid.css" />
+    <Content Include="Scripts\aggrid\ag-theme-balham.css" />
+    <Content Include="Scripts\aggrid\ag-theme-bootstrap.css" />
+    <Content Include="Scripts\aggrid\ag-theme-material.css" />
     <Content Include="Scripts\aggrid\DateEditor.js" />
     <Content Include="Scripts\axios.js" />
     <Content Include="Scripts\axios.min.js" />
@@ -1131,6 +1143,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\lodashcore.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
@@ -1175,6 +1188,7 @@
     <Content Include="Views\Shared\_PartialGrid.cshtml" />
     <Content Include="Views\Sweet\Alert.cshtml" />
     <Content Include="Views\Admin\AllStudent.cshtml" />
+    <Content Include="Views\Auth\ChangePass.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1196,6 +1210,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201910120924063_initial.resx">
       <DependentUpon>201910120924063_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910170313221_deleteclassbas.resx">
+      <DependentUpon>201910170313221_deleteclassbas.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
