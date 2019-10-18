@@ -17,6 +17,10 @@ namespace VinhEdu.Controllers
         UnitOfWork db = new UnitOfWork();
         public ActionResult Index()
         {
+            if (Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Admin");
+            }
             return RedirectToAction("Login");
         }
         public ActionResult Login()
@@ -116,6 +120,28 @@ namespace VinhEdu.Controllers
                 }
             }
             return View();
+        }
+        [Authorize(Roles = "admin")]
+        public JsonResult ChangeUserPass(string Identifier, string NewPass)
+        {
+            try
+            {
+                bool exist = db.UserRepository.CheckExistByIdentifier(Identifier);
+                if (exist)
+                {
+                    User u = db.UserRepository.FindByIdentifier(Identifier);
+                    u.Password = Common.CalculateMD5Hash(NewPass);
+                    db.SaveChanges();
+                    return Json("Thành công", JsonRequestBehavior.AllowGet);
+                }
+                Response.StatusCode = 500;
+                return Json("Lỗi", JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception e)
+            {
+                Response.StatusCode = 500;
+                return Json(e.Message, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }
