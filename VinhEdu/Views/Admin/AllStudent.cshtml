@@ -358,14 +358,24 @@
         }
         function Switch() {
             var cID = $('#ClassSwitch').children("option:selected").val();
-            axios.post('Admin/SwitchClass', { ClassID: cID, Identifier: Student.Identifier }).then(resp => {
-                
+            axios.post('/Admin/SwitchClass', { ClassID: cID, Identifier: Student.Identifier }).then(resp => {
+                let result = resp.data.success;
+                if (result) {
+                    swal('Thành công', resp.data.message, 'success');
+                    GetData();
+                }
+                else {
+                    swal('Lỗi', resp.data.message, 'error');
+                }
+                SwitchModal.modal('hide');
             }).catch((e) => {
                 var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
                         type: 'pastel-danger',
                         allow_dismiss: false,
                         timer: 1000,
-                    });
+                });
+                SwitchModal.modal('hide');
+                GetData();
             });
         }
     </script>
