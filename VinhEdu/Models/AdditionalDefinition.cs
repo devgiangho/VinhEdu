@@ -42,8 +42,11 @@ namespace VinhEdu.Models
         }
         public enum UserStatus
         {
+            [Display(Name = "Hoạt động")]
             NotActivated = 0,
+            [Display(Name = "Không kích hoạt")]
             Activated = 1,
+            [Display(Name = "Đã xóa")]
             Deleted = 2,
 
         }

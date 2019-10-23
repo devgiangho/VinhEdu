@@ -174,7 +174,7 @@
         var getClass = function (id) {
             $.ajax({
                 type: "POST",
-                url: '/Admin/GetClassBySchoolID',
+                url: '/AdStudent/GetClassBySchoolID',
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify({ id: id }),
                 dataType: "json",
@@ -216,7 +216,7 @@
                 classID = $('#ClassID').children("option:selected").val();
                 $.ajax({
                     type: "POST",
-                    url: '/Admin/AddBatchStudent',
+                    url: '/AdStudent/AddBatchStudent',
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify({ students: getAllRows(), ClassID: classID, ConfigureID: Config }),
                     dataType: "json",
@@ -253,8 +253,7 @@
         function Validate(dat) {
             let re = dat.every((e) => {
                 return Object.values(e).every((sub) => {
-                        //console.log(sub);
-                        return sub ? true : false;
+                        return (sub || sub === 0) ? true : false;
                     })
             });
             return re;

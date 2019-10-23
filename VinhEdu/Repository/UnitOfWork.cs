@@ -14,6 +14,7 @@ namespace VinhEdu.Repository
         private GenericRepository<Class> classRepository;
         private GenericRepository<Configure> configRepository;
         private GenericRepository<ClassMember> memberRepository;
+        private GenericRepository<Subject> subjectRepository;
         public UserRepository UserRepository
         {
             get
@@ -67,6 +68,17 @@ namespace VinhEdu.Repository
                     memberRepository = new GenericRepository<ClassMember>(context);
                 }
                 return memberRepository;
+            }
+        }
+        public GenericRepository<Subject> SubjectRepository
+        {
+            get
+            {
+                if (subjectRepository == null)
+                {
+                    subjectRepository = new GenericRepository<Subject>(context);
+                }
+                return subjectRepository;
             }
         }
         internal void SaveChanges()

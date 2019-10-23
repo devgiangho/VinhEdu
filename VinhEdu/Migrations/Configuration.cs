@@ -319,7 +319,6 @@
                 ClassID = 1,
                 UserID = 4,
                 IsHomeTeacher = true,
-                IsCurrent = true,
                 ConfigureID = 1,
             });
             // Giao viên
@@ -328,7 +327,6 @@
                 ClassID = 1,
                 UserID = 5,
                 IsHomeTeacher = false,
-                IsCurrent = true,
                 ConfigureID = 1,
             });
             context.ClassMembers.AddOrUpdate(e => e.ClassID, new ClassMember
@@ -337,14 +335,12 @@
                 UserID = 6,
                 IsHomeTeacher = false,
                 ConfigureID = 1,
-                IsCurrent = true,
             });
             context.ClassMembers.AddOrUpdate(e => e.ClassID, new ClassMember
             {
                 ClassID = 1,
                 UserID = 7,
                 IsHomeTeacher = false,
-                IsCurrent = true,
                 ConfigureID = 1,
             });
             // Học sinh của lớp
@@ -353,7 +349,6 @@
                 ClassID = 1,
                 UserID = 8,
                 IsHomeTeacher = false,
-                IsCurrent = true,
                 ConfigureID = 1,
                 LearnStatus = LearnStatus.Learning,
             });
@@ -362,7 +357,6 @@
                 ClassID = 1,
                 UserID = 9,
                 IsHomeTeacher = false,
-                IsCurrent = true,
                 ConfigureID = 1,
                 LearnStatus = LearnStatus.Learning,
             });
@@ -371,7 +365,6 @@
                 ClassID = 1,
                 UserID = 10,
                 IsHomeTeacher = false,
-                IsCurrent = true,
                 ConfigureID = 1,
                 LearnStatus = LearnStatus.Learning,
             });
@@ -380,7 +373,6 @@
                 ClassID = 1,
                 UserID = 11,
                 IsHomeTeacher = false,
-                IsCurrent = true,
                 LearnStatus = LearnStatus.Learning,
                 ConfigureID = 1,
             });
@@ -389,7 +381,6 @@
                 ClassID = 1,
                 UserID = 12,
                 IsHomeTeacher = false,
-                IsCurrent = true,
                 ConfigureID = 1,
                 LearnStatus = LearnStatus.Learning,
             });

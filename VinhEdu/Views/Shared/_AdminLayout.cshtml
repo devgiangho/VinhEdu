@@ -61,7 +61,6 @@
     <link rel="stylesheet" href="~/Content/sweetalert/sweet-alert.css" />
     <script src="~/Scripts/sweetalert.min.js"></script>
     <script src="~/Scripts/jquery-ui.js"></script>
-    @*<script src="~/Scripts/lodashcore.js"></script>*@
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -82,17 +81,6 @@
                 </li>
 
             </ul>
-
-            @*<form class="form-inline ml-3" action="/Admin/ListPost">
-                <div class="input-group input-group-sm">
-                    <input name="titleStr" value="@(ViewBag.titleStr as string)" class="form-control form-control-navbar" type="search" placeholder="Tìm bài viết" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-navbar" type="submit">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>*@
 
         </nav>
         <!-- Main Sidebar Container -->
@@ -152,13 +140,13 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/Admin/CreateUser" class="nav-link">
+                                        <a href="/Admin/CreateTeacher" class="nav-link">
                                             <i class="fa fa-circle-o nav-icon text-success"></i>
                                             <p>Thêm giáo viên</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/Admin/AllUser" class="nav-link">
+                                        <a href="/Admin/AllTeacher" class="nav-link">
                                             <i class="fa fa-circle-o nav-icon text-info"></i>
                                             <p>Tất cả giáo viên</p>
                                         </a>
@@ -176,7 +164,7 @@
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fa fa-user-circle"></i>
                                 <p>
-                                    Người dùng
+                                    Tài khoản
                                     <i class="fa fa-angle-left right"></i>
                                 </p>
                             </a>
@@ -187,17 +175,6 @@
                                         <p>Đổi mật khẩu</p>
                                     </a>
                                 </li>
-                                @{ if (User.IsInRole("admin"))
-                                    {
-                                        <li class="nav-item">
-                                            <a href="/User/Manage" class="nav-link">
-                                                <i class="fa fa-circle-o nav-icon text-success"></i>
-                                                <p>Quản lý người dùng</p>
-                                            </a>
-                                        </li>
-                                    }
-                                }
-
                             </ul>
                         </li>
                         <li class="nav-header" style="font-size:1.1rem">Công cụ</li>

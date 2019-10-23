@@ -25,7 +25,7 @@ namespace VinhEdu.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ConfigureID { get; internal set; }
 
-        public bool IsCurrent { get; set; }
+        //public bool IsCurrent { get; set; }
 
         public bool? IsHomeTeacher { get; set; }
         public LearnStatus LearnStatus { get; set; }

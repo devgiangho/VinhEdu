@@ -1,0 +1,158 @@
+﻿@model VinhEdu.ViewModels.TeacherViewModel
+@{
+    ViewBag.Title = "Thêm giáo viên";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+    <div class="container-fluid" style="margin-top:15px;padding-top:15px;">
+        <form method="post" id="createGV">
+
+            <div class="row">
+                <div class="col-md-2">
+                    Niên khóa:
+                    @Html.DropDownList("ConfigureID", (IEnumerable<SelectListItem>)ViewBag.Config, new { @class = "form-control" })
+                </div>
+                <div class="col-md-4">
+                    Trường:
+                    @Html.DropDownList("SchoolID", (IEnumerable<SelectListItem>)ViewBag.SchoolList, new { @class = "form-control" })
+                </div>
+                <div class="col-md-1">
+                    Lớp:
+                    <select class="form-control" id="ClassID" name="ClassID">
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        Môn học:<br />
+                        @Html.DropDownListFor(m => m.SubjectID, Model.Subject, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SubjectID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Quiz">Tên :</label><br />
+                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Quiz">Email:</label><br />
+                        @Html.TextBoxFor(m => m.Identifier, new { @class = "form-control", @placeholder = "Email" })
+                        @Html.ValidationMessageFor(model => model.Identifier, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="Quiz">Giới tính:</label><br />
+                        @Html.EnumDropDownListFor(m => m.Gender, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label for="Quiz">Password:</label><br />
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="Quiz">Trạng thái:</label><br />
+                        @Html.EnumDropDownListFor(m => m.Status, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="Quiz">Ngày sinh:</label><br />
+                        <input type="date" name="DateOfBirth" class="form-control" />
+                        @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Thêm giáo viên</button>
+            </div>
+        </form>
+    </div>
+<script>
+    var schoolID,classID;
+    $(document).ready(function () {
+            schoolID = $('#SchoolID').children("option:selected").val();
+            getClass(schoolID);
+            classID = $('#ClassID').children("option:selected").val();
+    });
+    $('#SchoolID').change(function () {
+        schoolID = $('#SchoolID').children("option:selected").val();
+        getClass(schoolID);
+    });
+    var getClass = function (id) {
+            $.ajax({
+                type: "POST",
+                url: '/AdStudent/GetClassBySchoolID',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ id: id }),
+                dataType: "json",
+                success: function (data) {
+                    $('#ClassID').empty();
+                    if (data.length > 0) {
+                        data.forEach((e) => {
+                            $('#ClassID').append('<option value=' + e.ClassID + '>' + e.ClassName + '</option>');
+                        });
+                    }
+                },
+                error: function () {
+                    var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
+                        type: 'pastel-danger',
+                        allow_dismiss: false,
+                        timer: 1000,
+                    });
+                }
+            });
+    }
+    $('#createGV').submit(function (e) {
+        e.preventDefault();
+        $('#overlay').fadeIn();
+        
+        var tempdata = $(this).serializeFormJSON();
+        console.log(tempdata);
+        axios.post('/AdTeacher/CreateTeacher', {model: tempdata }).then(resp => {
+            
+            $('#overlay').fadeOut();
+            if (resp.data.success) {
+                swal('Thành công', resp.data.message, 'success');
+                setTimeout(function () {
+                    location.reload();
+                },1000)
+            }
+            else {
+                swal("Lỗi", resp.data.message, "error");
+            }
+        }).catch((e) => {
+            $('#overlay').fadeOut();
+            swal("Lỗi", "Xảy ra lỗi", "error");
+        });
+    });
+</script>
+<script>
+    //JQUERY PLUGIN
+    (function ($) {
+        $.fn.serializeFormJSON = function () {
+
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+    })(jQuery);
+</script>
