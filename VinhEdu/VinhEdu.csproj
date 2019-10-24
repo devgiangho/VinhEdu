@@ -161,6 +161,14 @@
     <Compile Include="Migrations\201910180639156_remove-isCurrent.Designer.cs">
       <DependentUpon>201910180639156_remove-isCurrent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910240807242_addteachertoschool.cs" />
+    <Compile Include="Migrations\201910240807242_addteachertoschool.Designer.cs">
+      <DependentUpon>201910240807242_addteachertoschool.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910240810194_addteachertoschool1.cs" />
+    <Compile Include="Migrations\201910240810194_addteachertoschool1.Designer.cs">
+      <DependentUpon>201910240810194_addteachertoschool1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdditionalDefinition.cs" />
     <Compile Include="Models\Attendance.cs" />
@@ -184,6 +192,7 @@
     <Compile Include="ViewModels\StudentList.cs" />
     <Compile Include="ViewModels\StudentLoginViewModel.cs" />
     <Compile Include="ViewModels\TeacherList.cs" />
+    <Compile Include="ViewModels\TeacherOnCLass.cs" />
     <Compile Include="ViewModels\TeacherViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1146,6 +1155,7 @@
     <Content Include="Content\bootstrap\mixins.less" />
     <Content Include="Scripts\axios.min.map" />
     <Content Include="Scripts\axios.map" />
+    <Content Include=".editorconfig" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -1205,6 +1215,7 @@
     <Content Include="Views\Auth\ChangePass.cshtml" />
     <Content Include="Views\Admin\CreateTeacher.cshtml" />
     <Content Include="Views\Admin\AllTeacher.cshtml" />
+    <Content Include="Views\Admin\TeacherClass.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1237,6 +1248,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910180639156_remove-isCurrent.resx">
       <DependentUpon>201910180639156_remove-isCurrent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910240807242_addteachertoschool.resx">
+      <DependentUpon>201910240807242_addteachertoschool.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910240810194_addteachertoschool1.resx">
+      <DependentUpon>201910240810194_addteachertoschool1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

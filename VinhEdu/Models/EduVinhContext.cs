@@ -30,10 +30,10 @@ namespace VinhEdu.Models
             //    .Property(e => e.TeacherList)
             //    .IsUnicode(false);
 
-            //modelBuilder.Entity<Class>()
-            //    .HasMany(e => e.Attendances)
-            //    .WithRequired(e => e.Class)
-            //    .WillCascadeOnDelete(false);
+            modelBuilder.Entity<School>()
+                .HasMany(e => e.Teachers)
+                .WithOptional(e => e.School)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Class>()
                 .HasMany(e => e.ClassMembers)

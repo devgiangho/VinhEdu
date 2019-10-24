@@ -34,6 +34,7 @@
             {
                 ID = 2,
                 Identifier = "ngocnguyen123@gmail.com",
+                SchoolID = 1,
                 FullName = "Nguyễn Ngọc",
                 Type = UserType.HeadMaster,
                 Role = "headmaster",
@@ -49,6 +50,7 @@
                 ID = 3,
                 Identifier = "ngocnguyenabc@gmail.com",
                 FullName = "Hiệu Trưởng 2",
+                SchoolID = 2,
                 Type = UserType.HeadMaster,
                 Role = "headmaster",
                 Status = UserStatus.Activated,
@@ -163,6 +165,7 @@
                 ID = 4,
                 Identifier = "giaovien1@gmail.com",
                 SubjectID = 1,
+                SchoolID =1,
                 FullName = "Giáo Viên Toán",
                 Type = UserType.Teacher,
                 Role = "teacher",
@@ -175,6 +178,7 @@
             context.Users.AddOrUpdate(e => e.ID, new User
             {
                 ID = 5,
+                SchoolID = 1,
                 Identifier = "giaovien2@gmail.com",
                 FullName = "Giáo Viên Văn",
                 SubjectID = 2,
@@ -189,6 +193,7 @@
             context.Users.AddOrUpdate(e => e.ID, new User
             {
                 ID = 6,
+                SchoolID = 1,
                 Identifier = "giaovien3@gmail.com",
                 FullName = "Giáo Viên Anh",
                 Type = UserType.Teacher,
@@ -205,6 +210,7 @@
                 ID = 7,
                 Identifier = "giaovien4@gmail.com",
                 FullName = "Nguyễn Ngọc",
+                SchoolID = 2,
                 Type = UserType.Teacher,
                 SubjectID = 4,
                 Role = "teacher",

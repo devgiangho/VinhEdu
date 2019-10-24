@@ -21,7 +21,7 @@ namespace VinhEdu.ViewModels
         [Required]
         public string FullName { get; set; }
         [Required]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; } = DateTime.Now;
 
         public UserStatus Status { get; set; }
         [Required]

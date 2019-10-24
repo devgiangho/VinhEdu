@@ -24,13 +24,11 @@ namespace VinhEdu.Models
         [StringLength(50)]
         public string FullName { get; set; }
 
-        //[StringLength(50)]
-        //public string StudentID { get; set; }
-
         [StringLength(100)]
         public string Identifier { get; set; }
 
         public int? SubjectID { get; set; }
+        public int? SchoolID { get; set; }
 
         [Required]
         [StringLength(15)]
@@ -63,5 +61,6 @@ namespace VinhEdu.Models
         public virtual ICollection<PointBoard> PointBoards { get; set; }
 
         public virtual Subject Subject { get; set; }
+        public virtual School School { get; set; }
     }
 }

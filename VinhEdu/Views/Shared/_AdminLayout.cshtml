@@ -122,7 +122,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-edit"></i>
                                     <p>
-                                        Quản Lý
+                                        Quản Lý Học Sinh
                                         <i class="right fa fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -139,6 +139,17 @@
                                             <p>Tất cả học sinh</p>
                                         </a>
                                     </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fa fa-graduation-cap"></i>
+                                    <p>
+                                        Quản Lý Giáo Viên
+                                        <i class="right fa fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="/Admin/CreateTeacher" class="nav-link">
                                             <i class="fa fa-circle-o nav-icon text-success"></i>
@@ -152,54 +163,39 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/Admin/Configure" class="nav-link">
+                                        <a href="/Admin/TeacherClass" class="nav-link">
                                             <i class="fa fa-circle-o nav-icon text-info"></i>
-                                            <p>Quản lý thông tin</p>
+                                            <p>Quản lý đứng lớp</p>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
-                        }
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fa fa-user-circle"></i>
-                                <p>
-                                    Tài khoản
-                                    <i class="fa fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="/Auth/ChangePass" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon text-danger"></i>
-                                        <p>Đổi mật khẩu</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-header" style="font-size:1.1rem">Công cụ</li>
-                        @*@if (User.IsInRole("admin"))
-                        {
+                                }
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fa fa-user-circle"></i>
+                                    <p>
+                                        Tài khoản
+                                        <i class="fa fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="/Auth/ChangePass" class="nav-link">
+                                            <i class="fa fa-circle-o nav-icon text-danger"></i>
+                                            <p>Đổi mật khẩu</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-header" style="font-size:1.1rem">Công cụ</li>
                             <li class="nav-item">
-                                <a href="/Admin/InfoChange" class="nav-link">
-                                    <i class="nav-icon fa fa-circle-o text-success"></i>
-                                    <p>Thông tin website</p>
+                                <a href="/Auth/Logout" class="nav-link">
+                                    <i class="nav-icon fa fa-sign-out text-danger"></i>
+                                    <p>Đăng xuất</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="/Admin/HotPostManager" class="nav-link">
-                                    <i class="nav-icon fa fa-circle-o text-success"></i>
-                                    <p>Quản lý bài ghim</p>
-                                </a>
-                            </li>
-                        }*@
-                        <li class="nav-item">
-                            <a href="/Auth/Logout" class="nav-link">
-                                <i class="nav-icon fa fa-sign-out text-danger"></i>
-                                <p>Đăng xuất</p>
-                            </a>
-                        </li>
-                    </ul>
+                        </ul>
                 </nav>
             </div>
         </aside>

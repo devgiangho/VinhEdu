@@ -74,7 +74,6 @@
             field: "DateOfBirth",
             editable: true, resizable: true,
             cellEditor: DateEditor,
-            suppressSizeToFit: true
         },
         {
             headerName: "Môn học",
@@ -165,7 +164,7 @@
         let rowData = [];
         gridOptions.api.forEachNode(node => rowData.push(node.data));
         return rowData.map((e) => {
-            return { ...e, Gender: e.Gender == 'Nam' ? 0 : 1, Status: e.Status == 'Non-Active' ? 0 : 1 }
+            return { ...e, Gender: e.Gender == 'Nam' ? 0 : 1, Status: e.Status === 'Non-Active' ? 0 : 1, IsHomeTeacher: e.IsHomeTeacher === "Yes" ? true : false }
         });
     }
     function compareData(arr1, arr2) {
@@ -187,7 +186,7 @@
         let re = dat.every((e) => {
             return Object.values(e).every((sub) => {
                 ///console.log(sub);
-                return (sub || sub === 0) ? true : false;
+                return (sub || sub === 0 || sub === false) ? true : false;
             })
         });
         return re;

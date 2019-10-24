@@ -52,6 +52,10 @@ namespace VinhEdu.Repository
             T existing = table.Find(id);
             table.Remove(existing);
         }
+        public void Delete(T obj)
+        {
+            table.Remove(obj);
+        }
         public void Save()
         {
             _context.SaveChanges();

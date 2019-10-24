@@ -1,0 +1,253 @@
+﻿
+@{
+    ViewBag.Title = "Quản lý đứng lớp";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@Html.Partial("_PartialGrid")
+    <div class="container-fluid" style="margin-top:15px;padding-top:15px;">
+        <div class="card-header">
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    Trường:
+                    @Html.DropDownList("SchoolID", (IEnumerable<SelectListItem>)ViewBag.SchoolList, new { @class = "form-control" })
+                </div>
+                <div class="col-md-1">
+                    Lớp:
+                    @Html.DropDownList("ClassID", (IEnumerable<SelectListItem>)ViewBag.Class, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    Niên khóa:
+                    @Html.DropDownList("ConfigureID", (IEnumerable<SelectListItem>)ViewBag.Config, new { @class = "form-control" })
+                </div>
+                <div class="col-md-6 pt-4">
+                    <button class="btn btn-outline-primary" onclick="SwitchGV()">Đổi giáo viên</button>
+                </div>
+            </div>
+            
+        </div>
+        <div id="myGrid" style="height: 600px;width:100%;" class="ag-theme-balham"></div>
+        <div class="modal fade" id="SwitchModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Đổi giáo viên: </h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <p id="stdShow" class="align-content-center"></p>
+                        <div class="row mb-2">
+                            <p class="col-4">Chọn giáo viên: </p>
+                            <select id="TeacherSwitch" class="form-control col-8"></select>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" onclick="Switch()" class="btn btn-danger">Đổi</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    var Subject = {};
+    // specify the columns
+    var columnDefs = [
+        { headerName: "ID", field: "SubjectID", hide: true, editable: false, resizable: true },
+        { headerName: "Môn học", field: "SubjectName", editable: false, resizable: true },
+         { headerName: "TeacherID", field: "TeacherID",hide:true, editable: false, resizable: true },
+        { headerName: "Giáo viên", field: "FullName", editable: false, resizable: true },
+        {
+            headerName: "Là chủ nhiệm",
+            field: "IsHomeTeacher",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "Giới tính", field: "Gender",
+            editable: false, resizable: true,
+            cellEditor: 'agSelectCellEditor',
+            cellEditorParams: {
+                values: ['Nam', 'Nữ']
+            }
+        },
+    ];
+
+    // specify the data
+    var rowData = [];
+
+    // let the grid know which columns and what data to use
+    var gridOptions = {
+        columnDefs: columnDefs,
+        rowData: rowData,
+        rowSelection: 'single',
+        onSelectionChanged: onSelectionChanged,
+        headerHeight: '28px'
+    };
+    function onSelectionChanged() {
+        var selectedRows = gridOptions.api.getSelectedRows();
+        Subject.ID = selectedRows[0].SubjectID;
+        Subject.Name = selectedRows[0].SubjectName;
+        Subject.TeacherID = selectedRows[0].TeacherID;
+    }
+    // lookup the container we want the Grid to use
+    var eGridDiv = document.querySelector('#myGrid');
+
+    // create the grid passing in the div to use together with the columns & data we want to use
+    new agGrid.Grid(eGridDiv, gridOptions);
+
+</script>
+<script>
+    var SchoolID, ClassID, Config;
+    $(document).ready(function () {
+        SchoolID = $('#SchoolID').children("option:selected").val();
+        ClassID = $('#ClassID').children("option:selected").val();
+        Config = $('#ConfigureID').children("option:selected").val();
+        GetData();
+    });
+    $('#ClassID').change(() => {
+        ClassID = $('#ClassID').children("option:selected").val();
+        GetData();
+    });
+    $('#ConfigureID').change(() => {
+        GetData();
+    });
+    $('#SchoolID').change(() => {
+        ClearData();
+        SchoolID = $('#SchoolID').children("option:selected").val();
+        GetClass(SchoolID);
+        ClassID = $('#ClassID').children("option:selected").val();
+    });
+</script>
+<script>
+    function ClearData() {
+        gridOptions.api.setRowData([]);
+    }
+    var GetClass = function (id) {
+        $.ajax({
+            type: "POST",
+            url: '/AdStudent/GetClassBySchoolID',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ id: id }),
+            dataType: "json",
+            success: function (data) {
+                $('#ClassID').empty();
+                if (data.length > 0) {
+                    var count = 1;
+                    data.forEach((e) => {
+                        $('#ClassID').append('<option value=' + e.ClassID + ' ' + (count === 1 ? 'selected' : '') + '>' + e.ClassName + '</option>');
+                        count++;
+                    });
+                }
+                GetData();
+            },
+            error: function () {
+                var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
+                    type: 'pastel-danger',
+                    allow_dismiss: false,
+                    timer: 1000,
+                });
+            }
+        });
+    }
+    var GetClassModal = function (id) {
+        axios.post('/AdStudent/GetClassBySchoolID', { id: id }).then(resp => {
+            $('#ClassSwitch').empty();
+            if (resp.data.length > 0) {
+                var check = true;
+                resp.data.forEach((e) => {
+                    $('#ClassSwitch').append('<option value=' + e.ClassID + ' ' + (check === true ? 'selected' : '') + '>' + e.ClassName + '</option>');
+                    check = false;
+                });
+            }
+        }).catch((e) => {
+            var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
+                type: 'pastel-danger',
+                allow_dismiss: false,
+                timer: 1000,
+            });
+        });
+    }
+    function GetData() {
+        ClassID = $('#ClassID').children("option:selected").val();
+        Config = $('#ConfigureID').children("option:selected").val();
+        axios.post('/AdTeacher/GetTeacherOnClass', { ClassID: ClassID, ConfigureID: Config }).then(resp => {
+            ClearData();
+            resp.data.forEach((e) => {
+                newRow = {
+                    SubjectID: e.SubjectID,
+                    SubjectName: e.SubjectName,
+                    TeacherID: e.TeacherID,
+                    FullName: e.FullName,
+                    IsHomeTeacher: e.IsHomeTeacher ? "Yes" : "No",
+                    Gender: e.Gender == 0 ? 'Nam' : 'Nữ',
+                };
+                gridOptions.api.updateRowData({ add: [newRow] });
+            });
+            gridOptions.api.sizeColumnsToFit();
+        }).catch((err) => {
+            //swal("Lỗi", "Lỗi hệ thống", "error");
+            var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
+                type: 'pastel-danger',
+                allow_dismiss: false,
+                timer: 1000,
+            });
+        });
+
+    }
+</script>
+<script>
+    var modal = $('#SwitchModal');
+    function SwitchGV() {
+        if (!Subject.ID) {
+            swal('Lỗi', 'Bạn chưa chọn môn học', 'warning');
+        }
+        else {
+            GetTeacherBySubject();
+            modal.find('#stdShow').text('Môn: ' + Subject.Name)
+            modal.modal('show');
+        }
+    }
+    function GetTeacherBySubject() {
+        SchoolID = $('#SchoolID').children("option:selected").val();
+        axios.post('/AdTeacher/GetTeacherBySubject', { SchoolID: SchoolID, SubjectID: Subject.ID }).then(resp => {
+            $('#TeacherSwitch').empty();
+            if (resp.data.length > 0) {
+                var check = true;
+                resp.data.forEach((e) => {
+                    $('#TeacherSwitch').append('<option value=' + e.ID + ' ' + (check === true ? 'selected' : '') + '>' + e.FullName + '</option>');
+                    check = false;
+                });
+            }
+        }).catch((err) => {
+            //swal("Lỗi", "Lỗi hệ thống", "error");
+            var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
+                type: 'pastel-danger',
+                allow_dismiss: false,
+                timer: 1000,
+            });
+        });
+    }
+    function Switch() {
+        ClassID = $('#ClassID').children("option:selected").val();
+        Config = $('#ConfigureID').children("option:selected").val();
+        let NewID = $('#TeacherSwitch').children("option:selected").val();
+        axios.post('/AdTeacher/ChangeTeacherSubject', { ClassID:ClassID, ConfigID: Config, OldTeacherID: Subject.TeacherID, NewTeacherID: NewID }).then(resp => {
+            modal.modal('hide');
+            swal("Thành công", resp.data, "success");
+            $('#TeacherSwitch').empty();
+        }).catch((err) => {
+            modal.modal('hide');
+            var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
+                type: 'pastel-danger',
+                allow_dismiss: false,
+                timer: 1000,
+            });
+        });
+    }
+</script>

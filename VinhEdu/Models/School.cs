@@ -13,6 +13,7 @@ namespace VinhEdu.Models
         public School()
         {
             Classes = new HashSet<Class>();
+            Teachers = new HashSet<User>();
         }
 
         public int SchoolID { get; set; }
@@ -25,5 +26,7 @@ namespace VinhEdu.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Class> Classes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<User> Teachers { get; set; }
     }
 }
