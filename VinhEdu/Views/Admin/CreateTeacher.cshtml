@@ -121,10 +121,9 @@
             
             $('#overlay').fadeOut();
             if (resp.data.success) {
-                swal('Thành công', resp.data.message, 'success');
-                setTimeout(function () {
+                swal('Thành công', resp.data.message, 'success').then(() => {
                     location.reload();
-                },1000)
+                });
             }
             else {
                 swal("Lỗi", resp.data.message, "error");

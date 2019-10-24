@@ -200,7 +200,7 @@ namespace VinhEdu.Controllers
                 Configure Configure = db.ConfigRepository.GetAll().Where(e => e.IsActive).FirstOrDefault();
                 // Nếu chuyển ở năm học hiện tại thì cho phép, còn lại thì không
                 User student = db.UserRepository.FindByIdentifier(Identifier);
-                bool IsLearning = db.MemberRepository.GetAll().Any(e => e.LearnStatus == LearnStatus.Learning && e.ConfigureID == Configure.ID);
+                bool IsLearning = db.MemberRepository.GetAll().Any(e => e.LearnStatus == LearnStatus.Learning && e.ConfigureID == Configure.ID && e.UserID == student.ID);
                 if (!IsLearning)
                 {
                     return Json(new { message = "Học sinh này đã tốt nghiệp", success = false }, JsonRequestBehavior.AllowGet);

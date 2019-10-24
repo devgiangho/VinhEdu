@@ -1,11 +1,11 @@
 ﻿
 @{
-    ViewBag.Title = "Quản Lý Học Sinh";
+    ViewBag.Title = "Quản lý giáo viên";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 @Html.Partial("_PartialGrid")
 <div class="container-fluid" style="margin-top:15px;padding-top:15px;">
-    <h3>Quản lý học sinh</h3>
+    <h3>Quản lý giáo viên</h3>
     <div class="card-header">
         <div class="row mb-2">
             <div class="col-md-3">
@@ -22,46 +22,14 @@
             </div>
             <div class="col-md-6 pt-4">
                 <button class="btn btn-outline-danger" onclick="WarnDelete()">Xóa</button>
-                <button class="btn btn-outline-primary" onclick="SwitchClass()">Chuyển Lớp</button>
-                <button class="btn btn-outline-primary" onclick="ChangePassWord()">Đổi Mật Khẩu</button>
+                <button class="btn btn-outline-primary" onclick="ChangePassWord()">Đổi mật khẩu</button>
                 <button class="btn btn-outline-warning float-right" onclick="Submit()">Cập nhật</button>
             </div>
         </div>
     </div>
     <div id="myGrid" style="height: 600px;width:100%;" class="ag-theme-balham"></div>
 
-    <div class="modal fade" id="SwitchClassModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Chuyển lớp: </h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <p id="stdShow" class="align-content-center"></p>
-                    <div class="row mb-2">
-                        <p class="col-2 pt-1">Trường: </p>
-                        <select id="SchoolSwitch" class="form-control col-10"></select>
-                    </div>
-                    <div class="row">
-                        <p class="col-2 pt-1">Lớp</p>
-                        <select id="ClassSwitch" class="form-control col-10"></select>
-                    </div>
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" onclick="Switch()" class="btn btn-danger">Chuyển</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
     <div class="modal fade" id="ChangePassModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -91,14 +59,15 @@
     </div>
 
 </div>
+
 <script>
-    var Student = {};
+    var Teacher = {};
     var CurrentData = [];
     var SwitchModal = $('#SwitchClassModal');
     var ChangePassModal = $('#ChangePassModal');
     // specify the columns
     var columnDefs = [
-        { headerName: "Mã tài khoản", field: "Identifier", editable: false, resizable: true },
+        { headerName: "Email", field: "Identifier", editable: true, resizable: true },
         { headerName: "Họ và tên", field: "FullName", editable: true, resizable: true },
         {
             headerName: "Ngày sinh",
@@ -106,6 +75,16 @@
             editable: true, resizable: true,
             cellEditor: DateEditor,
             suppressSizeToFit: true
+        },
+        {
+            headerName: "Môn học",
+            field: "Subject",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "Là chủ nhiệm",
+            field: "IsHomeTeacher",
+            editable: false, resizable: true,
         },
         {
             headerName: "Giới tính", field: "Gender",
@@ -138,19 +117,14 @@
     };
     function onSelectionChanged() {
         var selectedRows = gridOptions.api.getSelectedRows();
-        Student.Identifier = selectedRows[0].Identifier;
-        Student.FullName = selectedRows[0].FullName;
+        Teacher.Identifier = selectedRows[0].Identifier;
+        Teacher.FullName = selectedRows[0].FullName;
     }
     // lookup the container we want the Grid to use
     var eGridDiv = document.querySelector('#myGrid');
 
     // create the grid passing in the div to use together with the columns & data we want to use
     new agGrid.Grid(eGridDiv, gridOptions);
-    function AddRow() {
-        var newItem = { Identifier: null, FullName: null, DateOfBirth: null, Gender: 'Nam' };
-        var res = gridOptions.api.updateRowData({ add: [newItem] });
-        console.log(res);
-    }
     function RemoveSelected() {
         var selectedData = gridOptions.api.getSelectedRows();
         var res = gridOptions.api.updateRowData({ remove: selectedData });
@@ -212,7 +186,7 @@
     function Validate(dat) {
         let re = dat.every((e) => {
             return Object.values(e).every((sub) => {
-                //console.log(sub);
+                ///console.log(sub);
                 return (sub || sub === 0) ? true : false;
             })
         });
@@ -278,7 +252,7 @@
     function GetData() {
         classID = $('#ClassID').children("option:selected").val();
         Config = $('#ConfigureID').children("option:selected").val();
-        axios.post('/AdStudent/GetStudent', { ClassID: classID, ConfigureID: Config }).then(resp => {
+        axios.post('/AdTeacher/GetTeacher', { ClassID: classID, ConfigureID: Config }).then(resp => {
             ClearData();
             let newdata = [];
             resp.data.forEach((e) => {
@@ -286,6 +260,8 @@
                     Identifier: e.Identifier,
                     FullName: e.FullName,
                     DateOfBirth: ToJavaScriptDate(e.DateOfBirth),
+                    Subject: e.SubjectName,
+                    IsHomeTeacher: e.IsHomeTeacher ? "Yes" : "No", 
                     Gender: e.Gender == 0 ? 'Nam' : 'Nữ',
                     Status: e.Status == 0 ? 'Non-Active' : 'Active'
                 };
@@ -305,13 +281,13 @@
 
     }
     function WarnDelete() {
-        if (!Student.FullName) {
-            swal('Lỗi', 'Bạn chưa chọn học sinh', 'warning');
+        if (!Teacher.FullName) {
+            swal('Lỗi', 'Bạn chưa chọn giáo viên', 'warning');
         }
         else {
             swal({
                 title: "Bạn chắc chứ ?",
-                text: "Bạn có chắc muốn xóa học sinh: " + Student.FullName,
+                text: "Bạn có chắc muốn xóa giáo viên: " + Teacher.FullName,
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -320,9 +296,9 @@
                     if (willDelete) {
                         $.ajax({
                             type: "POST",
-                            url: '/AdStudent/DeleteStudent',
+                            url: '/AdTeacher/DeleteTeacher',
                             contentType: "application/json; charset=utf-8",
-                            data: JSON.stringify({ Identifier: Student.Identifier }),
+                            data: JSON.stringify({ Identifier: Teacher.Identifier }),
                             dataType: "json",
                             success: function (data) {
                                 ClearData();
@@ -348,7 +324,7 @@
         if (data.length > 0 && checkFill === true && isUpdated === true) {
             Config = $('#ConfigureID').children("option:selected").val();
             classID = $('#ClassID').children("option:selected").val();
-            axios.post('/AdStudent/UpdateBatchStudent', { students: data }).then(resp => {
+            axios.post('/AdTeacher/UpdateBatchTeacher', { teachers: data }).then(resp => {
                 swal('Thành công', resp.data.message, 'success');
                 GetData();
                 $('#overlay').fadeOut();
@@ -370,59 +346,20 @@
             $('#overlay').fadeOut();
         }
     }
-    function SwitchClass() {
-        if (!Student.FullName) {
-            swal('Lỗi', 'Bạn chưa chọn học sinh', 'warning');
-        }
-        else {
-            $('#SchoolSwitch').empty();
-            var options = $("#SchoolID > option").clone();
-            $('#SchoolSwitch').append(options);
-
-            $('#ClassSwitch').empty();
-            var op2 = $("#ClassID > option").clone();
-            $('#ClassSwitch').append(op2);
-
-            SwitchModal.find('#stdShow').text(Student.FullName);
-            SwitchModal.modal('show');
-        }
-    }
-    function Switch() {
-        var cID = $('#ClassSwitch').children("option:selected").val();
-        axios.post('/AdStudent/SwitchClass', { ClassID: cID, Identifier: Student.Identifier }).then(resp => {
-            let result = resp.data.success;
-            if (result) {
-                swal('Thành công', resp.data.message, 'success');
-                GetData();
-            }
-            else {
-                swal('Lỗi', resp.data.message, 'error');
-            }
-            SwitchModal.modal('hide');
-        }).catch((e) => {
-            var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
-                type: 'pastel-danger',
-                allow_dismiss: false,
-                timer: 1000,
-            });
-            SwitchModal.modal('hide');
-            GetData();
-        });
-    }
     function ChangePassWord() {
-        if (!Student.FullName) {
-            swal('Lỗi', 'Bạn chưa chọn học sinh', 'warning');
+        if (!Teacher.FullName) {
+            swal('Lỗi', 'Bạn chưa chọn giáo viên', 'warning');
         }
         else {
             $('#NewPass').val('');
-            ChangePassModal.find('#stdShow').text(Student.FullName);
+            ChangePassModal.find('#stdShow').text(Teacher.FullName);
             ChangePassModal.modal('show');
         }
     }
     function ChangePassAJAX() {
         var pass = $('#NewPass').val();
-        axios.post('/Auth/ChangeUserPass', { Identifier: Student.Identifier, NewPass: pass }).then(resp => {
-            swal("Thành công", "Đổi mật khẩu thành công cho User : " + Student.FullName, "success");
+        axios.post('/Auth/ChangeUserPass', { Identifier: Teacher.Identifier, NewPass: pass }).then(resp => {
+            swal("Thành công", "Đổi mật khẩu thành công cho User : " + Teacher.FullName, "success");
             ChangePassModal.modal('hide');
         }).catch((er) => {
             swal("Lỗi", "Lỗi hệ thống", "error");

@@ -183,6 +183,7 @@
     <Compile Include="ViewModels\SchoolListViewModel.cs" />
     <Compile Include="ViewModels\StudentList.cs" />
     <Compile Include="ViewModels\StudentLoginViewModel.cs" />
+    <Compile Include="ViewModels\TeacherList.cs" />
     <Compile Include="ViewModels\TeacherViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1203,6 +1204,7 @@
     <Content Include="Views\Admin\AllStudent.cshtml" />
     <Content Include="Views\Auth\ChangePass.cshtml" />
     <Content Include="Views\Admin\CreateTeacher.cshtml" />
+    <Content Include="Views\Admin\AllTeacher.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
