@@ -19,8 +19,11 @@
                     Niên khóa:
                     @Html.DropDownList("ConfigureID", (IEnumerable<SelectListItem>)ViewBag.Config, new { @class = "form-control" })
                 </div>
-                <div class="col-md-6 pt-4">
+                <div class="col-md-3 pt-4">
                     <button class="btn btn-outline-primary" onclick="SwitchGV()">Đổi giáo viên</button>
+                </div>
+                <div class="col-md-3 pt-4">
+                    <button class="btn btn-outline-warning" onclick="GVCN()">Đặt chủ nhiệm</button>
                 </div>
             </div>
             
@@ -88,6 +91,8 @@
         Subject.ID = selectedRows[0].SubjectID;
         Subject.Name = selectedRows[0].SubjectName;
         Subject.TeacherID = selectedRows[0].TeacherID;
+        Subject.IsHomeTeacher = selectedRows[0].IsHomeTeacher;
+        Subject.FullName = selectedRows[0].FullName;
     }
     // lookup the container we want the Grid to use
     var eGridDiv = document.querySelector('#myGrid');
@@ -224,6 +229,42 @@
             GetTeacherBySubject();
             modal.find('#stdShow').text('Môn: ' + Subject.Name)
             modal.modal('show');
+        }
+    }
+    function GVCN() {
+        if (!Subject.ID) {
+            swal('Lỗi', 'Bạn chưa chọn môn học', 'warning');
+        }
+        else {
+            if (Subject.IsHomeTeacher == "Yes") {
+                swal('Lỗi', 'Giáo viên ' + Subject.FullName + ' đã là chủ nhiệm', 'warning');
+            }
+            else {
+                swal({
+                    title: "Bạn chắc chứ ?",
+                    text: "Bạn có chắc muốn đặt GV: " + Subject.FullName +' làm chủ nhiệm ?',
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willSet) => {
+                    if (willSet) {
+                        Config = $('#ConfigureID').children("option:selected").val();
+                        axios.post('/AdTeacher/ChangeHomeTeacher', { ClassID: ClassID, ConfigureID: Config, TeacherID: Subject.TeacherID })
+                            .then(dat => {
+                                let resp = dat.data;
+                                if (resp.success) {
+                                    swal("Thành công", resp.message, "success");
+                                    GetData();
+                                }
+                                else {
+                                    swal("Lỗi", resp.message, "error");
+                                }
+                            }).catch((e) => {
+                                swal("Lỗi", "Lỗi hệ thống", "error");
+                            });
+                    }
+                })
+            }
         }
     }
     function GetTeacherBySubject() {

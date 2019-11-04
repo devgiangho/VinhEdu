@@ -219,6 +219,35 @@ namespace VinhEdu.Controllers
                 return Json(e.Message, JsonRequestBehavior.AllowGet);
             }
         }
+        public JsonResult ChangeHomeTeacher(int ClassID,int ConfigureID,int TeacherID)
+        {
+            bool HasHomeTeacher = db.MemberRepository.GetAll().Any(e => e.ConfigureID == ConfigureID && ClassID == e.ClassID && e.IsHomeTeacher == true);
+            if(HasHomeTeacher)
+            {
+                ClassMember member = db.MemberRepository.GetAll()
+                    .Where(e => e.ConfigureID == ConfigureID && ClassID == e.ClassID && e.IsHomeTeacher == true)
+                    .First();
+                member.IsHomeTeacher = false;
+                db.SaveChanges();
+            }
+            bool IsMember = db.MemberRepository.GetAll()
+                .Any(e => e.ConfigureID == ConfigureID && ClassID == e.ClassID && e.UserID == TeacherID);
+            if(!IsMember)
+            {
+                return Json(new { success = false, message = "Giáo viên này chưa dạy lớp này." }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                ClassMember member = db.MemberRepository.GetAll()
+                .Where(e => e.ConfigureID == ConfigureID && ClassID == e.ClassID && e.UserID == TeacherID)
+                .First();
+                member.IsHomeTeacher = true;
+                db.SaveChanges();
+                return Json(new { success = true, message = "Đã đặt GVCN mới thành công!" }, JsonRequestBehavior.AllowGet);
+            }
+
+
+        }
         /// <summary>
         /// Xóa gv
         /// </summary>
