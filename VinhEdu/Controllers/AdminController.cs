@@ -61,7 +61,13 @@ namespace VinhEdu.Controllers
             List<School> lst = db.SchoolRepository.GetAll().ToList();
             List<Configure> configures = db.ConfigRepository.GetAll().OrderByDescending(e => e.IsActive).ToList();
             int SchoolId = lst.First().SchoolID;
-            List<Class> classes = db.ClassRepository.GetAll().Where(e => e.SchoolID == SchoolId).ToList();
+            List<Class> classes = new List<Class>();
+            classes.Add(new Class
+            {
+                ClassID = 0,
+                ClassName = "Tất cả"
+            });
+            classes.AddRange(db.ClassRepository.GetAll().Where(e => e.SchoolID == SchoolId).ToList());
             ViewBag.Class = new SelectList(classes, "ClassID", "ClassName");
             ViewBag.Config = new SelectList(configures, "ID", "SchoolYear");
             ViewBag.SchoolList = new SelectList(lst, "SchoolID", "SchoolName");
@@ -73,9 +79,16 @@ namespace VinhEdu.Controllers
             List<Configure> configures = db.ConfigRepository.GetAll().OrderByDescending(e => e.IsActive).ToList();
             int SchoolId = lst.First().SchoolID;
             List<Class> classes = db.ClassRepository.GetAll().Where(e => e.SchoolID == SchoolId).ToList();
+            //List<SubjectList> subjects = db.SubjectRepository.GetAll()
+            //    .Select(c => new SubjectList
+            //    { 
+            //        SubjectID = c.ID,
+            //        SubjectName = c.SubjectName,
+            //    }).ToList();
             ViewBag.Class = new SelectList(classes, "ClassID", "ClassName");
             ViewBag.Config = new SelectList(configures, "ID", "SchoolYear");
             ViewBag.SchoolList = new SelectList(lst, "SchoolID", "SchoolName");
+            //ViewBag.Subjects = subjects;
             return View();
         }
     }

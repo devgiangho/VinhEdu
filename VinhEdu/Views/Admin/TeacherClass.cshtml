@@ -71,20 +71,14 @@
         {
             headerName: "Giới tính", field: "Gender",
             editable: false, resizable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: ['Nam', 'Nữ']
-            }
         },
     ];
 
-    // specify the data
-    var rowData = [];
 
     // let the grid know which columns and what data to use
     var gridOptions = {
         columnDefs: columnDefs,
-        rowData: rowData,
+        rowData: [],
         rowSelection: 'single',
         onSelectionChanged: onSelectionChanged,
         headerHeight: '28px'
@@ -104,6 +98,7 @@
 </script>
 <script>
     var SchoolID, ClassID, Config;
+    var firstLoad = true;
     $(document).ready(function () {
         SchoolID = $('#SchoolID').children("option:selected").val();
         ClassID = $('#ClassID').children("option:selected").val();
@@ -125,6 +120,18 @@
     });
 </script>
 <script>
+    function getAllRows() {
+        let rowData = [];
+        gridOptions.api.forEachNode(node => rowData.push(node.data));
+        return rowData.map((e) => {
+            return { ...e, Gender: e.Gender == 'Nam' ? 0 : 1, IsHomeTeacher: e.IsHomeTeacher == 'Yes' ? true : false }
+        });
+    }
+    function getDisplayRows() {
+        let rowData = [];
+        gridOptions.api.forEachNode(node => rowData.push(node.data));
+        return rowData;
+    }
     function ClearData() {
         gridOptions.api.setRowData([]);
     }
@@ -178,6 +185,7 @@
         Config = $('#ConfigureID').children("option:selected").val();
         axios.post('/AdTeacher/GetTeacherOnClass', { ClassID: ClassID, ConfigureID: Config }).then(resp => {
             ClearData();
+            ///var current = firstLoad === true ? start_dat : getDisplayRows();
             resp.data.forEach((e) => {
                 newRow = {
                     SubjectID: e.SubjectID,
@@ -187,7 +195,12 @@
                     IsHomeTeacher: e.IsHomeTeacher ? "Yes" : "No",
                     Gender: e.Gender == 0 ? 'Nam' : 'Nữ',
                 };
+                //current.map((e2) => {
+                //    return e.SubjectID === e2.SubjectID ? newRow : e2; 
+                //});
+                //gridOptions.api.setRowData(current);
                 gridOptions.api.updateRowData({ add: [newRow] });
+                firstLoad = false;
             });
             gridOptions.api.sizeColumnsToFit();
         }).catch((err) => {
@@ -241,6 +254,7 @@
             modal.modal('hide');
             swal("Thành công", resp.data, "success");
             $('#TeacherSwitch').empty();
+            GetData();
         }).catch((err) => {
             modal.modal('hide');
             var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {

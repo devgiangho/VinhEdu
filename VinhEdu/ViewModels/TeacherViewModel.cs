@@ -37,6 +37,8 @@ namespace VinhEdu.ViewModels
         [Required]
         public int ClassID { get; set; }
         [Required]
+        public int SchoolID { get; set; }
+        [Required]
         public int ConfigureID { get; set; }
     }
 }

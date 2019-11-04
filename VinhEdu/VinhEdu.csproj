@@ -191,6 +191,7 @@
     <Compile Include="ViewModels\SchoolListViewModel.cs" />
     <Compile Include="ViewModels\StudentList.cs" />
     <Compile Include="ViewModels\StudentLoginViewModel.cs" />
+    <Compile Include="ViewModels\SubjectList.cs" />
     <Compile Include="ViewModels\TeacherList.cs" />
     <Compile Include="ViewModels\TeacherOnCLass.cs" />
     <Compile Include="ViewModels\TeacherViewModel.cs" />

@@ -27,7 +27,10 @@ namespace VinhEdu.Controllers
                 bool exist = db.UserRepository.CheckExistByIdentifier(model.Identifier);
                 if(!exist)
                 {
-                    var SchoolID = db.ClassRepository.FindByID(model.ClassID).SchoolID;
+                    //NẾU CÓ NGƯỜI KHÁC DẠY LỚP ĐÓ RỒI THÌ THÔI KHÔNG THÊM ĐƯỢC NỮA
+                    //bool check = db.MemberRepository.GetAll()
+                    //    .Any(e => e.ClassID == model.ClassID && e.User.SubjectID == model.SubjectID);
+                    var SchoolID = model.SchoolID;
                     User teacher = new User
                     {
                         Identifier = model.Identifier,
@@ -43,21 +46,18 @@ namespace VinhEdu.Controllers
                         CreateDate = DateTime.Now,
                     };
                     db.UserRepository.AddUser(teacher);
-                    //NẾU CÓ NGƯỜI KHÁC DẠY LỚP ĐÓ RỒI THÌ THÔI KHÔNG THÊM ĐƯỢC NỮA
-                    bool check = db.MemberRepository.GetAll()
-                        .Any(e => e.ClassID == model.ClassID && e.User.SubjectID == model.SubjectID);
-                    if(!check)
-                    {
-                        //Thêm vào lớp
-                        ClassMember member = new ClassMember
-                        {
-                            UserID = teacher.ID,
-                            ClassID = model.ClassID,
-                            ConfigureID = model.ConfigureID,
-                        };
-
-                        db.MemberRepository.Add(member);
-                    }
+                    
+                    //if(!check)
+                    //{
+                    //    //Thêm vào lớp
+                    //    ClassMember member = new ClassMember
+                    //    {
+                    //        UserID = teacher.ID,
+                    //        ClassID = model.ClassID,
+                    //        ConfigureID = model.ConfigureID,
+                    //    };
+                    //    db.MemberRepository.Add(member);
+                    //}
                     db.SaveChanges();
                     return Json(new { message = "Thành công", success = true }, JsonRequestBehavior.AllowGet);
                 }
@@ -76,7 +76,10 @@ namespace VinhEdu.Controllers
         /// <returns></returns>
         public JsonResult GetTeacher(int ClassID, int ConfigureID)
         {
-            var q = (from u in Context.Users
+            var q = new List<TeacherList>();
+            if (ClassID != 0)
+            {
+                q = (from u in Context.Users
                      join a in Context.ClassMembers
                      on u.ID equals a.UserID
                      where a.ConfigureID == ConfigureID && u.Type == AdditionalDefinition.UserType.Teacher && a.ClassID == ClassID
@@ -91,6 +94,24 @@ namespace VinhEdu.Controllers
                          SubjectName = u.Subject.SubjectName,
                          IsHomeTeacher = a.IsHomeTeacher,
                      }).ToList();
+            }
+            else
+            {
+                q = (from u in Context.Users
+                     where u.Type == AdditionalDefinition.UserType.Teacher
+                     && u.Status != AdditionalDefinition.UserStatus.Deleted
+                     select new TeacherList
+                     {
+                         Identifier = u.Identifier,
+                         DateOfBirth = u.DateOfBirth,
+                         FullName = u.FullName,
+                         Gender = u.Gender,
+                         Status = u.Status,
+                         SubjectName = u.Subject.SubjectName,
+                         IsHomeTeacher = false,
+                     }).ToList();
+            }
+            
 
             return Json(q, JsonRequestBehavior.AllowGet);
         }
@@ -116,8 +137,28 @@ namespace VinhEdu.Controllers
                          SubjectName = u.Subject.SubjectName,
                          IsHomeTeacher = a.IsHomeTeacher,
                      }).ToList();
-
-            return Json(q, JsonRequestBehavior.AllowGet);
+            List<SubjectList> subjects = db.SubjectRepository.GetAll()
+                .Select(c => new SubjectList
+                {
+                    SubjectID = c.ID,
+                    SubjectName = c.SubjectName,
+                }).ToList();
+            subjects.ForEach((item) =>
+            {
+                if(q.Any(a => a.SubjectID == item.SubjectID))
+                {
+                    TeacherOnCLass tc = q.Find(z => z.SubjectID == item.SubjectID);
+                    item.TeacherID = tc.TeacherID;
+                    item.FullName = tc.FullName;
+                    item.IsHomeTeacher = tc.IsHomeTeacher;
+                    item.Gender = tc.Gender;
+                }
+                else
+                {
+                    item.FullName = "Chưa chọn GV";
+                }
+            });
+            return Json(subjects, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// Lấy danh sách giáo viên của trường theo môn

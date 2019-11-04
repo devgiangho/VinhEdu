@@ -79,14 +79,21 @@ namespace VinhEdu.Controllers
                 if (exist)
                 {
                     var lst = db.ClassRepository.GetAll().Where(e => e.SchoolID == id)
-                    .Select(c => new
+                    .Select(c => new Class
                     {
-                        c.ClassID,
-                        c.ClassName,
+                       ClassID = c.ClassID,
+                       ClassName = c.ClassName,
                     })
                     .ToList();
+                    List<Class> classes = new List<Class>();
+                    classes.Add(new Class
+                    {
+                        ClassID = 0,
+                        ClassName = "Tất cả"
+                    });
+                    classes.AddRange(lst);
 
-                    return Json(lst, JsonRequestBehavior.AllowGet);
+                    return Json(classes, JsonRequestBehavior.AllowGet);
                 }
                 Response.StatusCode = 500;
                 return Json(new { Message = "Trường học không tồn tại" }, JsonRequestBehavior.AllowGet);
