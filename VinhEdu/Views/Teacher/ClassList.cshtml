@@ -1,0 +1,42 @@
+﻿@model IEnumerable<VinhEdu.ViewModels.ClassList>
+@{
+    ViewBag.Title = "Danh sách lớp dạy";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+    <div class="container-fluid" style="margin-top:15px;padding-top:15px;">
+        <h3>DS lớp dạy</h3>
+        <table id="lstPost" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên lớp</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <p>@item.ClassID</p>
+                        </td>
+                        <td>
+                            @item.ClassName
+                        </td>
+                        <td>
+                            @*@Html.ActionLink("Sửa", "Edit", new { id = item.ID }, new { @class = "badge badge-primary" })
+                            <a onclick="deleteConfirm(@item.ID,'@item.name')" href="#" class="badge badge-danger">Xóa</a>*@
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên lớp</th>
+                    <th>Hành động</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>

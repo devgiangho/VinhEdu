@@ -171,6 +171,15 @@
                                 </ul>
                             </li>
                         }
+                        @if (User.IsInRole("teacher"))
+                        {
+                            <li class="nav-item">
+                                <a href="/Teacher/ClassList" class="nav-link">
+                                    <i class="nav-icon fa fa-tasks text-info"></i>
+                                    <p>Danh sách lớp</p>
+                                </a>
+                            </li>
+                        }
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fa fa-user-circle"></i>
@@ -189,19 +198,22 @@
                             </ul>
                         </li>
                         <li class="nav-header" style="font-size:1.1rem">Công cụ</li>
-                        <li class="nav-item">
-                            <a href="/Admin/Setting" class="nav-link">
-                                <i class="nav-icon fa fa-cogs text-info"></i>
-                                <p>Thiết Lập</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/Auth/Logout" class="nav-link">
-                                <i class="nav-icon fa fa-sign-out text-danger"></i>
-                                <p>Đăng xuất</p>
-                            </a>
-                        </li>
-                    </ul>
+                        @if (User.IsInRole("admin"))
+                        {
+                            <li class="nav-item">
+                                <a href="/Admin/Setting" class="nav-link">
+                                    <i class="nav-icon fa fa-cogs text-info"></i>
+                                    <p>Thiết Lập</p>
+                                </a>
+                            </li>
+                        }
+                            <li class="nav-item">
+                                <a href="/Auth/Logout" class="nav-link">
+                                    <i class="nav-icon fa fa-sign-out text-danger"></i>
+                                    <p>Đăng xuất</p>
+                                </a>
+                            </li>
+                        </ul>
                 </nav>
             </div>
         </aside>

@@ -124,5 +124,4 @@ namespace VinhEdu.Controllers
         }
     }
 
-    
 }

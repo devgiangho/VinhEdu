@@ -27,6 +27,14 @@ namespace VinhEdu.Controllers
         {
             if (Request.IsAuthenticated)
             {
+                if (User.IsInRole("student"))
+                {
+                    return RedirectToAction("Index", "Student");
+                }
+                if (User.IsInRole("teacher") || User.IsInRole("headmaster"))
+                {
+                    return RedirectToAction("Index", "Teacher");
+                }
                 return RedirectToAction("Index", "Admin");
             }
             return View();
