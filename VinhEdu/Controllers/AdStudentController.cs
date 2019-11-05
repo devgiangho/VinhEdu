@@ -78,20 +78,20 @@ namespace VinhEdu.Controllers
                 bool exist = db.ClassRepository.GetAll().Where(e => e.SchoolID == id).Any();
                 if (exist)
                 {
-                    var lst = db.ClassRepository.GetAll().Where(e => e.SchoolID == id)
-                    .Select(c => new Class
+                    var classes = db.ClassRepository.GetAll().Where(e => e.SchoolID == id)
+                    .Select(c => new ClassSelect
                     {
-                       ClassID = c.ClassID,
-                       ClassName = c.ClassName,
+                        ClassID = c.ClassID,
+                        ClassName = c.ClassName,
                     })
                     .ToList();
-                    List<Class> classes = new List<Class>();
-                    classes.Add(new Class
-                    {
-                        ClassID = 0,
-                        ClassName = "Tất cả"
-                    });
-                    classes.AddRange(lst);
+                    //List<ClassSelect> classes = new List<ClassSelect>();
+                    //classes.Add(new ClassSelect
+                    //{
+                    //    ClassID = 0,
+                    //    ClassName = "Tất cả"
+                    //});
+                    //classes.AddRange(lst);
 
                     return Json(classes, JsonRequestBehavior.AllowGet);
                 }

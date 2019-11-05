@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using VinhEdu.Models;
 using VinhEdu.Repository;
 using VinhEdu.ViewModels;
+using static VinhEdu.Models.AdditionalDefinition;
 
 namespace VinhEdu.Controllers
 {
@@ -90,6 +91,36 @@ namespace VinhEdu.Controllers
             ViewBag.SchoolList = new SelectList(lst, "SchoolID", "SchoolName");
             //ViewBag.Subjects = subjects;
             return View();
+        }
+        [HttpGet]
+        public ViewResult Setting()
+        {
+            List<Configure> configures = db.ConfigRepository.GetAll().OrderByDescending(e => e.IsActive).ToList();
+            ViewBag.Config = new SelectList(configures, "ID", "SchoolYear");
+            Setting setting = Context.Settings.FirstOrDefault();
+            return View(setting);
+        }
+        [HttpPost]
+        public JsonResult Setting(string org,Semmester semmester, int ConfigID)
+        {
+            
+            Setting setting = Context.Settings.FirstOrDefault();
+            setting.OrganizationName = org;
+            setting.Semmester = semmester;
+            List<Configure> configure = Context.Configures.ToList();
+            configure.ForEach((e) =>
+            {
+                if (e.IsActive)
+                {
+                    e.IsActive = false;
+                }
+                if (e.ID == ConfigID)
+                {
+                    e.IsActive = true;
+                }
+            });
+            Context.SaveChanges();
+            return Json("Cập nhật thành công");
         }
     }
 

@@ -60,6 +60,13 @@
                 Gender = Gender.Male,
 
             });
+            //Thông tin sở
+            context.Settings.AddOrUpdate(e => e.ID, new Setting
+            {
+                ID = 1,
+                OrganizationName = "Phòng GD & ĐT Thành Phố Vinh",
+                Semmester = Semmester.HK1
+            });
             this.SeedData(context);
         }
         private void SeedData(VinhEdu.Models.EduVinhContext context)

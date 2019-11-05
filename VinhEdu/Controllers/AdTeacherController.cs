@@ -74,7 +74,7 @@ namespace VinhEdu.Controllers
         /// <param name="ClassID"></param>
         /// <param name="ConfigureID"></param>
         /// <returns></returns>
-        public JsonResult GetTeacher(int ClassID, int ConfigureID)
+        public JsonResult GetTeacher(int ClassID, int ConfigureID,int SchoolID = -1)
         {
             var q = new List<TeacherList>();
             if (ClassID != 0)
@@ -100,6 +100,7 @@ namespace VinhEdu.Controllers
                 q = (from u in Context.Users
                      where u.Type == AdditionalDefinition.UserType.Teacher
                      && u.Status != AdditionalDefinition.UserStatus.Deleted
+                     && u.SchoolID == SchoolID
                      select new TeacherList
                      {
                          Identifier = u.Identifier,
@@ -112,7 +113,6 @@ namespace VinhEdu.Controllers
                      }).ToList();
             }
             
-
             return Json(q, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
@@ -219,33 +219,44 @@ namespace VinhEdu.Controllers
                 return Json(e.Message, JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult ChangeHomeTeacher(int ClassID,int ConfigureID,int TeacherID)
+        /// <summary>
+        /// Thay đổi giáo viên chủ Nhiệm
+        /// </summary>
+        /// <param name="ClassID"></param>
+        /// <param name="ConfigureID"></param>
+        /// <param name="TeacherID"></param>
+        /// <returns></returns>
+        public JsonResult ChangeHomeTeacher(int ClassID, int ConfigureID, int TeacherID)
         {
-            bool HasHomeTeacher = db.MemberRepository.GetAll().Any(e => e.ConfigureID == ConfigureID && ClassID == e.ClassID && e.IsHomeTeacher == true);
-            if(HasHomeTeacher)
+            //Có đã là GVCN lớp nào chưa ?
+            bool IsAlreadyHomeTeacher = db.MemberRepository.GetAll()
+                .Any(e => e.ConfigureID == ConfigureID && e.UserID == TeacherID && e.IsHomeTeacher == true);
+            if (IsAlreadyHomeTeacher)
             {
-                ClassMember member = db.MemberRepository.GetAll()
-                    .Where(e => e.ConfigureID == ConfigureID && ClassID == e.ClassID && e.IsHomeTeacher == true)
-                    .First();
-                member.IsHomeTeacher = false;
-                db.SaveChanges();
+                return Json(new { success = false, message = "Giáo viên đã chủ nhiệm lớp khác." }, JsonRequestBehavior.AllowGet);
             }
             bool IsMember = db.MemberRepository.GetAll()
                 .Any(e => e.ConfigureID == ConfigureID && ClassID == e.ClassID && e.UserID == TeacherID);
-            if(!IsMember)
+            if (!IsMember)
             {
                 return Json(new { success = false, message = "Giáo viên này chưa dạy lớp này." }, JsonRequestBehavior.AllowGet);
             }
-            else
+            bool HasHomeTeacher = db.MemberRepository.GetAll()
+                .Any(e => e.ConfigureID == ConfigureID && ClassID == e.ClassID && e.IsHomeTeacher == true);
+            if (HasHomeTeacher)
             {
-                ClassMember member = db.MemberRepository.GetAll()
-                .Where(e => e.ConfigureID == ConfigureID && ClassID == e.ClassID && e.UserID == TeacherID)
-                .First();
-                member.IsHomeTeacher = true;
+                ClassMember memb = db.MemberRepository.GetAll()
+                    .Where(e => e.ConfigureID == ConfigureID && ClassID == e.ClassID && e.IsHomeTeacher == true)
+                    .First();
+                memb.IsHomeTeacher = false;
                 db.SaveChanges();
-                return Json(new { success = true, message = "Đã đặt GVCN mới thành công!" }, JsonRequestBehavior.AllowGet);
             }
-
+            ClassMember member = db.MemberRepository.GetAll()
+            .Where(e => e.ConfigureID == ConfigureID && ClassID == e.ClassID && e.UserID == TeacherID)
+            .First();
+            member.IsHomeTeacher = true;
+            db.SaveChanges();
+            return Json(new { success = true, message = "Đã đặt GVCN mới thành công!" }, JsonRequestBehavior.AllowGet);
 
         }
         /// <summary>
@@ -295,6 +306,44 @@ namespace VinhEdu.Controllers
                 return Json(e.Message, JsonRequestBehavior.AllowGet);
             }
 
+        }
+        /// <summary>
+        /// Lấy danh sách lớp AJAX cho QUẢN LÝ GV
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public JsonResult GetClassBySchoolID(int id)
+        {
+            try
+            {
+                bool exist = db.ClassRepository.GetAll().Where(e => e.SchoolID == id).Any();
+                if (exist)
+                {
+                    var lst = db.ClassRepository.GetAll().Where(e => e.SchoolID == id)
+                    .Select(c => new ClassSelect
+                    {
+                        ClassID = c.ClassID,
+                        ClassName = c.ClassName,
+                    })
+                    .ToList();
+                    List<ClassSelect> classes = new List<ClassSelect>();
+                    classes.Add(new ClassSelect
+                    {
+                        ClassID = 0,
+                        ClassName = "Tất cả"
+                    });
+                    classes.AddRange(lst);
+
+                    return Json(classes, JsonRequestBehavior.AllowGet);
+                }
+                Response.StatusCode = 500;
+                return Json(new { Message = "Trường học không tồn tại" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = 500;
+                return Json(new { Message = e }, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

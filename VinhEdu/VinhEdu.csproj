@@ -169,6 +169,14 @@
     <Compile Include="Migrations\201910240810194_addteachertoschool1.Designer.cs">
       <DependentUpon>201910240810194_addteachertoschool1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911050346113_ADDSETTING.cs" />
+    <Compile Include="Migrations\201911050346113_ADDSETTING.Designer.cs">
+      <DependentUpon>201911050346113_ADDSETTING.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911050823084_fix.cs" />
+    <Compile Include="Migrations\201911050823084_fix.Designer.cs">
+      <DependentUpon>201911050823084_fix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdditionalDefinition.cs" />
     <Compile Include="Models\Attendance.cs" />
@@ -178,6 +186,7 @@
     <Compile Include="Models\EduVinhContext.cs" />
     <Compile Include="Models\PointBoard.cs" />
     <Compile Include="Models\School.cs" />
+    <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\Subject.cs" />
     <Compile Include="Models\UpScoreObject.cs" />
     <Compile Include="Models\User.cs" />
@@ -188,6 +197,7 @@
     <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="Utilities\Common.cs" />
     <Compile Include="ViewModels\ChangePassViewModel.cs" />
+    <Compile Include="ViewModels\ClassSelect.cs" />
     <Compile Include="ViewModels\SchoolListViewModel.cs" />
     <Compile Include="ViewModels\StudentList.cs" />
     <Compile Include="ViewModels\StudentLoginViewModel.cs" />
@@ -1217,6 +1227,7 @@
     <Content Include="Views\Admin\CreateTeacher.cshtml" />
     <Content Include="Views\Admin\AllTeacher.cshtml" />
     <Content Include="Views\Admin\TeacherClass.cshtml" />
+    <Content Include="Views\Admin\Setting.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1255,6 +1266,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910240810194_addteachertoschool1.resx">
       <DependentUpon>201910240810194_addteachertoschool1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911050346113_ADDSETTING.resx">
+      <DependentUpon>201911050346113_ADDSETTING.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911050823084_fix.resx">
+      <DependentUpon>201911050823084_fix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

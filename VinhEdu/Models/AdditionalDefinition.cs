@@ -11,9 +11,9 @@ namespace VinhEdu.Models
         public enum Semmester
         {
             [Display(Name = "Học kỳ I")]
-            Teacher = 1,
+            HK1 = 1,
             [Display(Name = "Học kỳ II")]
-            Student = 2,
+            HK2 = 2,
         }
         public enum LoginType
         {

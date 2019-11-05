@@ -11,7 +11,7 @@ namespace VinhEdu.Models
             : base("name=EDUVinhCtx")
         {
         }
-
+        public virtual DbSet<Setting> Settings { get; set; }
         public virtual DbSet<Attendance> Attendances { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<ClassMember> ClassMembers { get; set; }

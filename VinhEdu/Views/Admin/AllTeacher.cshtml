@@ -206,7 +206,7 @@
     var GetClass = function (id) {
         $.ajax({
             type: "POST",
-            url: '/AdStudent/GetClassBySchoolID',
+            url: '/AdTeacher/GetClassBySchoolID',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({ id: id }),
             dataType: "json",
@@ -251,7 +251,8 @@
     function GetData() {
         classID = $('#ClassID').children("option:selected").val();
         Config = $('#ConfigureID').children("option:selected").val();
-        axios.post('/AdTeacher/GetTeacher', { ClassID: classID, ConfigureID: Config }).then(resp => {
+        schoolID = $('#SchoolID').children("option:selected").val();
+        axios.post('/AdTeacher/GetTeacher', { ClassID: classID, ConfigureID: Config, SchoolID: schoolID }).then(resp => {
             ClearData();
             let newdata = [];
             resp.data.forEach((e) => {

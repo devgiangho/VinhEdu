@@ -1,0 +1,40 @@
+﻿@model VinhEdu.Models.Setting
+@{
+    ViewBag.Title = "Cài đặt";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+    <div class="container-fluid" style="margin-top:15px;padding-top:15px;">
+        <h3>Setting</h3>
+            <div class="row">
+                <div class="col-md-12">
+                    Phòng GD:
+                    @Html.TextBoxFor(m => m.OrganizationName, new { @class = "form-control" })
+                </div>
+                <div class="col-md-6">
+                    Niên khóa:
+                    @Html.DropDownList("ConfigureID", (IEnumerable<SelectListItem>)ViewBag.Config, new { @class = "form-control" })
+                </div>
+                <div class="col-md-6">
+                    Học Kỳ:
+                    @Html.EnumDropDownListFor(m => m.Semmester, new { @class = "form-control" })
+                </div>
+                <button onclick="Update()" class="btn btn-danger mt-2 ml-2">CẬP NHẬT</button>
+            </div>
+    </div>
+<script>
+    function Update() {
+        let org = $('#OrganizationName').val();
+        let yearID = $('#ConfigureID').val();
+        let semmester = $('#Semmester').val();
+        if (org && org.length > 5 && yearID && semmester) {
+            axios.post('/Admin/Setting', { org: org, ConfigID: yearID, semmester: semmester }).then(resp => {
+                swal("Thành công", "Cập nhật thành công", "success");
+            }).catch((e) => {
+                swal("Lỗi", e, "error");
+            })
+        }
+        else {
+            swal("Lỗi", "Nhập lại thông tin", "warning");
+        }
+    }
+</script>
