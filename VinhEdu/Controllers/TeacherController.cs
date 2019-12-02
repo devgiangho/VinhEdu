@@ -90,7 +90,6 @@ namespace VinhEdu.Controllers
                                          StudentID = m.UserID,
                                          StudentName = m.User.FullName,
                                          TempScore = p.Score,
-                                         //Score = JsonConvert.DeserializeObject<Score>(p.Score)
                                      }).ToList();
             if(member.Count == 0)
             {
@@ -106,7 +105,6 @@ namespace VinhEdu.Controllers
                               StudentID = m.UserID,
                               StudentName = m.User.FullName,
                               TempScore = null,
-                              //Score = JsonConvert.DeserializeObject<Score>(p.Score)
                           }).ToList();
             }
             foreach (var item in member)
@@ -187,7 +185,7 @@ namespace VinhEdu.Controllers
                 return Json(new { Message = "Cập nhật thành công", Member = member, Success = true }, JsonRequestBehavior.AllowGet);
 
             }
-            return Json(new { Message = "Bạn nhập điểm không hợp lệ \n Điểm từ -1 (chưa có) đến 10", Success = false }, JsonRequestBehavior.AllowGet);
+            return Json(new { Message = "Bạn nhập điểm không hợp lệ \n Điểm từ x (chưa có) và 0 đến 10", Success = false }, JsonRequestBehavior.AllowGet);
         }
     }
 }

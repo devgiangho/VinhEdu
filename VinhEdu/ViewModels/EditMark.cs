@@ -27,27 +27,27 @@ namespace VinhEdu.ViewModels
     }
     public class Score
     {
-        [Range(-1,10)]
-        public int M1 { get; set; }
-        [Range(-1, 10)]
-        public int M2 { get; set; }
-        [Range(-1, 10)]
-        public int M3 { get; set; }
-        [Range(-1, 10)]
-        public int M4 { get; set; }
-        [Range(-1, 10)]
-        public int M5 { get; set; }
-        [Range(-1, 10)]
-        public int M6 { get; set; }
-        [Range(-1, 10)]
-        public int M7 { get; set; }
-        [Range(-1, 10)]
-        public int T1 { get; set; }
-        [Range(-1, 10)]
-        public int T2 { get; set; }
-        [Range(-1, 10)]
-        public int T3 { get; set; }
-        [Range(-1, 10)]
-        public int K1 { get; set; }
+        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        public string M1 { get; set; }
+        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        public string M2 { get; set; }
+        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        public string M3 { get; set; }
+        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        public string M4 { get; set; }
+        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        public string M5 { get; set; }
+        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        public string M6 { get; set; }
+        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        public string M7 { get; set; }
+        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        public string T1 { get; set; }
+        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        public string T2 { get; set; }
+        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        public string T3 { get; set; }
+        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        public string K1 { get; set; }
     }
 }
