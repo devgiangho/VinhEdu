@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using VinhEdu.Models;
 using VinhEdu.Repository;
+using static VinhEdu.Models.AdditionalDefinition;
 
 namespace VinhEdu.App_Start
 {
@@ -19,8 +20,9 @@ namespace VinhEdu.App_Start
                 UnitOfWork db = new UnitOfWork();
                 var user = db.UserRepository.FindByIdentifier(HttpContext.Current.User.Identity.Name);
                 var currentconfig = db.ConfigRepository.GetAll().Where(z => z.IsActive == true).FirstOrDefault();
-                var setting = db.context.Settings.FirstOrDefault().Semmester.GetDisplayName();
-                if(user != null)
+                Semester setting = db.context.Settings.FirstOrDefault().Semester;
+                //Object ValueSemester = Convert.ChangeType(setting, setting.GetTypeCode());
+                if (user != null)
                 {
                     HttpContext.Current.Session["UserID"] = user.ID;
                     HttpContext.Current.Session["Name"] = user.FullName;
@@ -28,7 +30,7 @@ namespace VinhEdu.App_Start
                     if(user.SubjectID != null)
                     {
                         HttpContext.Current.Session["SubjectID"] = user.SubjectID;
-                        HttpContext.Current.Session["Semester"] = setting;
+                        HttpContext.Current.Session["SemesterName"] = setting.GetDisplayName();
                     }
                 }
             }

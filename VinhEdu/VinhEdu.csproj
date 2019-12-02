@@ -185,6 +185,14 @@
     <Compile Include="Migrations\201911110305224_addsubject1.Designer.cs">
       <DependentUpon>201911110305224_addsubject1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912020632528_editpointboard.cs" />
+    <Compile Include="Migrations\201912020632528_editpointboard.Designer.cs">
+      <DependentUpon>201912020632528_editpointboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912020658453_editsemmester.cs" />
+    <Compile Include="Migrations\201912020658453_editsemmester.Designer.cs">
+      <DependentUpon>201912020658453_editsemmester.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdditionalDefinition.cs" />
     <Compile Include="Models\Attendance.cs" />
@@ -1235,13 +1243,14 @@
     <Content Include="Views\Teacher\ClassList.cshtml" />
     <Content Include="Views\Teacher\Index.cshtml" />
     <Content Include="Views\Teacher\PointBoard.cshtml" />
+    <Content Include="Views\Student\Index.cshtml" />
+    <Content Include="Views\Student\PointBoard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\client\" />
     <Folder Include="Views\AdStudent\" />
     <Folder Include="Views\AdTeacher\" />
-    <Folder Include="Views\Student\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -1284,6 +1293,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911110305224_addsubject1.resx">
       <DependentUpon>201911110305224_addsubject1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912020632528_editpointboard.resx">
+      <DependentUpon>201912020632528_editpointboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912020658453_editsemmester.resx">
+      <DependentUpon>201912020658453_editsemmester.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

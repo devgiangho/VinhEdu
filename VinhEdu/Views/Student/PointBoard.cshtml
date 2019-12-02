@@ -1,0 +1,132 @@
+﻿
+@{
+    ViewBag.Title = "PointBoard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@Html.Partial("_PartialGrid")
+<div class="container-fluid" style="margin-top:15px;padding-top:15px;">
+    <h3>Xem điểm @ViewBag.ClassName</h3>
+    <input type="hidden" id="ClassID" value="@ViewBag.ClassID" />
+    <div id="myGrid" style="height: 600px;width:100%;" class="ag-theme-balham"></div>
+
+</div>
+
+<script>
+    // specify the columns
+    var columnDefs = [
+        //{ headerName: "StudentID", field: "StudentID", hide: true, editable: false, resizable: true },
+        { headerName: "Môn Học", field: "SubjectName", editable: false, resizable: true, suppressSizeToFit: true },
+        {
+            headerName: "M1",
+            field: "Score.M1",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "M2",
+            field: "Score.M2",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "M3",
+            field: "Score.M3",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "M4",
+            field: "Score.M4",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "M5",
+            field: "Score.M5",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "M6",
+            field: "Score.M6",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "M7",
+            field: "Score.M7",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "T1",
+            field: "Score.T1",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "T2",
+            field: "Score.T2",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "T3",
+            field: "Score.T3",
+            editable: false, resizable: true,
+        },
+        {
+            headerName: "K1",
+            field: "Score.K1",
+            editable: false, resizable: true,
+        },
+    ];
+
+    // specify the data
+    var rowData = [];
+
+    // let the grid know which columns and what data to use
+    var gridOptions = {
+        columnDefs: columnDefs,
+        rowData: rowData,
+        rowSelection: 'single',
+        headerHeight: '28px'
+    };
+    // lookup the container we want the Grid to use
+    var eGridDiv = document.querySelector('#myGrid');
+
+    // create the grid passing in the div to use together with the columns & data we want to use
+    new agGrid.Grid(eGridDiv, gridOptions);
+</script>
+<script>
+    var ClassID = $('#ClassID').val();
+    $(document).ready(function () {
+        GetData();
+    });
+    function GetData() {
+        ClassID = $('#ClassID').val();
+        axios.get('/Student/GetCurrentPointBoard').then(resp => {
+            ClearData();
+            resp.data.forEach((e) => {
+                let hs = {
+                    ...e, Score: e.Score ? e.Score : {
+                        M1: -1,
+                        M2: -1,
+                        M3: -1,
+                        M4: -1,
+                        M5: -1,
+                        M6: -1,
+                        M7: -1,
+                        T1: -1,
+                        T2: -1,
+                        T3: -1,
+                        K1: -1,
+                    }
+                };
+                gridOptions.api.updateRowData({ add: [hs] });
+            });
+            gridOptions.api.sizeColumnsToFit();
+        }).catch((e) => {
+            swal('Lỗi', 'Lỗi hệ thống', 'error');
+        })
+    }
+    function ClearData() {
+        gridOptions.api.setRowData([]);
+    }
+    function getAllRows() {
+        let rowData = [];
+        gridOptions.api.forEachNode(node => rowData.push(node.data));
+        return rowData;
+    }
+</script>

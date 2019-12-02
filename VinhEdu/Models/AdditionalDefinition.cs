@@ -8,7 +8,7 @@ namespace VinhEdu.Models
 {
     public class AdditionalDefinition
     {
-        public enum Semmester
+        public enum Semester
         {
             [Display(Name = "Học kỳ I")]
             HK1 = 1,

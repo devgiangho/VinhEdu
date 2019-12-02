@@ -19,7 +19,7 @@ namespace VinhEdu.Models
         public int ConfigureID { get; internal set; }
         public virtual Configure Configure { get; set; }
 
-        public Semmester Semmester { get; set; }
+        public Semester Semmester { get; set; }
 
         public DateTime AttendanceDate { get; set; }
 

@@ -42,6 +42,7 @@ namespace VinhEdu.Controllers
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
+            Session.Clear();
             return RedirectToAction("Index", "Home");
         }
         public void setCookie(string username, bool rememberme = false, string role = "normal")
@@ -76,9 +77,15 @@ namespace VinhEdu.Controllers
                     var user = db.UserRepository.FindByIdentifier(model.Identify);
                     if (user.Password == Common.CalculateMD5Hash(model.Password) && (user.Status == UserStatus.Activated || user.Status == UserStatus.NotActivated))
                     {
+                        
+                        var currentconfig = db.ConfigRepository.GetAll().Where(z => z.IsActive == true).FirstOrDefault();
+                        Semester setting = db.context.Settings.FirstOrDefault().Semester;
                         setCookie(user.Identifier, model.RememberMe, user.Role);
                         Session["UserID"] = user.ID;
                         Session["Name"] = user.FullName;
+                        Session["SubjectID"] = user.SubjectID;
+                        Session["SemesterName"] = setting.GetDisplayName();
+                        Session["ConfigID"] = currentconfig.ID;
                         if (ReturnUrl != null)
                         {
                             return Redirect(ReturnUrl);

@@ -65,7 +65,7 @@
             {
                 ID = 1,
                 OrganizationName = "Phòng GD & ĐT Thành Phố Vinh",
-                Semmester = Semmester.HK1
+                Semester = Semester.HK1
             });
             this.SeedData(context);
         }

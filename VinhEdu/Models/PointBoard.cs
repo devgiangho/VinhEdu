@@ -5,6 +5,7 @@ namespace VinhEdu.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using static VinhEdu.Models.AdditionalDefinition;
 
     [Table("PointBoard")]
     public partial class PointBoard
@@ -18,10 +19,14 @@ namespace VinhEdu.Models
         [StringLength(1000)]
         public string Score { get; set; }
 
-        public int Semester { get; set; }
+        public Semester Semester { get; set; }
 
         [ForeignKey("Subject")]
         public int SubjectID { get; set; }
+
+        [ForeignKey("Configure")]
+        public int ConfigureID { get; set; }
+        public virtual Configure Configure { get; set; }
         public virtual Subject Subject { get; set; }
         public virtual Class Class { get; set; }
 

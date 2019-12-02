@@ -101,12 +101,12 @@ namespace VinhEdu.Controllers
             return View(setting);
         }
         [HttpPost]
-        public JsonResult Setting(string org,Semmester semmester, int ConfigID)
+        public JsonResult Setting(string org,Semester semmester, int ConfigID)
         {
             
             Setting setting = Context.Settings.FirstOrDefault();
             setting.OrganizationName = org;
-            setting.Semmester = semmester;
+            setting.Semester = semmester;
             List<Configure> configure = Context.Configures.ToList();
             configure.ForEach((e) =>
             {

@@ -180,6 +180,15 @@
                                 </a>
                             </li>
                         }
+                        @if (User.IsInRole("student"))
+                        {
+                            <li class="nav-item">
+                                <a href="/Student/PointBoard" class="nav-link">
+                                    <i class="nav-icon fa fa-tasks text-info"></i>
+                                    <p>Danh sách điểm</p>
+                                </a>
+                            </li>
+                        }
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fa fa-user-circle"></i>
@@ -207,13 +216,13 @@
                                 </a>
                             </li>
                         }
-                            <li class="nav-item">
-                                <a href="/Auth/Logout" class="nav-link">
-                                    <i class="nav-icon fa fa-sign-out text-danger"></i>
-                                    <p>Đăng xuất</p>
-                                </a>
-                            </li>
-                        </ul>
+                        <li class="nav-item">
+                            <a href="/Auth/Logout" class="nav-link">
+                                <i class="nav-icon fa fa-sign-out text-danger"></i>
+                                <p>Đăng xuất</p>
+                            </a>
+                        </li>
+                    </ul>
                 </nav>
             </div>
         </aside>

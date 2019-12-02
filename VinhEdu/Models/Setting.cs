@@ -13,7 +13,7 @@ namespace VinhEdu.Models
         [MinLength(10)]
         public string OrganizationName { get; set; }
         [Required]
-        public Semmester Semmester { get; set; }
+        public Semester Semester { get; set; }
 
     }
 }
