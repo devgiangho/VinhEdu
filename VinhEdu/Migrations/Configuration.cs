@@ -166,6 +166,60 @@
                 SchoolName = "THCS Quang Trung",
                 HeadMasterID = 3,
             });
+            context.Schools.AddOrUpdate(e => e.SchoolID, new School
+            {
+                SchoolID = 3,
+                SchoolName = "THCS Hà Huy Tập",
+                HeadMasterID = 3,
+            });
+            context.Schools.AddOrUpdate(e => e.SchoolID, new School
+            {
+                SchoolID = 4,
+                SchoolName = "THCS Trung Đô",
+                HeadMasterID = 3,
+            });
+            context.Schools.AddOrUpdate(e => e.SchoolID, new School
+            {
+                SchoolID = 5,
+                SchoolName = "THCS Đội Cung",
+                HeadMasterID = 3,
+            });
+            context.Schools.AddOrUpdate(e => e.SchoolID, new School
+            {
+                SchoolID = 6,
+                SchoolName = "THCS Lê lợi",
+                HeadMasterID = 3,
+            });
+            context.Schools.AddOrUpdate(e => e.SchoolID, new School
+            {
+                SchoolID = 7,
+                SchoolName = "THCS Bến Thủy",
+                HeadMasterID = 3,
+            });
+            context.Schools.AddOrUpdate(e => e.SchoolID, new School
+            {
+                SchoolID = 8,
+                SchoolName = "THCS Hưng Dũng",
+                HeadMasterID = 3,
+            });
+            context.Schools.AddOrUpdate(e => e.SchoolID, new School
+            {
+                SchoolID = 9,
+                SchoolName = "THCS Hưng Lộc",
+                HeadMasterID = 3,
+            });
+            context.Schools.AddOrUpdate(e => e.SchoolID, new School
+            {
+                SchoolID = 10,
+                SchoolName = "THCS Nghi Ân",
+                HeadMasterID = 3,
+            });
+            context.Schools.AddOrUpdate(e => e.SchoolID, new School
+            {
+                SchoolID = 11,
+                SchoolName = "THCS Nghi Kim",
+                HeadMasterID = 3,
+            });
             // Thêm Gíao viên 4 - 7
             context.Users.AddOrUpdate(e => e.ID, new User
             {
@@ -242,6 +296,18 @@
                 SchoolID = 1,
                 ClassName = "6B",
             });
+            context.Classes.AddOrUpdate(e => e.ClassID, new Class
+            {
+                ClassID = 5,
+                SchoolID = 1,
+                ClassName = "6C",
+            });
+            context.Classes.AddOrUpdate(e => e.ClassID, new Class
+            {
+                ClassID = 6,
+                SchoolID = 1,
+                ClassName = "6D",
+            });
             context.Classes.AddOrUpdate(e => e.ClassID, new Class 
             {
                 ClassID = 3,
@@ -254,6 +320,48 @@
                 ClassID = 4,
                 SchoolID = 2,
                 ClassName = "6E",
+            });
+            context.Classes.AddOrUpdate(e => e.ClassID, new Class
+            {
+                ClassID = 7,
+                SchoolID = 2,
+                ClassName = "6C",
+            });
+            context.Classes.AddOrUpdate(e => e.ClassID, new Class
+            {
+                ClassID = 8,
+                SchoolID = 2,
+                ClassName = "6D",
+            });
+            context.Classes.AddOrUpdate(e => e.ClassID, new Class
+            {
+                ClassID = 9,
+                SchoolID = 2,
+                ClassName = "6D",
+            });
+            context.Classes.AddOrUpdate(e => e.ClassID, new Class
+            {
+                ClassID = 10,
+                SchoolID = 2,
+                ClassName = "6A",
+            });
+            context.Classes.AddOrUpdate(e => e.ClassID, new Class
+            {
+                ClassID = 11,
+                SchoolID = 2,
+                ClassName = "6B",
+            });
+            context.Classes.AddOrUpdate(e => e.ClassID, new Class
+            {
+                ClassID = 12,
+                SchoolID = 2,
+                ClassName = "6C",
+            });
+            context.Classes.AddOrUpdate(e => e.ClassID, new Class
+            {
+                ClassID = 13,
+                SchoolID = 2,
+                ClassName = "6D",
             });
             // Thêm học sinh 8 - 12
             context.Users.AddOrUpdate(e => e.ID, new User
