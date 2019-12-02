@@ -8,7 +8,7 @@ namespace VinhEdu.Repository
 {
     public class UnitOfWork
     {
-        private EduVinhContext context = new EduVinhContext();
+        public EduVinhContext context = new EduVinhContext();
         private UserRepository userRepository;
         private SchoolRepository schoolRepository;
         private GenericRepository<Class> classRepository;

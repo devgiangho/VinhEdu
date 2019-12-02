@@ -177,6 +177,14 @@
     <Compile Include="Migrations\201911050823084_fix.Designer.cs">
       <DependentUpon>201911050823084_fix.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911110157214_addsubject.cs" />
+    <Compile Include="Migrations\201911110157214_addsubject.Designer.cs">
+      <DependentUpon>201911110157214_addsubject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911110305224_addsubject1.cs" />
+    <Compile Include="Migrations\201911110305224_addsubject1.Designer.cs">
+      <DependentUpon>201911110305224_addsubject1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdditionalDefinition.cs" />
     <Compile Include="Models\Attendance.cs" />
@@ -196,9 +204,11 @@
     <Compile Include="Repository\UnitOfWork.cs" />
     <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="Utilities\Common.cs" />
+    <Compile Include="Utilities\EnumFunction.cs" />
     <Compile Include="ViewModels\ChangePassViewModel.cs" />
     <Compile Include="ViewModels\ClassList.cs" />
     <Compile Include="ViewModels\ClassSelect.cs" />
+    <Compile Include="ViewModels\EditMark.cs" />
     <Compile Include="ViewModels\SchoolListViewModel.cs" />
     <Compile Include="ViewModels\StudentList.cs" />
     <Compile Include="ViewModels\StudentLoginViewModel.cs" />
@@ -1015,10 +1025,6 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\handsontable\handsontable.css" />
-    <Content Include="Content\handsontable\handsontable.full.css" />
-    <Content Include="Content\handsontable\handsontable.full.min.css" />
-    <Content Include="Content\handsontable\handsontable.min.css" />
     <Content Include="Content\images\apple-icon-120x120.png" />
     <Content Include="Content\images\default-avatar.jpg" />
     <Content Include="Content\images\login-bg.jpg" />
@@ -1029,7 +1035,6 @@
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\jqueryui.css" />
     <Content Include="Content\PagedList.css" />
-    <Content Include="Content\Pikaday\pikaday.css" />
     <Content Include="Content\sweetalert\bootstrap-sweetalert.png" />
     <Content Include="Content\sweetalert\docs.css" />
     <Content Include="Content\sweetalert\sweet-alert.css" />
@@ -1229,6 +1234,7 @@
     <Content Include="Views\Admin\Setting.cshtml" />
     <Content Include="Views\Teacher\ClassList.cshtml" />
     <Content Include="Views\Teacher\Index.cshtml" />
+    <Content Include="Views\Teacher\PointBoard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1272,6 +1278,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911050823084_fix.resx">
       <DependentUpon>201911050823084_fix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911110157214_addsubject.resx">
+      <DependentUpon>201911110157214_addsubject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911110305224_addsubject1.resx">
+      <DependentUpon>201911110305224_addsubject1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

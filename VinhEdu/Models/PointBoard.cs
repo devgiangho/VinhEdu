@@ -15,17 +15,14 @@ namespace VinhEdu.Models
 
         public int ClassID { get; set; }
 
-        [StringLength(500)]
-        public string ScoreX1 { get; set; }
-
-        [StringLength(500)]
-        public string ScoreX2 { get; set; }
-
-        [StringLength(200)]
-        public string ScoreX3 { get; set; }
+        [StringLength(1000)]
+        public string Score { get; set; }
 
         public int Semester { get; set; }
 
+        [ForeignKey("Subject")]
+        public int SubjectID { get; set; }
+        public virtual Subject Subject { get; set; }
         public virtual Class Class { get; set; }
 
         public virtual User User { get; set; }

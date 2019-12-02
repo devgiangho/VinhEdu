@@ -24,8 +24,7 @@
                             @item.ClassName
                         </td>
                         <td>
-                            @*@Html.ActionLink("Sửa", "Edit", new { id = item.ID }, new { @class = "badge badge-primary" })
-                            <a onclick="deleteConfirm(@item.ID,'@item.name')" href="#" class="badge badge-danger">Xóa</a>*@
+                            @Html.ActionLink("Quản lý điểm", "PointBoard", new { ClassID = item.ClassID }, new { @class = "badge badge-primary" })
 
                         </td>
                     </tr>
