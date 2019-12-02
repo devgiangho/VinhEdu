@@ -342,25 +342,25 @@
             context.Classes.AddOrUpdate(e => e.ClassID, new Class
             {
                 ClassID = 10,
-                SchoolID = 2,
+                SchoolID = 3,
                 ClassName = "6A",
             });
             context.Classes.AddOrUpdate(e => e.ClassID, new Class
             {
                 ClassID = 11,
-                SchoolID = 2,
+                SchoolID = 3,
                 ClassName = "6B",
             });
             context.Classes.AddOrUpdate(e => e.ClassID, new Class
             {
                 ClassID = 12,
-                SchoolID = 2,
+                SchoolID = 3,
                 ClassName = "6C",
             });
             context.Classes.AddOrUpdate(e => e.ClassID, new Class
             {
                 ClassID = 13,
-                SchoolID = 2,
+                SchoolID = 3,
                 ClassName = "6D",
             });
             // Thêm học sinh 8 - 12
