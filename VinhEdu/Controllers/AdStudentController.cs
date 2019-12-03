@@ -75,7 +75,8 @@ namespace VinhEdu.Controllers
         {
             try
             {
-                bool exist = db.ClassRepository.GetAll().Where(e => e.SchoolID == id).Any();
+                List<School> lst = db.context.Schools.ToList();
+                bool exist = lst.Any(a => a.SchoolID == id); ///db.context.Schools.Any(e => e.SchoolID == id);
                 if (exist)
                 {
                     var classes = db.ClassRepository.GetAll().Where(e => e.SchoolID == id)

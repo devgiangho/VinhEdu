@@ -202,7 +202,7 @@
             let rowData = [];
             gridOptions.api.forEachNode(node => rowData.push(node.data));
             return rowData.map((e) => {
-                return { ...e, Gender: e.Gender === 'Nam' ? 0 : 1 }
+                return { ...e, Gender: e.Gender === 'Nam' ? 0 : 1, DateOfBirth: new Date(e.DateOfBirth) }
             });
         }
         var Config;

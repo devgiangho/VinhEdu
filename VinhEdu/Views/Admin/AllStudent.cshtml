@@ -231,31 +231,24 @@
         gridOptions.api.setRowData([]);
     }
     var GetClass = function (id) {
-        $.ajax({
-            type: "POST",
-            url: '/AdStudent/GetClassBySchoolID',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ id: id }),
-            dataType: "json",
-            success: function (data) {
-                $('#ClassID').empty();
-                if (data.length > 0) {
-                    var count = 1;
-                    data.forEach((e) => {
-                        $('#ClassID').append('<option value=' + e.ClassID + ' ' + (count === 1 ? 'selected' : '') + '>' + e.ClassName + '</option>');
-                        count++;
-                    });
-                }
+        axios.post('/AdStudent/GetClassBySchoolID', { id: id }).then(resp => {
+            let data = resp.data;
+            $('#ClassID').empty();
+            if (data && data.length > 0) {
+                var count = 1;
+                data.forEach((e) => {
+                    $('#ClassID').append('<option value=' + e.ClassID + ' ' + (count === 1 ? 'selected' : '') + '>' + e.ClassName + '</option>');
+                    count++;
+                });
                 GetData();
-            },
-            error: function () {
-                var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
+            }
+        }).catch((e) => {
+            var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
                     type: 'pastel-danger',
                     allow_dismiss: false,
                     timer: 1000,
                 });
-            }
-        });
+        })
     }
     var GetClassModal = function (id) {
         axios.post('/AdStudent/GetClassBySchoolID', { id: id }).then(resp => {
