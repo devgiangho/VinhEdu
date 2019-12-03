@@ -146,6 +146,7 @@ namespace VinhEdu.Controllers
 
                 }
                 db.UserRepository.AddRangeUser(lst);
+                db.SaveChanges();
                 //Thêm vào lớp
                 lst.ForEach(e =>
                 {
