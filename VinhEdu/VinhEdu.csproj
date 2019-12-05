@@ -194,6 +194,7 @@
       <DependentUpon>201912020658453_editsemmester.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\SeedData.cs" />
     <Compile Include="Models\AdditionalDefinition.cs" />
     <Compile Include="Models\Attendance.cs" />
     <Compile Include="Models\Class.cs" />

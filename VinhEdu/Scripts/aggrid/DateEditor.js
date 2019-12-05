@@ -12,7 +12,7 @@ DateEditor.prototype.init = function (params) {
 
     // https://jqueryui.com/datepicker/
     $(this.eInput).datepicker({
-        dateFormat: "dd/mm/yyyy",
+        dateFormat: "mm/dd/yy",
         changeMonth: true,
         changeYear: true
     });
