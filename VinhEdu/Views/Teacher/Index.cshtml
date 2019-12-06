@@ -1,5 +1,47 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "TeacherDashboard";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    
 }
+<div class="container-fluid">
+    <section class="content">
+        <div class="container-fluid mt-3">
+            <div class="row">
+                @if (ViewBag.isHomeTeacher)
+                {
+                    var HomeClass = (VinhEdu.ViewModels.ShowHomeClass)ViewBag.HomeClass;
+                    <div class="col-lg-4 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>@HomeClass.ClassName</h3>
+                                <p><b>@HomeClass.CountStudent</b> học sinh</p>
+                                <p>Lớp chủ nhiệm</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                             <a href="/Teacher/MyHomeClass" class="small-box-footer">Xem điểm <i class="fa fa-arrow-circle-right"></i></a> 
+                        </div>
+                    </div>
+                }
+
+                <div class="col-lg-4 col-6">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>@ViewBag.teachingClass</h3>
+
+                            <p>Lớp đang dạy</p>
+                            <p>Môn: @ViewBag.SubjectName</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-person-add"></i>
+                        </div>
+                         <a href="" class="small-box-footer">Xem danh sách <i class="fa fa-arrow-circle-right"></i></a> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

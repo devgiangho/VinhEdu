@@ -12,7 +12,7 @@
                 Trường:
                 @Html.DropDownList("SchoolID", (IEnumerable<SelectListItem>)ViewBag.SchoolList, new { @class = "form-control" })
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
                 Lớp:
                 @Html.DropDownList("ClassID", (IEnumerable<SelectListItem>)ViewBag.Class, new { @class = "form-control" })
             </div>
@@ -20,7 +20,7 @@
                 Niên khóa:
                 @Html.DropDownList("ConfigureID", (IEnumerable<SelectListItem>)ViewBag.Config, new { @class = "form-control" })
             </div>
-            <div class="col-md-6 pt-4">
+            <div class="col-md-5 pt-4">
                 <button class="btn btn-outline-danger" onclick="WarnDelete()">Xóa</button>
                 <button class="btn btn-outline-primary" onclick="ChangePassWord()">Đổi mật khẩu</button>
                 <button class="btn btn-outline-warning float-right" onclick="Submit()">Cập nhật</button>

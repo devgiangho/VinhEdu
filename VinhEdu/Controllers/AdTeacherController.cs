@@ -83,7 +83,7 @@ namespace VinhEdu.Controllers
                      join a in Context.ClassMembers
                      on u.ID equals a.UserID
                      where a.ConfigureID == ConfigureID && u.Type == AdditionalDefinition.UserType.Teacher && a.ClassID == ClassID
-                     && u.Status != AdditionalDefinition.UserStatus.Deleted
+                     && u.Status != AdditionalDefinition.UserStatus.Deleted && u.SchoolID == SchoolID
                      select new TeacherList
                      {
                          Identifier = u.Identifier,

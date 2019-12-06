@@ -18,6 +18,7 @@ namespace VinhEdu.Controllers
         EduVinhContext Context = new EduVinhContext();
         public ActionResult Index()
         {
+            
             return View();
         }
         public ActionResult CreateStudent()

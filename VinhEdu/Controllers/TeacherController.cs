@@ -7,6 +7,7 @@ using VinhEdu.Models;
 using VinhEdu.Repository;
 using VinhEdu.ViewModels;
 using Newtonsoft.Json;
+using static VinhEdu.Models.AdditionalDefinition;
 
 namespace VinhEdu.Controllers
 {
@@ -17,7 +18,163 @@ namespace VinhEdu.Controllers
         //EduVinhContext Context = new EduVinhContext();
         public ActionResult Index()
         {
+            int configID = (int)Session["ConfigID"];
+            int UserID = (int)Session["UserID"];
+            bool isHomeTeacher = db.MemberRepository
+                .GetAll().Any(c => c.UserID == UserID && c.IsHomeTeacher == true && c.ConfigureID == configID);
+            if (isHomeTeacher)
+            {
+                var HomeClass = db.MemberRepository
+                .GetAll().Where(c => c.UserID == UserID && c.IsHomeTeacher == true)
+                .Select(c => new ShowHomeClass
+                {
+                    ClassName = c.Class.ClassName,
+                    CountStudent = c.Class.ClassMembers.Count(b => b.LearnStatus == LearnStatus.Learning),
+                    ClassID = c.ClassID
+                }).First();
+                ViewBag.HomeClass = HomeClass;
+                ViewBag.isHomeTeacher = isHomeTeacher;
+            }
+            ViewBag.teachingClass = db.MemberRepository.GetAll()
+                .Where(c => c.ConfigureID == configID && c.UserID == UserID)
+                .Count();
+            ViewBag.SubjectName = db.SubjectRepository.FindByID((int)Session["SubjectID"]).SubjectName;
             return View();
+        }
+        /// <summary>
+        /// Lớp mình chủ nhiệm
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MyHomeClass()
+        {
+            int configID = (int)Session["ConfigID"];
+            int UserID = (int)Session["UserID"];
+            bool isHomeTeacher = db.MemberRepository
+               .GetAll().Any(c => c.UserID == UserID && c.IsHomeTeacher == true && c.ConfigureID == configID);
+            if(isHomeTeacher)
+            {
+                int ClassID = db.MemberRepository
+               .GetAll().Where(c => c.UserID == UserID && c.IsHomeTeacher == true && c.ConfigureID == configID)
+               .First().ClassID;
+                List<ViewModels.StudentList> lstStudent = db.MemberRepository.
+                    GetAll().Where(c => c.ClassID == ClassID && c.ConfigureID == configID
+                    && c.User.Type == UserType.Student && c.LearnStatus == LearnStatus.Learning && c.User.Status == UserStatus.Activated)
+                    .Select(c => new StudentList
+                    {
+                        ID = c.UserID,
+                        DateOfBirth = c.User.DateOfBirth,
+                        FullName = c.User.FullName,
+                        Gender = c.User.Gender
+                    }).ToList();
+                return View(lstStudent);
+            }
+            return RedirectToAction("Index");
+        }
+        /// <summary>
+        /// Xem điểm lớp mình chủ nhiệm
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult GetHomeClassScoreBoard()
+        {
+            try
+            {
+                int configID = (int)Session["ConfigID"];
+                int UserID = (int)Session["UserID"];
+                var CurrentSemester = db.context.Settings.FirstOrDefault().Semester;
+                int ClassID = db.MemberRepository
+                   .GetAll().Where(c => c.UserID == UserID && c.IsHomeTeacher == true && c.ConfigureID == configID)
+                   .First().ClassID;
+                List<int> lstStudent = db.MemberRepository.GetAll()
+                    .Where(c => c.LearnStatus == LearnStatus.Learning || c.LearnStatus == LearnStatus.Duplicated
+                    && c.ClassID == ClassID && configID == c.ConfigureID)
+                    .Select(c => c.UserID).ToList();
+                List<MarkStudent> markList = new List<MarkStudent>();
+                List<int> subjectList = db.SubjectRepository.GetAll().Select(c => c.ID).ToList();
+                if (lstStudent.Count == 0)
+                {
+                    return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                }
+                foreach (var studentID in lstStudent)
+                {
+                    
+                    List<SubjectScore> lstSubjectScores = new List<SubjectScore>();
+                    foreach (var subjectID in subjectList)
+                    {
+                        SubjectScore mark = new SubjectScore();
+                        bool HasMark = db.context.PointBoards
+                            .Any(e => e.ClassID == ClassID &&
+                            e.StudentID == studentID && e.SubjectID == subjectID && e.ConfigureID == configID);
+                        if (HasMark)
+                        {
+                            mark = (from m in db.context.ClassMembers
+                                    join p in db.context.PointBoards on m.UserID equals p.StudentID into pm
+                                    from p in pm.DefaultIfEmpty()
+                                    where m.UserID == studentID
+                                    where m.ClassID == ClassID
+                                    where p.SubjectID == subjectID
+                                    where p.ConfigureID == configID
+                                    select new SubjectScore
+                                    {
+                                        SubjectID = subjectID,
+                                        SubjectName = p.Subject.SubjectName,
+                                        TempScore = p.Score,
+                                    }).First();
+                            if (mark.TempScore != null)
+                            {
+                                mark.Score = JsonConvert.DeserializeObject<Score>(mark.TempScore);
+                            }
+                        }
+                        else
+                        {
+                            PointBoard NewMark = new PointBoard
+                            {
+                                ClassID = ClassID,
+                                Score = JsonConvert.SerializeObject(new Score()),
+                                StudentID = studentID,
+                                SubjectID = subjectID,
+                                ConfigureID = configID,
+                                Semester = CurrentSemester == AdditionalDefinition.Semester.HK1 ? AdditionalDefinition.Semester.HK1 : AdditionalDefinition.Semester.HK2
+                            };
+                            db.context.PointBoards.Add(NewMark);
+
+                            db.context.SaveChanges();
+                            mark = (from m in db.context.ClassMembers
+                                    join p in db.context.PointBoards on m.UserID equals p.StudentID into pm
+                                    from p in pm.DefaultIfEmpty()
+                                    where m.UserID == studentID
+                                    where m.ClassID == ClassID
+                                    where p.SubjectID == subjectID
+                                    where p.ConfigureID == configID
+                                    select new SubjectScore
+                                    {
+                                        SubjectID = subjectID,
+                                        SubjectName = p.Subject.SubjectName,
+                                        TempScore = p.Score,
+                                    }).First();
+                            if (mark.TempScore != null)
+                            {
+                                mark.Score = JsonConvert.DeserializeObject<Score>(mark.TempScore);
+                            }
+                        }
+                        lstSubjectScores.Add(mark);
+                    }
+
+                    string studentName = db.UserRepository.FindByID(studentID).FullName;
+                    MarkStudent itemMark = new MarkStudent
+                    {
+                        StudentID = studentID,
+                        StudentName = studentName,
+                        SubjectScores = lstSubjectScores
+                    };
+                    markList.Add(itemMark);
+                }
+
+                return Json(markList, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception e)
+            {
+                return Json(new {success = false }, JsonRequestBehavior.AllowGet);
+            }
         }
         public ViewResult ClassList()
         {
@@ -63,7 +220,7 @@ namespace VinhEdu.Controllers
                     throw new Exception();
                 }
             }
-            catch (Exception e)
+            catch
             {
                 return RedirectToAction("ClassList");
             }
@@ -187,5 +344,6 @@ namespace VinhEdu.Controllers
             }
             return Json(new { Message = "Bạn nhập điểm không hợp lệ \n Điểm từ x (chưa có) và 0 đến 10", Success = false }, JsonRequestBehavior.AllowGet);
         }
+         
     }
 }

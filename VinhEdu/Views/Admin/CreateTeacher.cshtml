@@ -5,9 +5,8 @@
 }
     <div class="container-fluid" style="margin-top:15px;padding-top:15px;">
         <form method="post" id="createGV">
-
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-4">
                     Niên khóa:
                     @Html.DropDownList("ConfigureID", (IEnumerable<SelectListItem>)ViewBag.Config, new { @class = "form-control" })
                 </div>
@@ -20,7 +19,7 @@
                     <select class="form-control" id="ClassID" name="ClassID">
                     </select>
                 </div>*@
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         Môn học:<br />
                         @Html.DropDownListFor(m => m.SubjectID, Model.Subject, new { @class = "form-control" })
@@ -43,7 +42,7 @@
                         @Html.ValidationMessageFor(model => model.Identifier, "", new { @class = "text-danger" })
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="Quiz">Giới tính:</label><br />
                         @Html.EnumDropDownListFor(m => m.Gender, new { @class = "form-control" })
@@ -51,19 +50,19 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label for="Quiz">Password:</label><br />
                     @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="Quiz">Trạng thái:</label><br />
                         @Html.EnumDropDownListFor(m => m.Status, new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="Quiz">Ngày sinh:</label><br />
                         <input type="date" name="DateOfBirth" class="form-control" />

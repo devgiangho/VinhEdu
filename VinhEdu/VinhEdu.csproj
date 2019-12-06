@@ -219,6 +219,7 @@
     <Compile Include="ViewModels\ClassSelect.cs" />
     <Compile Include="ViewModels\EditMark.cs" />
     <Compile Include="ViewModels\SchoolListViewModel.cs" />
+    <Compile Include="ViewModels\ShowHomeClass.cs" />
     <Compile Include="ViewModels\StudentList.cs" />
     <Compile Include="ViewModels\StudentLoginViewModel.cs" />
     <Compile Include="ViewModels\SubjectList.cs" />
@@ -1246,6 +1247,7 @@
     <Content Include="Views\Teacher\PointBoard.cshtml" />
     <Content Include="Views\Student\Index.cshtml" />
     <Content Include="Views\Student\PointBoard.cshtml" />
+    <Content Include="Views\Teacher\MyHomeClass.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
