@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using VinhEdu.Models;
 
 namespace VinhEdu.ViewModels
 {
@@ -40,27 +41,27 @@ namespace VinhEdu.ViewModels
     }
     public class Score
     {
-        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        [CustomScoreRequired]
         public string M1 { get; set; } = "x";
-        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        [CustomScoreRequired]
         public string M2 { get; set; } = "x";
-        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        [CustomScoreRequired]
         public string M3 { get; set; } = "x";
-        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        [CustomScoreRequired]
         public string M4 { get; set; } = "x";
-        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        [CustomScoreRequired]
         public string P1 { get; set; } = "x";
-        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        [CustomScoreRequired]
         public string P2 { get; set; } = "x";
-        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        [CustomScoreRequired]
         public string P3 { get; set; } = "x";
-        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        [CustomScoreRequired]
         public string T1 { get; set; } = "x";
-        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        [CustomScoreRequired]
         public string T2 { get; set; } = "x";
-        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        [CustomScoreRequired]
         public string T3 { get; set; } = "x";
-        [RegularExpression(@"^[x]|(([1-9][0-9]{0,1}(\.[\d]{1,2})?|10))$")]
+        [CustomScoreRequired]
         public string K1 { get; set; } = "x";
     }
 }

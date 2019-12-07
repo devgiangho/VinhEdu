@@ -203,9 +203,9 @@
     <Compile Include="Models\EduVinhContext.cs" />
     <Compile Include="Models\PointBoard.cs" />
     <Compile Include="Models\School.cs" />
+    <Compile Include="Models\ScoreRequired.cs" />
     <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\Subject.cs" />
-    <Compile Include="Models\UpScoreObject.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\GenericRepository.cs" />
