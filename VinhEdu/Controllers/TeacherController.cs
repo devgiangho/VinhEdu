@@ -22,6 +22,7 @@ namespace VinhEdu.Controllers
             int UserID = (int)Session["UserID"];
             bool isHomeTeacher = db.MemberRepository
                 .GetAll().Any(c => c.UserID == UserID && c.IsHomeTeacher == true && c.ConfigureID == configID);
+            ViewBag.isHomeTeacher = isHomeTeacher;
             if (isHomeTeacher)
             {
                 var HomeClass = db.MemberRepository
@@ -33,7 +34,6 @@ namespace VinhEdu.Controllers
                     ClassID = c.ClassID
                 }).First();
                 ViewBag.HomeClass = HomeClass;
-                ViewBag.isHomeTeacher = isHomeTeacher;
             }
             ViewBag.teachingClass = db.MemberRepository.GetAll()
                 .Where(c => c.ConfigureID == configID && c.UserID == UserID)
