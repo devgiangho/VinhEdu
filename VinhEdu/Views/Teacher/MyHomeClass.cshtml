@@ -1,0 +1,143 @@
+﻿@model IEnumerable<VinhEdu.ViewModels.StudentList>
+@{
+    ViewBag.Title = "Lớp chủ nhiệm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@Html.Partial("_PartialGrid")
+<div class="card  mt-3">
+    <div class="card-header">
+        Học sinh lớp chủ nhiệm
+    </div>
+    <div class="card-body">
+        <table id="lstPost" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Học sinh</th>
+                    <th>Giới tính</th>
+                    <th>Ngày sinh</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <p>@item.ID</p>
+                        </td>
+                        <td>
+                            <p>@item.FullName</p>
+                        </td>
+                        <td>
+                            @item.Gender.GetDisplayName()
+                        </td>
+                        <td>
+                            @item.DateOfBirth.ToString("dd/MM/yyyy")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Học sinh</th>
+                    <th>Giới tính</th>
+                    <th>Ngày sinh</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<div id="myGrid" style="height: 600px;width:100%;" class="ag-theme-balham"></div>
+<script src="~/Content/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/Content/AdminLTE/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+<script>
+    $(function () {
+        $("#lstPost").DataTable();
+    });
+</script>
+<script>
+    // specify the columns
+    var columnDefs = [
+        { headerName: "StudentID", field: "StudentID", hide: true, editable: false, resizable: true },
+        { headerName: "Học sinh", field: "StudentName", editable: false, resizable: true, suppressSizeToFit: true },
+        {
+            headerName: "Toán",
+            field: "S1",
+            editable: false, resizable: true,
+            children: [
+                {
+                    headerName: "M1",
+                    field: "Score.M1",
+                    editable: true, resizable: true,
+                },
+                {
+                    headerName: "M2",
+                    field: "Score.M2",
+                    editable: true, resizable: true,
+                },
+                {
+                    headerName: "M3",
+                    field: "Score.M3",
+                    editable: true, resizable: true,
+                },
+                {
+                    headerName: "M4",
+                    field: "Score.M4",
+                    editable: true, resizable: true,
+                },
+                {
+                    headerName: "P1",
+                    field: "Score.P1",
+                    editable: false, resizable: true,
+                },
+                {
+                    headerName: "P2",
+                    field: "Score.P2",
+                    editable: false, resizable: true,
+                },
+                {
+                    headerName: "P3",
+                    field: "Score.P3",
+                    editable: false, resizable: true,
+                },
+                {
+                    headerName: "T1",
+                    field: "Score.T1",
+                    editable: true, resizable: true,
+                },
+                {
+                    headerName: "T2",
+                    field: "Score.T2",
+                    editable: true, resizable: true,
+                },
+                {
+                    headerName: "T3",
+                    field: "Score.T3",
+                    editable: true, resizable: true,
+                },
+                {
+                    headerName: "K1",
+                    field: "Score.K1",
+                    editable: true, resizable: true,
+                }
+            ]
+        }
+    ];
+
+    // specify the data
+    var rowData = [];
+
+    // let the grid know which columns and what data to use
+    var gridOptions = {
+        columnDefs: columnDefs,
+        rowData: rowData,
+        rowSelection: 'single',
+        headerHeight: '28px'
+    };
+    // lookup the container we want the Grid to use
+    var eGridDiv = document.querySelector('#myGrid');
+
+    // create the grid passing in the div to use together with the columns & data we want to use
+    new agGrid.Grid(eGridDiv, gridOptions);
+</script>
