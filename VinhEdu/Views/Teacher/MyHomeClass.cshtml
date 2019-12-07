@@ -48,7 +48,10 @@
         </table>
     </div>
 </div>
-<div id="myGrid" style="height: 600px;width:100%;" class="ag-theme-balham"></div>
+<div class="card-header">
+    Bảng điểm
+</div>
+<div id="myGrid" style="height: 400px;width:100%;" class="ag-theme-balham"></div>
 <script src="~/Content/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="~/Content/AdminLTE/plugins/datatables/dataTables.bootstrap4.min.js"></script>
 <script>
@@ -57,72 +60,12 @@
     });
 </script>
 <script>
+    //LIST SUBJECT
+    var subjectList = [];
     // specify the columns
     var columnDefs = [
         { headerName: "StudentID", field: "StudentID", hide: true, editable: false, resizable: true },
-        { headerName: "Học sinh", field: "StudentName", editable: false, resizable: true, suppressSizeToFit: true },
-        {
-            headerName: "Toán",
-            field: "S1",
-            editable: false, resizable: true,
-            children: [
-                {
-                    headerName: "M1",
-                    field: "Score.M1",
-                    editable: true, resizable: true,
-                },
-                {
-                    headerName: "M2",
-                    field: "Score.M2",
-                    editable: true, resizable: true,
-                },
-                {
-                    headerName: "M3",
-                    field: "Score.M3",
-                    editable: true, resizable: true,
-                },
-                {
-                    headerName: "M4",
-                    field: "Score.M4",
-                    editable: true, resizable: true,
-                },
-                {
-                    headerName: "P1",
-                    field: "Score.P1",
-                    editable: false, resizable: true,
-                },
-                {
-                    headerName: "P2",
-                    field: "Score.P2",
-                    editable: false, resizable: true,
-                },
-                {
-                    headerName: "P3",
-                    field: "Score.P3",
-                    editable: false, resizable: true,
-                },
-                {
-                    headerName: "T1",
-                    field: "Score.T1",
-                    editable: true, resizable: true,
-                },
-                {
-                    headerName: "T2",
-                    field: "Score.T2",
-                    editable: true, resizable: true,
-                },
-                {
-                    headerName: "T3",
-                    field: "Score.T3",
-                    editable: true, resizable: true,
-                },
-                {
-                    headerName: "K1",
-                    field: "Score.K1",
-                    editable: true, resizable: true,
-                }
-            ]
-        }
+        { headerName: "Học sinh", field: "StudentName", editable: false, resizable: true,  },
     ];
 
     // specify the data
@@ -139,5 +82,102 @@
     var eGridDiv = document.querySelector('#myGrid');
 
     // create the grid passing in the div to use together with the columns & data we want to use
-    new agGrid.Grid(eGridDiv, gridOptions);
+    
+    $(document).ready(function() {
+        extractData();
+    });
+    function extractData() {
+        axios.get('/Teacher/GetSubjectInstance').then(resp => {
+            let data = resp.data;
+            let coldef = { editable: false, resizable: true, width: 45}
+            data.forEach((item) => {
+                let column = {
+                    headerName: item.SubjectName,
+                    field: item.SubjectID,
+                    resizable: true,
+                    children: [
+                        {
+                            headerName: "M1",
+                            field: "S" + item.SubjectID + "Score.M1",
+                           ...coldef
+                        },
+                        {
+                            headerName: "M2",
+                            field: "S" + item.SubjectID + "Score.M2",
+                            ...coldef
+                        },
+                        {
+                            headerName: "M3",
+                            field: "S" + item.SubjectID + "Score.M3",
+                            ...coldef
+                        },
+                        {
+                            headerName: "M4",
+                            field: "S" + item.SubjectID + "Score.M4",
+                           ...coldef
+                        },
+                        {
+                            headerName: "P1",
+                            field: "S" + item.SubjectID + "Score.P1",
+                           ...coldef
+                        },
+                        {
+                            headerName: "P2",
+                            field: "S" + item.SubjectID + "Score.P2",
+                           ...coldef
+                        },
+                        {
+                            headerName: "P3",
+                            field: "S" + item.SubjectID + "Score.P3",
+                           ...coldef
+                        },
+                        {
+                            headerName: "T1",
+                            field: "S" + item.SubjectID + "Score.T1",
+                           ...coldef
+                        },
+                        {
+                            headerName: "T2",
+                            field: "S" + item.SubjectID + "Score.T2",
+                           ...coldef
+                        },
+                        {
+                            headerName: "T3",
+                            field: "S" + item.SubjectID + "Score.T3",
+                           ...coldef
+                        },
+                        {
+                            headerName: "K1",
+                            field: "S" + item.SubjectID + "Score.K1",
+                           ...coldef
+                        }
+                    ]
+                }
+                columnDefs.push(column);
+                subjectList.push(item);
+            });
+            GetAllScore();
+        });
+    }
+    function GetAllScore() {
+        axios.get('/Teacher/GetHomeClassScoreBoard').then(resp => {
+            let data = resp.data;
+            data.forEach((item) => {
+                let newRow = {};
+                newRow.StudentID = item.StudentID;
+                newRow.StudentName = item.StudentName;
+                subjectList.forEach((s) => {
+                    item.SubjectScores.forEach((score) => {
+                        if (score.SubjectID == s.SubjectID) {
+                            newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
+                        }
+                    });
+                });
+                rowData.push(newRow);
+                //console.log(rowData);
+            });
+            new agGrid.Grid(eGridDiv, gridOptions);
+        });
+    }
+    
 </script>

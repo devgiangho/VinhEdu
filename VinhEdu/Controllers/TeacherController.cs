@@ -122,6 +122,7 @@ namespace VinhEdu.Controllers
                             if (mark.TempScore != null)
                             {
                                 mark.Score = JsonConvert.DeserializeObject<Score>(mark.TempScore);
+                                mark.TempScore = null;
                             }
                         }
                         else
@@ -176,6 +177,25 @@ namespace VinhEdu.Controllers
                 return Json(new {success = false }, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// Lấy danh sách tất cả các môn
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "teacher,admin")]
+        public JsonResult GetSubjectInstance()
+        {
+            var subjectList = db.SubjectRepository
+                .GetAll().Select(c => new
+                {
+                    SubjectID = c.ID,
+                    SubjectName = c.SubjectName,
+                }).ToList();
+            return Json(subjectList, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// Danh sách lớp dạy
+        /// </summary>
+        /// <returns></returns>
         public ViewResult ClassList()
         {
             Configure configure = db.ConfigRepository.GetAll()
