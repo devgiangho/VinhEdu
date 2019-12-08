@@ -20,6 +20,7 @@ namespace VinhEdu.Controllers
         }
         public ViewResult PointBoard()
         {
+            ViewBag.Semester = db.context.Settings.FirstOrDefault().Semester.GetDisplayName();
             return View();
         }
         /// <summary>

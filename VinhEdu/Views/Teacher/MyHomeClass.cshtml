@@ -49,9 +49,13 @@
     </div>
 </div>
 <div class="card-header">
-    Bảng điểm 
+    Bảng điểm học kỳ 1:
 </div>
 <div id="myGrid" style="height: 400px;width:100%;" class="ag-theme-balham"></div>
+<div class="card-header">
+    Bảng điểm học kỳ 2:
+</div>
+<div id="myGrid2" style="height: 400px;width:100%;" class="ag-theme-balham"></div>
 <script src="~/Content/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="~/Content/AdminLTE/plugins/datatables/dataTables.bootstrap4.min.js"></script>
 <script>
@@ -65,7 +69,7 @@
     // specify the columns
     var columnDefs = [
         { headerName: "StudentID", field: "StudentID", hide: true, editable: false, resizable: true },
-        { headerName: "Học sinh", field: "StudentName", editable: false, resizable: true,  },
+        { headerName: "Học sinh", field: "StudentName", editable: false, resizable: true, },
     ];
 
     // specify the data
@@ -80,16 +84,27 @@
     };
     // lookup the container we want the Grid to use
     var eGridDiv = document.querySelector('#myGrid');
-
-    // create the grid passing in the div to use together with the columns & data we want to use
     
-    $(document).ready(function() {
+    // specify the data
+    var rowData2 = [];
+
+    // let the grid know which columns and what data to use
+    var gridOptions2 = {
+        columnDefs: columnDefs,
+        rowData: rowData2,
+        rowSelection: 'single',
+        headerHeight: '28px'
+    };
+    // lookup the container we want the Grid to use
+    var eGridDiv2 = document.querySelector('#myGrid2');
+
+    $(document).ready(function () {
         extractData();
     });
     function extractData() {
         axios.get('/Teacher/GetSubjectInstance').then(resp => {
             let data = resp.data;
-            let coldef = { editable: false, resizable: true, width: 45}
+            let coldef = { editable: false, resizable: true, width: 45 }
             data.forEach((item) => {
                 let column = {
                     headerName: item.SubjectName,
@@ -99,7 +114,7 @@
                         {
                             headerName: "M1",
                             field: "S" + item.SubjectID + "Score.M1",
-                           ...coldef
+                            ...coldef
                         },
                         {
                             headerName: "M2",
@@ -114,42 +129,42 @@
                         {
                             headerName: "M4",
                             field: "S" + item.SubjectID + "Score.M4",
-                           ...coldef
+                            ...coldef
                         },
                         {
                             headerName: "P1",
                             field: "S" + item.SubjectID + "Score.P1",
-                           ...coldef
+                            ...coldef
                         },
                         {
                             headerName: "P2",
                             field: "S" + item.SubjectID + "Score.P2",
-                           ...coldef
+                            ...coldef
                         },
                         {
                             headerName: "P3",
                             field: "S" + item.SubjectID + "Score.P3",
-                           ...coldef
+                            ...coldef
                         },
                         {
                             headerName: "T1",
                             field: "S" + item.SubjectID + "Score.T1",
-                           ...coldef
+                            ...coldef
                         },
                         {
                             headerName: "T2",
                             field: "S" + item.SubjectID + "Score.T2",
-                           ...coldef
+                            ...coldef
                         },
                         {
                             headerName: "T3",
                             field: "S" + item.SubjectID + "Score.T3",
-                           ...coldef
+                            ...coldef
                         },
                         {
                             headerName: "K1",
                             field: "S" + item.SubjectID + "Score.K1",
-                           ...coldef
+                            ...coldef
                         }
                     ]
                 }
@@ -160,53 +175,48 @@
         });
     }
     function GetAllScore() {
-        axios.get('/Teacher/GetHomeClassScoreBoard').then(resp => {
+        axios.post('/Teacher/GetHomeClassScoreBoard',{semester:1}).then(resp => {
             let data = resp.data;
-            data.forEach((item) => {
-                let newRow = {};
-                newRow.StudentID = item.StudentID;
-                newRow.StudentName = item.StudentName;
-                subjectList.forEach((s) => {
-                    item.SubjectScores.forEach((score) => {
-                        if (score.SubjectID == s.SubjectID) {
-                            newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
-                        }
+            if (data) {
+                data.forEach((item) => {
+                    let newRow = {};
+                    newRow.StudentID = item.StudentID;
+                    newRow.StudentName = item.StudentName;
+                    subjectList.forEach((s) => {
+                        item.SubjectScores.forEach((score) => {
+                            if (score.SubjectID == s.SubjectID) {
+                                newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
+                            }
+                        });
                     });
+                    rowData.push(newRow);
                 });
-                rowData.push(newRow);
-                //console.log(rowData);
-            });
-            new agGrid.Grid(eGridDiv, gridOptions);
+                new agGrid.Grid(eGridDiv, gridOptions);
+                getHK2();
+            }
+            
+        });
+        
+    }
+    function getHK2() {
+        axios.post('/Teacher/GetHomeClassScoreBoard',{semester:2}).then(resp => {
+            let data = resp.data;
+            if (data) {
+                data.forEach((item) => {
+                    let newRow = {};
+                    newRow.StudentID = item.StudentID;
+                    newRow.StudentName = item.StudentName;
+                    subjectList.forEach((s) => {
+                        item.SubjectScores.forEach((score) => {
+                            if (score.SubjectID == s.SubjectID) {
+                                newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
+                            }
+                        });
+                    });
+                    rowData2.push(newRow);
+                });
+                new agGrid.Grid(eGridDiv2, gridOptions2);
+            }
         });
     }
-    
 </script>
-@*<script>
-    function onBtPrint() {
-    var gridApi = gridOptions.api;
-
-    setPrinterFriendly(gridApi);
-
-    setTimeout( function( ) {
-        print();
-        setNormal(gridApi);
-    }, 2000);
-}
-
-function setPrinterFriendly(api) {
-    var eGridDiv = document.querySelector('#myGrid');
-    eGridDiv.style.width = '';
-    eGridDiv.style.height = '';
-
-    api.setDomLayout('print');
-}
-
-function setNormal(api) {
-    var eGridDiv = document.querySelector('#myGrid');
-    eGridDiv.style.width = '600px';
-    eGridDiv.style.height = '200px';
-
-    api.setDomLayout(null);
-}
-
-</script>*@

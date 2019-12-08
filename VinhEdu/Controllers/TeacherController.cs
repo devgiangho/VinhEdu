@@ -71,16 +71,17 @@ namespace VinhEdu.Controllers
             return RedirectToAction("Index");
         }
         /// <summary>
-        /// Xem điểm lớp mình chủ nhiệm
+        /// Xem điểm lớp mình chủ nhiệm theo học kì
         /// </summary>
+        /// <param name="semester"></param>
         /// <returns></returns>
-        public JsonResult GetHomeClassScoreBoard()
+        public JsonResult GetHomeClassScoreBoard(int semester)
         {
             try
             {
                 int configID = (int)Session["ConfigID"];
                 int UserID = (int)Session["UserID"];
-                var CurrentSemester = db.context.Settings.FirstOrDefault().Semester;
+                var CurrentSemester = semester == 1 ? Semester.HK1 : Semester.HK2;
                 int ClassID = db.MemberRepository
                    .GetAll().Where(c => c.UserID == UserID && c.IsHomeTeacher == true && c.ConfigureID == configID)
                    .First().ClassID;
@@ -92,7 +93,7 @@ namespace VinhEdu.Controllers
                 List<int> subjectList = db.SubjectRepository.GetAll().Select(c => c.ID).ToList();
                 if (lstStudent.Count == 0)
                 {
-                    return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                    return Json(false, JsonRequestBehavior.AllowGet);
                 }
                 foreach (var studentID in lstStudent)
                 {
@@ -102,7 +103,7 @@ namespace VinhEdu.Controllers
                     {
                         SubjectScore mark = new SubjectScore();
                         bool HasMark = db.context.PointBoards
-                            .Any(e => e.ClassID == ClassID &&
+                            .Any(e => e.ClassID == ClassID && e.Semester == CurrentSemester &&
                             e.StudentID == studentID && e.SubjectID == subjectID && e.ConfigureID == configID);
                         if (HasMark)
                         {
@@ -113,6 +114,7 @@ namespace VinhEdu.Controllers
                                     where m.ClassID == ClassID
                                     where p.SubjectID == subjectID
                                     where p.ConfigureID == configID
+                                    where p.Semester == CurrentSemester
                                     select new SubjectScore
                                     {
                                         SubjectID = subjectID,
@@ -134,7 +136,7 @@ namespace VinhEdu.Controllers
                                 StudentID = studentID,
                                 SubjectID = subjectID,
                                 ConfigureID = configID,
-                                Semester = CurrentSemester == AdditionalDefinition.Semester.HK1 ? AdditionalDefinition.Semester.HK1 : AdditionalDefinition.Semester.HK2
+                                Semester = CurrentSemester
                             };
                             db.context.PointBoards.Add(NewMark);
 
@@ -174,7 +176,7 @@ namespace VinhEdu.Controllers
             }
             catch(Exception e)
             {
-                return Json(new {success = false }, JsonRequestBehavior.AllowGet);
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
         }
         /// <summary>
@@ -221,6 +223,7 @@ namespace VinhEdu.Controllers
         /// <returns></returns>
         public ActionResult PointBoard(int ClassID)
         {
+            ViewBag.Semester = db.context.Settings.FirstOrDefault().Semester.GetDisplayName();
             try
             {
                 var className = db.ClassRepository.FindByID(ClassID).ClassName;
@@ -276,7 +279,7 @@ namespace VinhEdu.Controllers
                         StudentID = studentID,
                         SubjectID = SubjectID,
                         ConfigureID = CurrentConfig,
-                        Semester = CurrentSemester == AdditionalDefinition.Semester.HK1 ? AdditionalDefinition.Semester.HK1 : AdditionalDefinition.Semester.HK2
+                        Semester = CurrentSemester
                     };
                     db.context.PointBoards.Add(NewMark);
                     db.SaveChanges();
@@ -317,7 +320,8 @@ namespace VinhEdu.Controllers
                 {
                     bool HasMark = db.context.PointBoards
                         .Any(e => e.ClassID == ClassID &&
-                        e.StudentID == mark.StudentID && e.SubjectID == SubjectID && e.Semester == CurrentSemester);
+                        e.StudentID == mark.StudentID && e.SubjectID == SubjectID
+                        && e.Semester == CurrentSemester);
                     if (HasMark)
                     {
                         PointBoard CurrentMark = db.context.PointBoards
@@ -337,7 +341,7 @@ namespace VinhEdu.Controllers
                             StudentID = mark.StudentID,
                             SubjectID = mark.SubjectID,
                             ConfigureID = CurrentConfig,
-                            Semester = CurrentSemester == AdditionalDefinition.Semester.HK1 ? AdditionalDefinition.Semester.HK1 : AdditionalDefinition.Semester.HK2
+                            Semester = CurrentSemester == Semester.HK1 ? Semester.HK1 : Semester.HK2
                         };
                         db.context.PointBoards.Add(NewMark);
                         db.SaveChanges();
