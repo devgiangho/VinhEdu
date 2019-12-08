@@ -14,7 +14,6 @@
 <script>
     // specify the columns
     var columnDefs = [
-        //{ headerName: "StudentID", field: "StudentID", hide: true, editable: false, resizable: true },
         { headerName: "Môn Học", field: "SubjectName", editable: false, resizable: true, suppressSizeToFit: true },
         {
             headerName: "M1",
@@ -71,6 +70,11 @@
             field: "Score.K1",
             editable: false, resizable: true,
         },
+        {
+            headerName: "TK",
+            field: "Score.TK",
+            editable: false, resizable: true,
+        },
     ];
 
     // specify the data
@@ -94,6 +98,9 @@
     $(document).ready(function () {
         GetData();
     });
+    /*
+     * Hàm ajax lấy dữ liệu từ server về, 
+     */
     function GetData() {
         ClassID = $('#ClassID').val();
         axios.get('/Student/GetCurrentPointBoard').then(resp => {
@@ -112,15 +119,49 @@
                         T2: 'x',
                         T3: 'x',
                         K1: 'x',
+                        TK: 'x',
                     }
                 };
+                let finalScore = calculateScore(hs.Score);
+                hs.Score.TK = finalScore;
                 gridOptions.api.updateRowData({ add: [hs] });
             });
             gridOptions.api.sizeColumnsToFit();
         }).catch((e) => {
             swal('Lỗi', 'Lỗi hệ thống', 'error');
-        })
+        });
     }
+    /*
+     * Hàm tính điểm tổng kết, làm tròn 2 con số
+     */
+    function calculateScore(score) {
+        let tk = 'x'
+        checkM = score.M1 != 'x' || score.M2 != 'x'|| score.M3  != 'x' || score.M4 != 'x';
+        checkP = score.P1 != 'x'&& score.P2 != 'x' && score.P3 != 'x';
+        checkT = score.T1 != 'x' && score.T2 != 'x' && score.T3 != 'x' && score.T4 != 'x';
+        checkHK = score.K1 != 'x';
+
+        if (checkHK && checkM && checkP && checkT) {
+            let x1Score = [score.M1, score.M2, score.M3, score.M4, score.P1, score.P2, score.P3];
+            let x2Score = [score.T1, score.T2, score.T3, score.K1];
+            let scoreCount = 0;
+            const reducer = (accumulator, currentValue) => {
+                if (currentValue != 'x') {
+                    scoreCount++;
+                    return parseFloat(currentValue) + accumulator;
+                }
+                return accumulator;
+            };
+            let countX1 = x1Score.reduce(reducer, 0);
+            let countX2 = x2Score.reduce(reducer, 0);
+            tk = countX1 + countX2 + parseFloat(score.K1);
+            return (parseFloat(tk).toFixed(2) / scoreCount);
+        }
+        return 'x';
+    }
+    /*
+     * Hàm xóa dữ liệu
+     */
     function ClearData() {
         gridOptions.api.setRowData([]);
     }

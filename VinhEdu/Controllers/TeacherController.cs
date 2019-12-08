@@ -85,7 +85,7 @@ namespace VinhEdu.Controllers
                    .GetAll().Where(c => c.UserID == UserID && c.IsHomeTeacher == true && c.ConfigureID == configID)
                    .First().ClassID;
                 List<int> lstStudent = db.MemberRepository.GetAll()
-                    .Where(c => c.LearnStatus == LearnStatus.Learning || c.LearnStatus == LearnStatus.Duplicated
+                    .Where(c => c.LearnStatus  != LearnStatus.Finished
                     && c.ClassID == ClassID && configID == c.ConfigureID)
                     .Select(c => c.UserID).ToList();
                 List<MarkStudent> markList = new List<MarkStudent>();
@@ -255,43 +255,50 @@ namespace VinhEdu.Controllers
         {
             var CurrentConfig = (int)Session["ConfigID"];
             var SubjectID = (int)Session["SubjectID"];
-            List<EditMark> member = (from m in db.context.ClassMembers
-                                     join p in db.context.PointBoards on m.UserID equals p.StudentID into pm
-                                     from p in pm.DefaultIfEmpty()
-                                     where m.User.Status == AdditionalDefinition.UserStatus.Activated
-                                     where m.User.Type == AdditionalDefinition.UserType.Student
-                                     where m.ClassID == ClassID
-                                     where p.SubjectID == SubjectID
-                                     select new EditMark {
-                                         SubjectID = SubjectID,
-                                         StudentID = m.UserID,
-                                         StudentName = m.User.FullName,
-                                         TempScore = p.Score,
-                                     }).ToList();
-            if(member.Count == 0)
+            var CurrentSemester = db.context.Settings.FirstOrDefault().Semester;
+            List<EditMark> editMarks = new List<EditMark>();
+            List<int> lstStudent = db.MemberRepository.GetAll()
+                   .Where(c => c.LearnStatus != LearnStatus.Finished
+                   && c.ClassID == ClassID && CurrentConfig == c.ConfigureID)
+                   .Select(c => c.UserID).ToList();
+            foreach (int studentID in lstStudent)
             {
-                member = (from m in db.context.ClassMembers
-                          join p in db.context.PointBoards on m.UserID equals p.StudentID into pm
-                          from p in pm.DefaultIfEmpty()
-                          where m.User.Status == AdditionalDefinition.UserStatus.Activated
-                          where m.User.Type == AdditionalDefinition.UserType.Student
-                          where m.ClassID == ClassID
-                          select new EditMark
-                          {
-                              SubjectID = SubjectID,
-                              StudentID = m.UserID,
-                              StudentName = m.User.FullName,
-                              TempScore = null,
-                          }).ToList();
-            }
-            foreach (var item in member)
-            {
-                if (item.TempScore != null)
+                bool HasMark = db.context.PointBoards
+                        .Any(e => e.ClassID == ClassID &&
+                        e.StudentID == studentID && e.SubjectID == SubjectID && e.Semester == CurrentSemester);
+                if (!HasMark)
                 {
-                    item.Score = JsonConvert.DeserializeObject<Score>(item.TempScore);
+                    Score emptyScore = new Score();
+                    PointBoard NewMark = new PointBoard
+                    {
+                        ClassID = ClassID,
+                        Score = JsonConvert.SerializeObject(emptyScore),
+                        StudentID = studentID,
+                        SubjectID = SubjectID,
+                        ConfigureID = CurrentConfig,
+                        Semester = CurrentSemester == AdditionalDefinition.Semester.HK1 ? AdditionalDefinition.Semester.HK1 : AdditionalDefinition.Semester.HK2
+                    };
+                    db.context.PointBoards.Add(NewMark);
+                    db.SaveChanges();
                 }
+                EditMark editItem = db.context.PointBoards
+                .Where(c => c.ClassID == ClassID && c.ConfigureID == c.ConfigureID
+                && c.Semester == CurrentSemester && c.SubjectID == SubjectID && c.StudentID == studentID)
+                .Select(c => new EditMark
+                {
+                    SubjectID = c.SubjectID,
+                    StudentName = c.User.FullName,
+                    TempScore = c.Score,
+                    StudentID = c.StudentID
+                }).FirstOrDefault();
+                if (editItem.TempScore != null)
+                {
+                    editItem.Score = JsonConvert.DeserializeObject<Score>(editItem.TempScore);
+                    editItem.TempScore = null;
+                }
+                editMarks.Add(editItem);
             }
-            return Json(member, JsonRequestBehavior.AllowGet);
+            return Json(editMarks, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// Cập nhật bảng điểm
@@ -310,15 +317,16 @@ namespace VinhEdu.Controllers
                 {
                     bool HasMark = db.context.PointBoards
                         .Any(e => e.ClassID == ClassID &&
-                        e.StudentID == mark.StudentID && e.SubjectID == SubjectID);
+                        e.StudentID == mark.StudentID && e.SubjectID == SubjectID && e.Semester == CurrentSemester);
                     if (HasMark)
                     {
                         PointBoard CurrentMark = db.context.PointBoards
                         .Where(e => e.ClassID == ClassID &&
                         e.StudentID == mark.StudentID && e.SubjectID == SubjectID &&  e.ConfigureID == CurrentConfig).First();
                         var dumpData = JsonConvert.SerializeObject(mark.Score);
+
                         CurrentMark.Score = dumpData;
-                        db.context.SaveChanges();
+                        db.SaveChanges();
                     }
                     else
                     {
@@ -332,34 +340,36 @@ namespace VinhEdu.Controllers
                             Semester = CurrentSemester == AdditionalDefinition.Semester.HK1 ? AdditionalDefinition.Semester.HK1 : AdditionalDefinition.Semester.HK2
                         };
                         db.context.PointBoards.Add(NewMark);
-                        db.context.SaveChanges();
+                        db.SaveChanges();
                     }
 
                 }
-                List<EditMark> member = (from m in db.context.ClassMembers
-                                         join p in db.context.PointBoards on m.UserID equals p.StudentID into pm
-                                         from p in pm.DefaultIfEmpty()
-                                         where m.User.Status == AdditionalDefinition.UserStatus.Activated
-                                         where m.User.Type == AdditionalDefinition.UserType.Student
-                                         where m.ClassID == ClassID
-                                         where p.SubjectID == SubjectID
-                                         select new EditMark
-                                         {
-                                             SubjectID = SubjectID,
-                                             StudentID = m.UserID,
-                                             StudentName = m.User.FullName,
-                                             TempScore = p.Score,
-                                             //Score = JsonConvert.DeserializeObject<Score>(p.Score),
-                                         }).ToList();
-                List<EditMark> Result = new List<EditMark>();
-                foreach (var item in member)
+                // Đổ lại dữ liệu
+                List<int> lstStudent = db.MemberRepository.GetAll()
+                   .Where(c => c.LearnStatus != LearnStatus.Finished
+                   && c.ClassID == ClassID && CurrentConfig == c.ConfigureID)
+                   .Select(c => c.UserID).ToList();
+                List<EditMark> editMarks = new List<EditMark>();
+                foreach (int studentID in lstStudent)
                 {
-                    if (item.TempScore != null)
+                    EditMark editItem = db.context.PointBoards
+                    .Where(c => c.ClassID == ClassID && c.ConfigureID == c.ConfigureID
+                    && c.Semester == CurrentSemester && c.SubjectID == SubjectID && c.StudentID == studentID)
+                    .Select(c => new EditMark
                     {
-                        item.Score = JsonConvert.DeserializeObject<Score>(item.TempScore);
+                        SubjectID = c.SubjectID,
+                        StudentName = c.User.FullName,
+                        TempScore = c.Score,
+                        StudentID = c.StudentID
+                    }).FirstOrDefault();
+                    if (editItem.TempScore != null)
+                    {
+                        editItem.Score = JsonConvert.DeserializeObject<Score>(editItem.TempScore);
+                        editItem.TempScore = null;
                     }
+                    editMarks.Add(editItem);
                 }
-                return Json(new { Message = "Cập nhật thành công", Member = member, Success = true }, JsonRequestBehavior.AllowGet);
+                return Json(new { Message = "Cập nhật thành công", Member = editMarks, Success = true }, JsonRequestBehavior.AllowGet);
 
             }
             return Json(new { Message = "Bạn nhập điểm không hợp lệ \n Điểm từ x (chưa có) và 0 đến 10", Success = false }, JsonRequestBehavior.AllowGet);

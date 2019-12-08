@@ -49,7 +49,7 @@
     </div>
 </div>
 <div class="card-header">
-    Bảng điểm
+    Bảng điểm 
 </div>
 <div id="myGrid" style="height: 400px;width:100%;" class="ag-theme-balham"></div>
 <script src="~/Content/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
@@ -181,3 +181,32 @@
     }
     
 </script>
+@*<script>
+    function onBtPrint() {
+    var gridApi = gridOptions.api;
+
+    setPrinterFriendly(gridApi);
+
+    setTimeout( function( ) {
+        print();
+        setNormal(gridApi);
+    }, 2000);
+}
+
+function setPrinterFriendly(api) {
+    var eGridDiv = document.querySelector('#myGrid');
+    eGridDiv.style.width = '';
+    eGridDiv.style.height = '';
+
+    api.setDomLayout('print');
+}
+
+function setNormal(api) {
+    var eGridDiv = document.querySelector('#myGrid');
+    eGridDiv.style.width = '600px';
+    eGridDiv.style.height = '200px';
+
+    api.setDomLayout(null);
+}
+
+</script>*@

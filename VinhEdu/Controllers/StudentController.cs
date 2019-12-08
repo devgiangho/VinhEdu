@@ -31,33 +31,80 @@ namespace VinhEdu.Controllers
             var CurrentConfig = db.ConfigRepository.GetAll().Where(z => z.IsActive == true).FirstOrDefault().ID;//(int)Session["ConfigID"];
             var Semester  = db.context.Settings.FirstOrDefault().Semester;
             var UserID = (int)Session["UserID"];
+            var CurrentSemester = db.context.Settings.FirstOrDefault().Semester;
+            int ClassID = db.MemberRepository
+                   .GetAll().Where(c => c.UserID == UserID && c.ConfigureID == CurrentConfig 
+                   && (c.LearnStatus != AdditionalDefinition.LearnStatus.Finished))
+                   .First().ClassID;
             var CurrentClass = db.MemberRepository.GetAll()
                 .Where(e => e.ConfigureID == CurrentConfig && e.UserID == UserID 
                 && e.LearnStatus == AdditionalDefinition.LearnStatus.Learning).FirstOrDefault();
-            
-            List<ShowMark> showMarks = (from m in db.context.ClassMembers
-                                     join p in db.context.PointBoards on m.UserID equals p.StudentID into pm
-                                     from p in pm.DefaultIfEmpty()
-                                     where m.User.Status == AdditionalDefinition.UserStatus.Activated
-                                     where m.User.ID == UserID
-                                     where m.ConfigureID == CurrentConfig
-                                     where p.Semester == Semester
-                                     where m.ClassID == CurrentClass.ClassID
-                                        select new ShowMark
-                                     {
-                                         SubjectName = p.Subject.SubjectName,
-                                         StudentID = m.UserID,
-                                         StudentName = m.User.FullName,
-                                         TempScore = p.Score,
-                                     }).ToList();
-            foreach (var item in showMarks)
+            List<int> subjectList = db.SubjectRepository.GetAll().Select(c => c.ID).ToList();
+            List<ShowMark> markList = new List<ShowMark>();
+            foreach (var subjectID in subjectList)
             {
-                if (item.TempScore != null)
+                ShowMark mark = new ShowMark();
+                bool HasMark = db.context.PointBoards
+                    .Any(e => e.ClassID == ClassID &&
+                    e.StudentID == UserID && e.SubjectID == subjectID
+                    && e.ConfigureID == CurrentConfig && e.Semester == CurrentSemester);
+                if (HasMark)
                 {
-                    item.Score = JsonConvert.DeserializeObject<Score>(item.TempScore);
+                    mark = (from m in db.context.ClassMembers
+                            join p in db.context.PointBoards on m.UserID equals p.StudentID into pm
+                            from p in pm.DefaultIfEmpty()
+                            where m.UserID == UserID
+                            where m.ClassID == ClassID
+                            where p.SubjectID == subjectID
+                            where p.ConfigureID == CurrentConfig
+                            select new ShowMark
+                            {
+                                SubjectID = subjectID,
+                                SubjectName = p.Subject.SubjectName,
+                                TempScore = p.Score,
+                            }).First();
+                    if (mark.TempScore != null)
+                    {
+                        mark.Score = JsonConvert.DeserializeObject<Score>(mark.TempScore);
+                        mark.TempScore = null;
+                    }
                 }
+                else
+                {
+                    PointBoard NewMark = new PointBoard
+                    {
+                        ClassID = ClassID,
+                        Score = JsonConvert.SerializeObject(new Score()),
+                        StudentID = UserID,
+                        SubjectID = subjectID,
+                        ConfigureID = CurrentConfig,
+                        Semester = CurrentSemester == AdditionalDefinition.Semester.HK1 ? AdditionalDefinition.Semester.HK1 : AdditionalDefinition.Semester.HK2
+                    };
+                    db.context.PointBoards.Add(NewMark);
+
+                    db.context.SaveChanges();
+                    mark = (from m in db.context.ClassMembers
+                            join p in db.context.PointBoards on m.UserID equals p.StudentID into pm
+                            from p in pm.DefaultIfEmpty()
+                            where m.UserID == UserID
+                            where m.ClassID == ClassID
+                            where p.SubjectID == subjectID
+                            where p.ConfigureID == CurrentConfig
+                            select new ShowMark
+                            {
+                                SubjectID = subjectID,
+                                SubjectName = p.Subject.SubjectName,
+                                TempScore = p.Score,
+                            }).First();
+                    if (mark.TempScore != null)
+                    {
+                        mark.Score = JsonConvert.DeserializeObject<Score>(mark.TempScore);
+                        mark.TempScore = null;
+                    }
+                }
+                markList.Add(mark);
             }
-            return Json(showMarks, JsonRequestBehavior.AllowGet);
+            return Json(markList, JsonRequestBehavior.AllowGet);
         }
     }
 }
