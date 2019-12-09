@@ -380,6 +380,20 @@ namespace VinhEdu.Controllers
             }
             return Json(new { Message = "Bạn nhập điểm không hợp lệ \n Điểm từ x (chưa có) và 0 đến 10", Success = false }, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// Gửi tin nhắn cho phụ huynh
+        /// </summary>
+        /// <param name="studentID"></param>
+        /// <param name="classID"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public JsonResult SendContact(int studentID,int classID,string message)
+        {
+            var CurrentConfig = (int)Session["ConfigID"];
+            var UserID = (int)Session["UserID"];
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
          
     }
 }

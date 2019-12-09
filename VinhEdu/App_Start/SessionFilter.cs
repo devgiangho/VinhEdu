@@ -27,7 +27,8 @@ namespace VinhEdu.App_Start
                     HttpContext.Current.Session["UserID"] = user.ID;
                     HttpContext.Current.Session["Name"] = user.FullName;
                     HttpContext.Current.Session["ConfigID"] = currentconfig.ID;
-                    if(user.SubjectID != null)
+                    HttpContext.Current.Session["SchoolYear"] = currentconfig.SchoolYear;
+                    if (user.SubjectID != null)
                     {
                         HttpContext.Current.Session["SubjectID"] = user.SubjectID;
                         HttpContext.Current.Session["SubjectName"] = user.Subject.SubjectName;

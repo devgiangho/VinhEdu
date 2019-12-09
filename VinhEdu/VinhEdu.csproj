@@ -193,6 +193,10 @@
     <Compile Include="Migrations\201912020658453_editsemmester.Designer.cs">
       <DependentUpon>201912020658453_editsemmester.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912090515032_addContact.cs" />
+    <Compile Include="Migrations\201912090515032_addContact.Designer.cs">
+      <DependentUpon>201912090515032_addContact.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\SeedData.cs" />
     <Compile Include="Models\AdditionalDefinition.cs" />
@@ -200,6 +204,7 @@
     <Compile Include="Models\Class.cs" />
     <Compile Include="Models\ClassMember.cs" />
     <Compile Include="Models\Configure.cs" />
+    <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\EduVinhContext.cs" />
     <Compile Include="Models\PointBoard.cs" />
     <Compile Include="Models\School.cs" />
@@ -1302,6 +1307,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912020658453_editsemmester.resx">
       <DependentUpon>201912020658453_editsemmester.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912090515032_addContact.resx">
+      <DependentUpon>201912090515032_addContact.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

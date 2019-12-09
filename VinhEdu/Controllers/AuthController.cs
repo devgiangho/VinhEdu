@@ -88,6 +88,7 @@ namespace VinhEdu.Controllers
                             //Nếu là giáo viên thì lấy môn đang dạy
                             Session["SubjectID"] = user.SubjectID;
                             Session["SubjectName"] = user.Subject.SubjectName;
+                            Session["SemesterName"] = setting.GetDisplayName();
                         }
                         if(user.Type == UserType.Student)
                         {
@@ -100,6 +101,8 @@ namespace VinhEdu.Controllers
                         }
                         Session["SemesterName"] = setting.GetDisplayName();
                         Session["ConfigID"] = currentconfig.ID;
+                        Session["SchoolYear"] = currentconfig.SchoolYear;
+
                         if (ReturnUrl != null)
                         {
                             return Redirect(ReturnUrl);
