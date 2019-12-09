@@ -30,7 +30,17 @@ namespace VinhEdu.App_Start
                     if(user.SubjectID != null)
                     {
                         HttpContext.Current.Session["SubjectID"] = user.SubjectID;
+                        HttpContext.Current.Session["SubjectName"] = user.Subject.SubjectName;
                         HttpContext.Current.Session["SemesterName"] = setting.GetDisplayName();
+                    }
+                    if (user.Type == UserType.Student)
+                    {
+                        //Nếu là học sinh thì lấy lớp học hiện tại
+                        HttpContext.Current.Session["ClassName"] = user.ClassMembers
+                            .Where(c => c.ConfigureID == currentconfig.ID &&
+                            c.LearnStatus != LearnStatus.Finished && c.LearnStatus != LearnStatus.Switched)
+                            .Select(c => c.Class.ClassName)
+                            .FirstOrDefault();
                     }
                 }
             }

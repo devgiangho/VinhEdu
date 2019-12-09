@@ -1,15 +1,25 @@
 ﻿
 @{
-    ViewBag.Title = "PointBoard";
+    ViewBag.Title = "Bảng điểm của tôi";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 @Html.Partial("_PartialGrid")
-<div class="container-fluid" style="margin-top:15px;padding-top:15px;">
-    <h3>Xem điểm @ViewBag.ClassName - @ViewBag.Semester</h3>
-    <input type="hidden" id="ClassID" value="@ViewBag.ClassID" />
-    <div id="myGrid" style="height: 600px;width:100%;" class="ag-theme-balham"></div>
+    <div class="container-fluid" style="margin-top:15px;padding-top:15px;">
+        <h3 style="TEXT-TRANSFORM: uppercase;
+    font-family: serif;">
+            Điểm của tôi - lớp @Session["ClassName"] - HỌC KỲ I
+        </h3>
+        <input type="hidden" id="ClassID" value="@ViewBag.ClassID" />
+        <div id="myGrid" style="height: 340px;width:100%;" class="ag-theme-balham"></div>
+        <hr/>
+        <h3 style="TEXT-TRANSFORM: uppercase;
+        font-family: serif;">
+            Lớp @Session["ClassName"] - HỌC KỲ II
+        </h3>
+        <input type="hidden" id="ClassID" value="@ViewBag.ClassID" />
+        <div id="myGrid2" style="height: 340px;width:100%;" class="ag-theme-balham"></div>
 
-</div>
+    </div>
 
 <script>
     // specify the columns
@@ -71,7 +81,7 @@
             editable: false, resizable: true,
         },
         {
-            headerName: "TK",
+            headerName: "T.Kết",
             field: "Score.TK",
             editable: false, resizable: true,
         },
@@ -79,7 +89,7 @@
 
     // specify the data
     var rowData = [];
-
+    var rowData2 = [];
     // let the grid know which columns and what data to use
     var gridOptions = {
         columnDefs: columnDefs,
@@ -87,11 +97,19 @@
         rowSelection: 'single',
         headerHeight: '28px'
     };
+    var gridOptions2 = {
+        columnDefs: columnDefs,
+        rowData: rowData2,
+        rowSelection: 'single',
+        headerHeight: '28px'
+    };
     // lookup the container we want the Grid to use
     var eGridDiv = document.querySelector('#myGrid');
+    var eGridDiv2 = document.querySelector('#myGrid2');
 
     // create the grid passing in the div to use together with the columns & data we want to use
     new agGrid.Grid(eGridDiv, gridOptions);
+    new agGrid.Grid(eGridDiv2, gridOptions2);
 </script>
 <script>
     var ClassID = $('#ClassID').val();
@@ -103,8 +121,10 @@
      */
     function GetData() {
         ClassID = $('#ClassID').val();
-        axios.get('/Student/GetCurrentPointBoard').then(resp => {
+        axios.post('/Student/GetStudentPointBoard', {semester : 1}).then(resp => {
             ClearData();
+            let checkTK = 0;
+            let allTK = [];
             resp.data.forEach((e) => {
                 let hs = {
                     ...e, Score: e.Score ? e.Score : {
@@ -122,11 +142,66 @@
                         TK: 'x',
                     }
                 };
-                let finalScore = calculateScore(hs.Score);
+                let finalScore = caculateScore(hs.Score);
                 hs.Score.TK = finalScore;
+                if (finalScore != 'x') {
+                    checkTK++;
+                }
                 gridOptions.api.updateRowData({ add: [hs] });
+                allTK.push(hs);
             });
+           //Tính điểm tổng kết tất cả các môn
+            if (resp.data.length == checkTK) {
+                let finalScoreTK = caculateFinalScore(allTK);
+                let finalTK = {
+                    SubjectName: 'Tổng kết học kỳ',
+                    ["Score"]: { ["TK"]: finalScoreTK }
+                };
+                gridOptions.api.updateRowData({ add: [finalTK] });
+            }
             gridOptions.api.sizeColumnsToFit();
+        }).catch((e) => {
+            swal('Lỗi', 'Lỗi hệ thống', 'error');
+        });
+        axios.post('/Student/GetStudentPointBoard', {semester : 2}).then(resp => {
+            ClearData2();
+            let checkTK = 0;
+            let allTK = [];
+            resp.data.forEach((e) => {
+                let hs = {
+                    ...e, Score: e.Score ? e.Score : {
+                        M1: 'x',
+                        M2: 'x',
+                        M3: 'x',
+                        M4: 'x',
+                        P1: 'x',
+                        P2: 'x',
+                        P3: 'x',
+                        T1: 'x',
+                        T2: 'x',
+                        T3: 'x',
+                        K1: 'x',
+                        TK: 'x',
+                    }
+                };
+                let finalScore = caculateScore(hs.Score);
+                hs.Score.TK = finalScore;
+                if (finalScore != 'x') {
+                    checkTK++;
+                }
+                gridOptions2.api.updateRowData({ add: [hs] });
+                allTK.push(hs);
+            });
+           //Tính điểm tổng kết tất cả các môn
+            if (resp.data.length == checkTK) {
+                let finalScoreTK = caculateFinalScore(allTK);
+                let finalTK = {
+                    SubjectName: 'Tổng kết học kỳ',
+                    ["Score"]: { ["TK"]: finalScoreTK }
+                };
+                gridOptions2.api.updateRowData({ add: [finalTK] });
+            }
+            gridOptions2.api.sizeColumnsToFit();
         }).catch((e) => {
             swal('Lỗi', 'Lỗi hệ thống', 'error');
         });
@@ -134,7 +209,7 @@
     /*
      * Hàm tính điểm tổng kết, làm tròn 2 con số
      */
-    function calculateScore(score) {
+    function caculateScore(score) {
         let tk = 'x'
         checkM = score.M1 != 'x' || score.M2 != 'x'|| score.M3  != 'x' || score.M4 != 'x';
         checkP = score.P1 != 'x'&& score.P2 != 'x' && score.P3 != 'x';
@@ -143,21 +218,47 @@
 
         if (checkHK && checkM && checkP && checkT) {
             let x1Score = [score.M1, score.M2, score.M3, score.M4, score.P1, score.P2, score.P3];
-            let x2Score = [score.T1, score.T2, score.T3, score.K1];
+            let x2Score = [score.T1, score.T2, score.T3];
             let scoreCount = 0;
             const reducer = (accumulator, currentValue) => {
                 if (currentValue != 'x') {
+                    //hệ số 1
                     scoreCount++;
                     return parseFloat(currentValue) + accumulator;
                 }
                 return accumulator;
             };
+            const reducer2 = (accumulator, currentValue) => {
+                if (currentValue != 'x') {
+                    //hệ số 2
+                    scoreCount += 2;
+                    return (parseFloat(currentValue) * 2) + accumulator;
+                }
+                return accumulator;
+            };
             let countX1 = x1Score.reduce(reducer, 0);
-            let countX2 = x2Score.reduce(reducer, 0);
-            tk = countX1 + countX2 + parseFloat(score.K1);
-            return (parseFloat(tk).toFixed(2) / scoreCount);
+            let countX2 = x2Score.reduce(reducer2, 0);
+            tk = countX1 + countX2 + (parseFloat(score.K1) * 3);
+            scoreCount += 3; // hệ số điểm học kì
+            return (parseFloat(tk) / scoreCount).toFixed(2);
         }
         return 'x';
+    }
+    /*
+     * Hàm tính điểm tổng kết tất cả  
+     */
+    function caculateFinalScore(arrayTK) {
+        let countSubject = arrayTK.length + 2;
+        let totalScore = 0;
+        arrayTK.forEach((e) => {
+            if (e.SubjectID == 1 || e.SubjectID == 2) {
+                totalScore += (parseFloat(e.Score.TK) * 2);
+            }
+            else {
+                totalScore += parseFloat(e.Score.TK);
+            }
+        });
+        return parseFloat(totalScore / countSubject).toFixed(2);
     }
     /*
      * Hàm xóa dữ liệu
@@ -165,9 +266,8 @@
     function ClearData() {
         gridOptions.api.setRowData([]);
     }
-    function getAllRows() {
-        let rowData = [];
-        gridOptions.api.forEachNode(node => rowData.push(node.data));
-        return rowData;
+    function ClearData2() {
+        gridOptions2.api.setRowData([]);
     }
+    
 </script>

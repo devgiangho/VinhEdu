@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using VinhEdu.Models;
 using VinhEdu.Repository;
 using VinhEdu.ViewModels;
+using static VinhEdu.Models.AdditionalDefinition;
 
 namespace VinhEdu.Controllers
 {
@@ -27,12 +28,11 @@ namespace VinhEdu.Controllers
         /// Lấy điểm năm học và kì học hiện tại
         /// </summary>
         /// <returns></returns>
-        public JsonResult GetCurrentPointBoard()
+        public JsonResult GetStudentPointBoard(Semester semester)
         {
-            var CurrentConfig = db.ConfigRepository.GetAll().Where(z => z.IsActive == true).FirstOrDefault().ID;//(int)Session["ConfigID"];
-            var Semester  = db.context.Settings.FirstOrDefault().Semester;
+            var CurrentConfig = (int)Session["ConfigID"];
+            var CurrentSemester = semester;
             var UserID = (int)Session["UserID"];
-            var CurrentSemester = db.context.Settings.FirstOrDefault().Semester;
             int ClassID = db.MemberRepository
                    .GetAll().Where(c => c.UserID == UserID && c.ConfigureID == CurrentConfig 
                    && (c.LearnStatus != AdditionalDefinition.LearnStatus.Finished))
@@ -58,6 +58,7 @@ namespace VinhEdu.Controllers
                             where m.ClassID == ClassID
                             where p.SubjectID == subjectID
                             where p.ConfigureID == CurrentConfig
+                            where p.Semester == CurrentSemester
                             select new ShowMark
                             {
                                 SubjectID = subjectID,
@@ -79,7 +80,7 @@ namespace VinhEdu.Controllers
                         StudentID = UserID,
                         SubjectID = subjectID,
                         ConfigureID = CurrentConfig,
-                        Semester = CurrentSemester == AdditionalDefinition.Semester.HK1 ? AdditionalDefinition.Semester.HK1 : AdditionalDefinition.Semester.HK2
+                        Semester = CurrentSemester,// == AdditionalDefinition.Semester.HK1 ? AdditionalDefinition.Semester.HK1 : AdditionalDefinition.Semester.HK2
                     };
                     db.context.PointBoards.Add(NewMark);
 
@@ -91,6 +92,7 @@ namespace VinhEdu.Controllers
                             where m.ClassID == ClassID
                             where p.SubjectID == subjectID
                             where p.ConfigureID == CurrentConfig
+                            where p.Semester == CurrentSemester
                             select new ShowMark
                             {
                                 SubjectID = subjectID,

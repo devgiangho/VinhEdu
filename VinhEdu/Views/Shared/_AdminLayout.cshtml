@@ -102,6 +102,30 @@
                     </div>
                     <div class="info">
                         <a href="#" class="d-block">@Session["Name"]</a>
+                        @{
+                            var role = "";
+                            if (User.IsInRole("admin"))
+                            {
+                                role = "ADMIN";
+                            }
+                            if (User.IsInRole("teacher"))
+                            {
+                                role = "GIÁO VIÊN";
+                            }
+                            if (User.IsInRole("student"))
+                            {
+                                role = "HỌC SINH";
+                            }
+                        }
+                        <span class="badge badge-info">@role</span>
+                        @if (User.IsInRole("teacher"))
+                        {
+                            <span class="badge badge-success">@Session["SubjectName"]</span>
+                        }
+                        @if (User.IsInRole("student"))
+                        {
+                            <span class="badge badge-success">Lớp @Session["ClassName"]</span>
+                        }
                     </div>
                 </div>
 

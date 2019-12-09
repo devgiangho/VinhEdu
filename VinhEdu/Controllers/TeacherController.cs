@@ -223,7 +223,7 @@ namespace VinhEdu.Controllers
         /// <returns></returns>
         public ActionResult PointBoard(int ClassID)
         {
-            ViewBag.Semester = db.context.Settings.FirstOrDefault().Semester.GetDisplayName();
+            
             try
             {
                 var className = db.ClassRepository.FindByID(ClassID).ClassName;
@@ -236,6 +236,8 @@ namespace VinhEdu.Controllers
                     ViewBag.Title = "Quản lý điểm";
                     ViewBag.ClassID = ClassID;
                     ViewBag.ClassName = className;
+                    ViewBag.Semester = db.context.Settings.FirstOrDefault().Semester.GetDisplayName();
+                    ViewBag.SubjectName = db.UserRepository.FindByID(UserID).Subject.SubjectName;
                     return View();
                 }
                 else
