@@ -25,9 +25,9 @@
     function Update() {
         let org = $('#OrganizationName').val();
         let yearID = $('#ConfigureID').val();
-        let semmester = $('#Semmester').val();
-        if (org && org.length > 5 && yearID && semmester) {
-            axios.post('/Admin/Setting', { org: org, ConfigID: yearID, semmester: semmester }).then(resp => {
+        let semester = $('#Semester').val();
+        if (org && org.length > 5 && yearID && semester) {
+            axios.post('/Admin/Setting', { org: org, ConfigID: yearID, semester: semester }).then(resp => {
                 swal("Thành công", "Cập nhật thành công", "success");
             }).catch((e) => {
                 swal("Lỗi", e, "error");

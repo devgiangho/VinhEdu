@@ -147,49 +147,43 @@
             {
                 ID = 4,
                 IsActive = false,
-                SchoolYear = "2019 - 2020"
+                SchoolYear = "2022 - 2023"
             });
             context.Configures.AddOrUpdate(e => e.ID, new Configure
             {
                 ID = 5,
                 IsActive = true,
-                SchoolYear = "2019 - 2020"
+                SchoolYear = "2023 - 2024"
             });
             context.Configures.AddOrUpdate(e => e.ID, new Configure
             {
                 ID = 6,
                 IsActive = false,
-                SchoolYear = "2020 - 2021"
+                SchoolYear = "2024 - 2025"
             });
             context.Configures.AddOrUpdate(e => e.ID, new Configure
             {
                 ID = 7,
                 IsActive = false,
-                SchoolYear = "2021 - 2022"
+                SchoolYear = "2025 - 2026"
             });
             context.Configures.AddOrUpdate(e => e.ID, new Configure
             {
                 ID = 8,
                 IsActive = false,
-                SchoolYear = "2022 - 2023"
+                SchoolYear = "2026 - 2027"
             });
             context.Configures.AddOrUpdate(e => e.ID, new Configure
             {
                 ID = 9,
                 IsActive = false,
-                SchoolYear = "2023 - 2024"
+                SchoolYear = "2027 - 2028"
             });
             context.Configures.AddOrUpdate(e => e.ID, new Configure
             {
                 ID = 10,
                 IsActive = false,
-                SchoolYear = "2024 - 2025"
-            });
-            context.Configures.AddOrUpdate(e => e.ID, new Configure
-            {
-                ID = 11,
-                IsActive = false,
-                SchoolYear = "2025 - 2026"
+                SchoolYear = "2028 - 2029"
             });
             // Thêm Trường
             context.Schools.AddOrUpdate(e => e.SchoolID, new School
