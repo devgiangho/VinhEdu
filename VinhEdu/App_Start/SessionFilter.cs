@@ -42,6 +42,14 @@ namespace VinhEdu.App_Start
                             c.LearnStatus != LearnStatus.Finished && c.LearnStatus != LearnStatus.Switched)
                             .Select(c => c.Class.ClassName)
                             .FirstOrDefault();
+                        HttpContext.Current.Session["SchoolName"] = user.ClassMembers
+                                .Where(c => c.ConfigureID == currentconfig.ID &&
+                                c.LearnStatus != LearnStatus.Switched)
+                                .Select(c => c.Class.School.SchoolName);
+                    }
+                    if (user.Type == UserType.HeadMaster)
+                    {
+                        HttpContext.Current.Session["SchoolName"] = user.School.SchoolName;
                     }
                 }
             }

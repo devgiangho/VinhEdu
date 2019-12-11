@@ -198,6 +198,10 @@
     <Compile Include="Migrations\201912090515032_addContact.Designer.cs">
       <DependentUpon>201912090515032_addContact.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912110142211_addmodel.cs" />
+    <Compile Include="Migrations\201912110142211_addmodel.Designer.cs">
+      <DependentUpon>201912110142211_addmodel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\SeedData.cs" />
     <Compile Include="Models\AdditionalDefinition.cs" />
@@ -1255,13 +1259,13 @@
     <Content Include="Views\Student\PointBoard.cshtml" />
     <Content Include="Views\Teacher\MyHomeClass.cshtml" />
     <Content Include="Views\Teacher\Message.cshtml" />
+    <Content Include="Views\HeadMaster\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\client\" />
     <Folder Include="Views\AdStudent\" />
     <Folder Include="Views\AdTeacher\" />
-    <Folder Include="Views\HeadMaster\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -1313,6 +1317,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912090515032_addContact.resx">
       <DependentUpon>201912090515032_addContact.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912110142211_addmodel.resx">
+      <DependentUpon>201912110142211_addmodel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
