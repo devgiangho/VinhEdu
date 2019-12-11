@@ -87,7 +87,8 @@ namespace VinhEdu.Controllers
                         setCookie(user.Identifier, model.RememberMe, user.Role);
                         Session["UserID"] = user.ID;
                         Session["Name"] = user.FullName;
-                        if(user.SubjectID != null)
+                        Session["Semester"] = setting;
+                        if (user.SubjectID != null)
                         {
                             //Nếu là giáo viên thì lấy môn đang dạy
                             Session["SubjectID"] = user.SubjectID;
@@ -105,9 +106,13 @@ namespace VinhEdu.Controllers
                             Session["SchoolName"] = user.ClassMembers
                                 .Where(c => c.ConfigureID == currentconfig.ID &&
                                 c.LearnStatus != LearnStatus.Switched)
-                                .Select(c => c.Class.School.SchoolName);
+                                .Select(c => c.Class.School.SchoolName).First();
                         }
-                        if(user.Type == UserType.HeadMaster)
+                        if (user.Type == UserType.Teacher)
+                        {
+                            Session["SchoolName"] = user.School.SchoolName;
+                        }
+                        if (user.Type == UserType.HeadMaster)
                         {
                             Session["SchoolName"] = user.School.SchoolName;
                         }

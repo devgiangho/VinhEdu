@@ -147,6 +147,15 @@
                                 </p>
                             </a>
                         </li>
+                        @if (User.IsInRole("headmaster"))
+                        {
+                            <li class="nav-item">
+                                <a href="/HeadMaster/ClassRoomList" class="nav-link">
+                                    <i class="nav-icon fa fa-tasks text-info"></i>
+                                    <p>Danh sách lớp</p>
+                                </a>
+                            </li>
+                        }
                         @if (User.IsInRole("admin"))
                         {
                             <li class="nav-item has-treeview">
@@ -211,11 +220,11 @@
                                 </a>
                             </li>
                             @*<li class="nav-item">
-                                <a href="/Teacher/Message" class="nav-link">
-                                    <i class="nav-icon fa fa-envelope-o text-primary"></i>
-                                    <p>Tin nhắn</p>
-                                </a>
-                            </li>*@
+                <a href="/Teacher/Message" class="nav-link">
+                    <i class="nav-icon fa fa-envelope-o text-primary"></i>
+                    <p>Tin nhắn</p>
+                </a>
+            </li>*@
                         }
                         @if (User.IsInRole("student"))
                         {
@@ -226,11 +235,11 @@
                                 </a>
                             </li>
                             @*<li class="nav-item">
-                                <a href="/Student/Message" class="nav-link">
-                                    <i class="nav-icon fa fa-envelope-o text-primary"></i>
-                                    <p>Tin nhắn</p>
-                                </a>
-                            </li>*@
+                <a href="/Student/Message" class="nav-link">
+                    <i class="nav-icon fa fa-envelope-o text-primary"></i>
+                    <p>Tin nhắn</p>
+                </a>
+            </li>*@
                         }
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">

@@ -28,11 +28,13 @@ namespace VinhEdu.App_Start
                     HttpContext.Current.Session["Name"] = user.FullName;
                     HttpContext.Current.Session["ConfigID"] = currentconfig.ID;
                     HttpContext.Current.Session["SchoolYear"] = currentconfig.SchoolYear;
+                    HttpContext.Current.Session["SemesterName"] = setting.GetDisplayName();
+                    HttpContext.Current.Session["Semester"] = setting;
                     if (user.SubjectID != null)
                     {
                         HttpContext.Current.Session["SubjectID"] = user.SubjectID;
                         HttpContext.Current.Session["SubjectName"] = user.Subject.SubjectName;
-                        HttpContext.Current.Session["SemesterName"] = setting.GetDisplayName();
+                        
                     }
                     if (user.Type == UserType.Student)
                     {
@@ -45,9 +47,9 @@ namespace VinhEdu.App_Start
                         HttpContext.Current.Session["SchoolName"] = user.ClassMembers
                                 .Where(c => c.ConfigureID == currentconfig.ID &&
                                 c.LearnStatus != LearnStatus.Switched)
-                                .Select(c => c.Class.School.SchoolName);
+                                .Select(c => c.Class.School.SchoolName).First();
                     }
-                    if (user.Type == UserType.HeadMaster)
+                    if (user.Type == UserType.HeadMaster || user.Type == UserType.Teacher)
                     {
                         HttpContext.Current.Session["SchoolName"] = user.School.SchoolName;
                     }

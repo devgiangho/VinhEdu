@@ -7,6 +7,11 @@ using VinhEdu.Models;
 
 namespace VinhEdu.ViewModels
 {
+    public class CheckMark
+    {
+        public List<MarkStudent> markStudents { get; set; }
+        public bool isFinished {get;set;}
+    }
     public class MarkStudent
     {
         public int StudentID { get; set; }
@@ -19,6 +24,7 @@ namespace VinhEdu.ViewModels
         public int SubjectID { get; set; }
         public Score Score { get; set; }
         public string TempScore { get; set; }
+        public string finalScore { get; set; }
     }
     public class ShowMark {
         public int StudentID { get; set; }

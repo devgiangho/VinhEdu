@@ -1,0 +1,54 @@
+﻿@model IEnumerable<VinhEdu.ViewModels.ClassListHeadMaster>
+@{
+    ViewBag.Title = "Danh sách lớp học";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .small-box .icon{
+        font-size:35px;
+            top: 15px;
+    }
+    .small-box:hover .icon {
+        font-size: 40px;
+    }
+    .inner {
+        height:90px
+    }
+</style>
+    <div class="container-fluid mt-3">
+        <div class="row">
+            @foreach (var item in Model)
+                {
+                    var bg = "bg-info";
+                    switch(item.Grade)
+                    {
+                        case VinhEdu.Models.Grade.G7:
+                        bg = "bg-primary";
+                        break;
+                        case VinhEdu.Models.Grade.G8:
+                        bg = "bg-success";
+                        break;
+                        case VinhEdu.Models.Grade.G9:
+                        bg = "bg-warning";
+                        break;
+                    }
+                <div class="col-lg-3 col-6">
+                    <div class="small-box @bg">
+                        <div class="inner">
+                            <p>GVCN: @item.HomeTeacher</p>
+                            <p>@item.StudentCount học sinh</p>
+                        </div>
+                        <div class="icon text-white">
+                            @item.ClassName
+                        </div>
+                        @{
+                            var link = item.StudentCount > 0 ? "/HeadMaster/GradeUpManage?ClassID=" + @item.ClassID : "#";
+                            <a href="@link" class="small-box-footer">Xem / xét điểm <i class="fa fa-arrow-circle-up"></i></a>
+                        }
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>

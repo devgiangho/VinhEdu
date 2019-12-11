@@ -1,0 +1,241 @@
+﻿
+@{
+    ViewBag.Title = "Quản lý xét điểm lên lớp";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@Html.Partial("_PartialGrid")
+<div class="card-header">
+    Quản lý xét điểm lên lớp - lớp @ViewBag.ClassName
+</div>
+<div class="card-header">
+    Bảng điểm học kỳ 1:
+</div>
+<div id="myGrid" style="height: 300px;width:100%;" class="ag-theme-balham"></div>
+<div class="card-header">
+    Bảng điểm học kỳ 2:
+</div>
+<div id="myGrid2" style="height: 300px;width:100%;" class="ag-theme-balham"></div>
+<script>
+    var classID = @ViewBag.ClassID;
+</script>
+<script>
+    //LIST SUBJECT
+    var subjectList = [];
+    // specify the columns
+    var columnDefs = [
+        { headerName: "StudentID", field: "StudentID", hide: true, editable: false, resizable: true },
+        { headerName: "Học sinh", field: "StudentName", editable: false, resizable: true, },
+    ];
+
+    // specify the data
+    var rowData = [];
+
+    // let the grid know which columns and what data to use
+    var gridOptions = {
+        columnDefs: columnDefs,
+        rowData: rowData,
+        rowSelection: 'single',
+        headerHeight: '28px'
+    };
+    // lookup the container we want the Grid to use
+    var eGridDiv = document.querySelector('#myGrid');
+
+    // specify the data
+    var rowData2 = [];
+
+    // let the grid know which columns and what data to use
+    var gridOptions2 = {
+        columnDefs: columnDefs,
+        rowData: rowData2,
+        rowSelection: 'single',
+        headerHeight: '28px'
+    };
+    // lookup the container we want the Grid to use
+    var eGridDiv2 = document.querySelector('#myGrid2');
+
+    $(document).ready(function () {
+        extractData();
+    });
+    function extractData() {
+        axios.get('/Teacher/GetSubjectInstance').then(resp => {
+            let data = resp.data;
+            let coldef = { editable: false, resizable: true, width: 50 }
+            data.forEach((item) => {
+                let column = {
+                    headerName: item.SubjectName,
+                    field: item.SubjectID,
+                    resizable: true,
+                    children: [
+                        {
+                            headerName: "M1",
+                            field: "S" + item.SubjectID + "Score.M1",
+                            ...coldef
+                        },
+                        {
+                            headerName: "M2",
+                            field: "S" + item.SubjectID + "Score.M2",
+                            ...coldef
+                        },
+                        {
+                            headerName: "M3",
+                            field: "S" + item.SubjectID + "Score.M3",
+                            ...coldef
+                        },
+                        {
+                            headerName: "M4",
+                            field: "S" + item.SubjectID + "Score.M4",
+                            ...coldef
+                        },
+                        {
+                            headerName: "P1",
+                            field: "S" + item.SubjectID + "Score.P1",
+                            ...coldef
+                        },
+                        {
+                            headerName: "P2",
+                            field: "S" + item.SubjectID + "Score.P2",
+                            ...coldef
+                        },
+                        {
+                            headerName: "P3",
+                            field: "S" + item.SubjectID + "Score.P3",
+                            ...coldef
+                        },
+                        {
+                            headerName: "T1",
+                            field: "S" + item.SubjectID + "Score.T1",
+                            ...coldef
+                        },
+                        {
+                            headerName: "T2",
+                            field: "S" + item.SubjectID + "Score.T2",
+                            ...coldef
+                        },
+                        {
+                            headerName: "T3",
+                            field: "S" + item.SubjectID + "Score.T3",
+                            ...coldef
+                        },
+                        {
+                            headerName: "K1",
+                            field: "S" + item.SubjectID + "Score.K1",
+                            ...coldef
+                        },
+                        {
+                            headerName: "TK",
+                            field: "S" + item.SubjectID + "Score.TK",
+                            ...coldef
+                        }
+                    ]
+                }
+                columnDefs.push(column);
+                subjectList.push(item);
+            });
+            GetAllScore();
+        });
+    }
+    function GetAllScore() {
+        axios.post('/HeadMaster/GetStudentClassMark', { classID: classID, semester: 1 }).then(resp => {
+            let data = resp.data;
+            if (data) {
+                data.forEach((item) => {
+                    let newRow = {};
+                    newRow.StudentID = item.StudentID;
+                    newRow.StudentName = item.StudentName;
+                    subjectList.forEach((s) => {
+                        item.SubjectScores.forEach((score) => {
+                            if (score.SubjectID == s.SubjectID) {
+                                score.Score.TK = caculateScore(score.Score);
+                                newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
+                            }
+                        });
+                    });
+                    rowData.push(newRow);
+                });
+                new agGrid.Grid(eGridDiv, gridOptions);
+                getHK2();
+            }
+
+        });
+
+    }
+    /*
+     * Lấy điểm học kì 2
+     * */
+    function getHK2() {
+        axios.post('/HeadMaster/GetStudentClassMark', { classID: classID, semester: 2 }).then(resp => {
+            let data = resp.data;
+            if (data) {
+                data.forEach((item) => {
+                    let newRow = {};
+                    newRow.StudentID = item.StudentID;
+                    newRow.StudentName = item.StudentName;
+                    subjectList.forEach((s) => {
+                        item.SubjectScores.forEach((score) => {
+                            if (score.SubjectID == s.SubjectID) {
+                                score.Score.TK = caculateScore(score.Score);
+                                newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
+                            }
+                        });
+                    });
+                    rowData2.push(newRow);
+                });
+                new agGrid.Grid(eGridDiv2, gridOptions2);
+            }
+        });
+    }
+    /*
+     * Hàm tính điểm tổng kết, làm tròn 2 con số
+     */
+    function caculateScore(score) {
+        let tk = 'x'
+        checkM = score.M1 != 'x' || score.M2 != 'x'|| score.M3  != 'x' || score.M4 != 'x';
+        checkP = score.P1 != 'x'&& score.P2 != 'x' && score.P3 != 'x';
+        checkT = score.T1 != 'x' && score.T2 != 'x' && score.T3 != 'x';
+        checkHK = score.K1 != 'x';
+
+        if (checkHK && checkM && checkP && checkT) {
+            let x1Score = [score.M1, score.M2, score.M3, score.M4, score.P1, score.P2, score.P3];
+            let x2Score = [score.T1, score.T2, score.T3];
+            let scoreCount = 0;
+            const reducer = (accumulator, currentValue) => {
+                if (currentValue != 'x') {
+                    //hệ số 1
+                    scoreCount++;
+                    return parseFloat(currentValue) + accumulator;
+                }
+                return accumulator;
+            };
+            const reducer2 = (accumulator, currentValue) => {
+                if (currentValue != 'x') {
+                    //hệ số 2
+                    scoreCount += 2;
+                    return (parseFloat(currentValue) * 2) + accumulator;
+                }
+                return accumulator;
+            };
+            let countX1 = x1Score.reduce(reducer, 0);
+            let countX2 = x2Score.reduce(reducer2, 0);
+            tk = countX1 + countX2 + (parseFloat(score.K1) * 3);
+            scoreCount += 3; // hệ số điểm học kì
+            return (parseFloat(tk) / scoreCount).toFixed(2);
+        }
+        return 'x';
+    }
+    /*
+     * Hàm tính điểm tổng kết tất cả  
+     */
+    function caculateFinalScore(arrayTK) {
+        let countSubject = arrayTK.length + 2;
+        let totalScore = 0;
+        arrayTK.forEach((e) => {
+            if (e.SubjectID == 1 || e.SubjectID == 2) {
+                totalScore += (parseFloat(e.Score.TK) * 2);
+            }
+            else {
+                totalScore += parseFloat(e.Score.TK);
+            }
+        });
+        return parseFloat(totalScore / countSubject).toFixed(2);
+    }
+</script>

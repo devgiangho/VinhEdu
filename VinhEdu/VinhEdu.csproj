@@ -226,8 +226,10 @@
     <Compile Include="Utilities\EnumFunction.cs" />
     <Compile Include="ViewModels\ChangePassViewModel.cs" />
     <Compile Include="ViewModels\ClassList.cs" />
+    <Compile Include="ViewModels\ClassListHeadMaster.cs" />
     <Compile Include="ViewModels\ClassSelect.cs" />
     <Compile Include="ViewModels\EditMark.cs" />
+    <Compile Include="ViewModels\GradeUp.cs" />
     <Compile Include="ViewModels\SchoolListViewModel.cs" />
     <Compile Include="ViewModels\ShowHomeClass.cs" />
     <Compile Include="ViewModels\StudentList.cs" />
@@ -1260,6 +1262,8 @@
     <Content Include="Views\Teacher\MyHomeClass.cshtml" />
     <Content Include="Views\Teacher\Message.cshtml" />
     <Content Include="Views\HeadMaster\Index.cshtml" />
+    <Content Include="Views\HeadMaster\ClassRoomList.cshtml" />
+    <Content Include="Views\HeadMaster\GradeUpManage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

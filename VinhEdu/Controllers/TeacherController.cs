@@ -11,7 +11,7 @@ using static VinhEdu.Models.AdditionalDefinition;
 
 namespace VinhEdu.Controllers
 {
-    [Authorize(Roles = "teacher")]
+    [Authorize(Roles = "teacher,admin,headmaster")]
     public class TeacherController : Controller
     {
         UnitOfWork db = new UnitOfWork();
@@ -188,7 +188,7 @@ namespace VinhEdu.Controllers
         /// Lấy danh sách tất cả các môn
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "teacher,admin")]
+        [Authorize(Roles = "teacher,admin,headmaster")]
         public JsonResult GetSubjectInstance()
         {
             var subjectList = db.SubjectRepository
