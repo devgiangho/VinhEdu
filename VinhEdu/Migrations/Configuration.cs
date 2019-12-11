@@ -155,6 +155,42 @@
                 IsActive = true,
                 SchoolYear = "2019 - 2020"
             });
+            context.Configures.AddOrUpdate(e => e.ID, new Configure
+            {
+                ID = 6,
+                IsActive = false,
+                SchoolYear = "2020 - 2021"
+            });
+            context.Configures.AddOrUpdate(e => e.ID, new Configure
+            {
+                ID = 7,
+                IsActive = false,
+                SchoolYear = "2021 - 2022"
+            });
+            context.Configures.AddOrUpdate(e => e.ID, new Configure
+            {
+                ID = 8,
+                IsActive = false,
+                SchoolYear = "2022 - 2023"
+            });
+            context.Configures.AddOrUpdate(e => e.ID, new Configure
+            {
+                ID = 9,
+                IsActive = false,
+                SchoolYear = "2023 - 2024"
+            });
+            context.Configures.AddOrUpdate(e => e.ID, new Configure
+            {
+                ID = 10,
+                IsActive = false,
+                SchoolYear = "2024 - 2025"
+            });
+            context.Configures.AddOrUpdate(e => e.ID, new Configure
+            {
+                ID = 11,
+                IsActive = false,
+                SchoolYear = "2025 - 2026"
+            });
             // Thêm Trường
             context.Schools.AddOrUpdate(e => e.SchoolID, new School
             {
@@ -289,32 +325,31 @@
             {
                 ClassID = 1,
                 SchoolID = 1,
-                //HomeRoomTeacherID = 4,
-                ClassName = "6A",
+                Grade = Grade.G6,ClassName = "6A",
             });
             context.Classes.AddOrUpdate(e => e.ClassID, new Class
             {
                 ClassID = 2,
                 SchoolID = 1,
-                ClassName = "6B",
+                Grade = Grade.G6,ClassName = "6B",
             });
             context.Classes.AddOrUpdate(e => e.ClassID, new Class
             {
                 ClassID = 3,
                 SchoolID = 1,
-                ClassName = "6C",
+                Grade = Grade.G6,ClassName = "6C",
             });
             context.Classes.AddOrUpdate(e => e.ClassID, new Class
             {
                 ClassID = 4,
                 SchoolID = 1,
-                ClassName = "6D",
+                Grade = Grade.G6,ClassName = "6D",
             });
             context.Classes.AddOrUpdate(e => e.ClassID, new Class
             {
                 ClassID = 5,
                 SchoolID = 1,
-                ClassName = "7A",
+                Grade = Grade.G7,ClassName = "7A",
             });
  
 

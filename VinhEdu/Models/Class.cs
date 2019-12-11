@@ -1,4 +1,4 @@
-namespace VinhEdu.Models
+﻿namespace VinhEdu.Models
 {
     using System;
     using System.Collections.Generic;
@@ -24,14 +24,8 @@ namespace VinhEdu.Models
         public string ClassName { get; set; }
 
         public int SchoolID { get; set; }
-
-        //public int HomeRoomTeacherID { get; set; }
-
-        //[StringLength(500)]
-        //public string StudentList { get; set; }
-
-        //[StringLength(500)]
-        //public string TeacherList { get; set; }
+        [Required]
+        public Grade Grade { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Attendance> Attendances { get; set; }
@@ -45,5 +39,16 @@ namespace VinhEdu.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PointBoard> PointBoards { get; set; }
+    }
+    public enum Grade
+    {
+        [Display(Name = "Khối 6")]
+        G6 = 6,
+        [Display(Name = "Khối 7")]
+        G7 = 7,
+        [Display(Name = "Khối 8")]
+        G8 = 8,
+        [Display(Name = "Khối 9")]
+        G9 = 9,
     }
 }

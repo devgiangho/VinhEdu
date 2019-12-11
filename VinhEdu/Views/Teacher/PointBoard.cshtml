@@ -74,6 +74,11 @@
             field: "Score.K1",
             editable: true, resizable: true,
         },
+        {
+            headerName: "T.Kết",
+            field: "Score.TK",
+            editable: true, resizable: true,
+        },
     ];
 
     // specify the data
@@ -132,8 +137,11 @@
                         T2: 'x',
                         T3: 'x',
                         K1: 'x',
+                        TK: 'x',
                     }
                 };
+                let finalScore = caculateScore(hs.Score);
+                hs.Score.TK = finalScore;
                 gridOptions.api.updateRowData({ add: [hs] });
             });
             gridOptions.api.sizeColumnsToFit();
@@ -152,7 +160,27 @@
                 $('#overlay').fadeOut();
                 swal('Thành công', data.Message, 'success');
                 ClearData();
-                gridOptions.api.setRowData(data.Member);
+                data.Member.forEach((e) => {
+                let hs = {
+                    ...e, Score: e.Score ? e.Score : {
+                        M1: 'x',
+                        M2: 'x',
+                        M3: 'x',
+                        M4: 'x',
+                        P1: 'x',
+                        P2: 'x',
+                        P3: 'x',
+                        T1: 'x',
+                        T2: 'x',
+                        T3: 'x',
+                        K1: 'x',
+                        TK: 'x',
+                    }
+                };
+                let finalScore = caculateScore(hs.Score);
+                hs.Score.TK = finalScore;
+                gridOptions.api.updateRowData({ add: [hs] });
+            });
             }
             else {
                 $('#overlay').fadeOut();
@@ -165,4 +193,43 @@
         gridOptions.api.forEachNode(node => rowData.push(node.data));
         return rowData;
     }
+    /*
+     * Hàm tính điểm tổng kết, làm tròn 2 con số
+     */
+    function caculateScore(score) {
+        let tk = 'x'
+        checkM = score.M1 != 'x' || score.M2 != 'x'|| score.M3  != 'x' || score.M4 != 'x';
+        checkP = score.P1 != 'x'&& score.P2 != 'x' && score.P3 != 'x';
+        checkT = score.T1 != 'x' && score.T2 != 'x' && score.T3 != 'x' && score.T4 != 'x';
+        checkHK = score.K1 != 'x';
+
+        if (checkHK && checkM && checkP && checkT) {
+            let x1Score = [score.M1, score.M2, score.M3, score.M4, score.P1, score.P2, score.P3];
+            let x2Score = [score.T1, score.T2, score.T3];
+            let scoreCount = 0;
+            const reducer = (accumulator, currentValue) => {
+                if (currentValue != 'x') {
+                    //hệ số 1
+                    scoreCount++;
+                    return parseFloat(currentValue) + accumulator;
+                }
+                return accumulator;
+            };
+            const reducer2 = (accumulator, currentValue) => {
+                if (currentValue != 'x') {
+                    //hệ số 2
+                    scoreCount += 2;
+                    return (parseFloat(currentValue) * 2) + accumulator;
+                }
+                return accumulator;
+            };
+            let countX1 = x1Score.reduce(reducer, 0);
+            let countX2 = x2Score.reduce(reducer2, 0);
+            tk = countX1 + countX2 + (parseFloat(score.K1) * 3);
+            scoreCount += 3; // hệ số điểm học kì
+            return (parseFloat(tk) / scoreCount).toFixed(2);
+        }
+        return 'x';
+    }
+    
 </script>

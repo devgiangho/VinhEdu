@@ -16,9 +16,13 @@ namespace VinhEdu.Controllers
                 {
                     return RedirectToAction("Index", "Student");
                 }
-                if (User.IsInRole("teacher") || User.IsInRole("headmaster"))
+                if (User.IsInRole("teacher"))
                 {
                     return RedirectToAction("Index", "Teacher");
+                }
+                if (User.IsInRole("headmaster"))
+                {
+                    return RedirectToAction("Index", "HeadMaster");
                 }
                 return RedirectToAction("Index", "Admin");
             }
