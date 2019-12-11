@@ -16,6 +16,7 @@
                     <th>Học sinh</th>
                     <th>Giới tính</th>
                     <th>Ngày sinh</th>
+                    <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +35,11 @@
                         <td>
                             @item.DateOfBirth.ToString("dd/MM/yyyy")
                         </td>
+                        <td>
+                            <span class="badge badge-info" style="cursor:pointer" onclick="openContact(@ViewBag.ClassID,@item.ID,'@item.FullName')">
+                                Gửi tin nhắn
+                            </span>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -43,6 +49,7 @@
                     <th>Học sinh</th>
                     <th>Giới tính</th>
                     <th>Ngày sinh</th>
+                    <th>Hành động</th>
                 </tr>
             </tfoot>
         </table>
@@ -56,6 +63,37 @@
     Bảng điểm học kỳ 2:
 </div>
 <div id="myGrid2" style="height: 400px;width:100%;" class="ag-theme-balham"></div>
+<div class="modal fade" id="messageModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Gửi tin nhắn: </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <p class="col-2">Gửi tới: </p>
+                    <p class="col-10" id="stdName"></p>
+                </div>
+                <div class="row">
+                    <p class="ml-1">Nội dung:</p>
+                    <textarea id="messageContent" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" onclick="sendMessage()" class="btn btn-primary">Gửi</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 <script src="~/Content/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="~/Content/AdminLTE/plugins/datatables/dataTables.bootstrap4.min.js"></script>
 <script>
@@ -218,5 +256,37 @@
                 new agGrid.Grid(eGridDiv2, gridOptions2);
             }
         });
+    }
+</script>
+<script>
+    let storeObj = {
+        classID: -1,
+        studentID: -1,
+    };
+    //Gửi tin nhắn liên hệ
+    function openContact(classID, studentID, studentName) {
+        storeObj.classID = classID;
+        storeObj.studentID = studentID;
+        let modal = $('#messageModal');
+        $('#messageContent').val('');
+        modal.find('#stdName').text(studentName);
+        modal.modal('show');
+    }
+    function sendMessage() {
+        $('#overlay').fadeIn();
+        let message = $('#messageContent').val();
+        axios.post('/Teacher/SendContact', { classID: storeObj.classID, studentID: storeObj.studentID, message: message }).then(resp => {
+            let data = resp.data;
+            if (data.success) {
+                swal('Thành công', data.message, 'success');
+                $('#messageModal').modal('hide');
+                $('#overlay').fadeOut();
+            }
+            else {
+                swal('Lỗi', 'Lỗi hệ thống', 'error');
+            }
+        }).catch((e) => {
+            swal('Lỗi', 'Lỗi hệ thống', 'error');
+        })
     }
 </script>

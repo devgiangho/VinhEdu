@@ -56,6 +56,7 @@ namespace VinhEdu.Controllers
                 int ClassID = db.MemberRepository
                .GetAll().Where(c => c.UserID == UserID && c.IsHomeTeacher == true && c.ConfigureID == configID)
                .First().ClassID;
+                ViewBag.ClassID = ClassID;
                 List<ViewModels.StudentList> lstStudent = db.MemberRepository.
                     GetAll().Where(c => c.ClassID == ClassID && c.ConfigureID == configID
                     && c.User.Type == UserType.Student && c.LearnStatus == LearnStatus.Learning && c.User.Status == UserStatus.Activated)
@@ -69,6 +70,10 @@ namespace VinhEdu.Controllers
                 return View(lstStudent);
             }
             return RedirectToAction("Index");
+        }
+        public ViewResult Message()
+        {
+            return View();
         }
         /// <summary>
         /// Xem điểm lớp mình chủ nhiệm theo học kì
@@ -392,7 +397,27 @@ namespace VinhEdu.Controllers
         {
             var CurrentConfig = (int)Session["ConfigID"];
             var UserID = (int)Session["UserID"];
-            return Json(true, JsonRequestBehavior.AllowGet);
+            try
+            {
+                Contact contact = new Contact
+                {
+                    ClassID = classID,
+                    ConfigureID = CurrentConfig,
+                    Message = message,
+                    SendFrom = SendFrom.FromTeacher,
+                    TeacherID = UserID,
+                    SendTime = DateTime.Now,
+                    StudentID = studentID,
+                };
+                db.context.Contacts.Add(contact);
+                db.SaveChanges();
+                return Json(new { success = true, message = "Đã gửi tin nhắn thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new {success = false, message = "Lỗi xảy ra, vui lòng thử lại sau" }, JsonRequestBehavior.AllowGet);
+            }
+            
         }
          
     }

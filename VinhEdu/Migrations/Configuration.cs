@@ -322,7 +322,7 @@
             context.Users.AddOrUpdate(e => e.ID, new User
             {
                 ID = 8,
-                Identifier = "STD008",
+                Identifier = "0368273672",
                 FullName = "Đặng Văn Quang",
                 Type = UserType.Student,
                 Role = "student",
@@ -336,7 +336,7 @@
             context.Users.AddOrUpdate(e => e.ID, new User
             {
                 ID = 9,
-                Identifier = "STD009",
+                Identifier = "0368273679",
                 FullName = "Đặng Văn Quý",
                 Type = UserType.Student,
                 Role = "student",
@@ -350,7 +350,7 @@
             context.Users.AddOrUpdate(e => e.ID, new User
             {
                 ID = 10,
-                Identifier = "STD010",
+                Identifier = "0368273610",
                 FullName = "Đặng Văn Quế",
                 Type = UserType.Student,
                 Role = "student",
@@ -364,7 +364,7 @@
             context.Users.AddOrUpdate(e => e.ID, new User
             {
                 ID = 11,
-                Identifier = "STD011",
+                Identifier = "0368273611",
                 FullName = "Lâm Tâm Như",
                 Type = UserType.Student,
                 Role = "student",
@@ -378,7 +378,7 @@
             context.Users.AddOrUpdate(e => e.ID, new User
             {
                 ID = 12,
-                Identifier = "STD012",
+                Identifier = "0368273612",
                 FullName = "Lăng Thanh Trúc",
                 Type = UserType.Student,
                 Role = "student",

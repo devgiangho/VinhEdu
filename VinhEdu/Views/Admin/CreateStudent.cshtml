@@ -80,7 +80,7 @@
     <script>
         // specify the columns
         var columnDefs = [
-            { headerName: "Mã tài khoản", field: "Identifier", editable: true,resizable: true, colId:'Identifier' },
+            { headerName: "Số điện thoại", field: "Identifier", editable: true,resizable: true, colId:'Identifier' },
             { headerName: "Họ và tên", field: "FullName", editable: true,resizable: true },
             {
                 headerName: "Ngày sinh",
@@ -101,7 +101,7 @@
 
         // specify the data
         var rowData = [
-            { Identifier: 'STD001', FullName: 'Đinh Trung Kiên', DateOfBirth: '08/10/2019', Gender: 'Nam', Password: '' },
+            { Identifier: '0368273672', FullName: 'Đinh Trung Kiên', DateOfBirth: '08/10/2019', Gender: 'Nam', Password: '' },
         ];
 
         // let the grid know which columns and what data to use
@@ -197,7 +197,10 @@
         }
     </script>
     <script>
-        //Submit
+        /*
+         * 
+         * Lấy tất cả dữ liệu trong grid
+         * */
         function getAllRows() {
             let rowData = [];
             gridOptions.api.forEachNode(node => rowData.push(node.data));
@@ -211,6 +214,10 @@
             });
         }
         var Config;
+        /*
+         * 
+         * Cập nhật dữ liệu
+         * */
         var Submit = function () {
             $('#overlay').fadeIn();
             var checkFill = Validate(getAllRows());
@@ -228,7 +235,7 @@
                     success: function (data) {
                         $('#overlay').fadeOut();
                         ClearData();
-                        swal("Thành công", "OK", "success");
+                        swal("Thành công", "Thêm thành công", "success");
                     },
                     error: function (xhr, status, error) {
                         $('#overlay').fadeOut();
@@ -263,6 +270,10 @@
             });
             return re;
         }
+        /*
+         * 
+         * check không trùng lặp HS
+         * */
         function ValidateKey(dat) {
             if (dat.length == 1) {
                 return false;

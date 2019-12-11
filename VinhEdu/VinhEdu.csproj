@@ -1253,6 +1253,7 @@
     <Content Include="Views\Student\Index.cshtml" />
     <Content Include="Views\Student\PointBoard.cshtml" />
     <Content Include="Views\Teacher\MyHomeClass.cshtml" />
+    <Content Include="Views\Teacher\Message.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
