@@ -25,6 +25,7 @@
     var columnDefs = [
         { headerName: "StudentID", field: "StudentID", hide: true, editable: false, resizable: true },
         { headerName: "Học sinh", field: "StudentName", editable: false, resizable: true, },
+        { headerName: "Tổng Kết", field: "finalScore", editable: false, resizable: true,width:80 },
     ];
 
     // specify the data
@@ -131,6 +132,7 @@
                 columnDefs.push(column);
                 subjectList.push(item);
             });
+            //columnDefs.push(colTK);
             GetAllScore();
         });
     }
@@ -140,16 +142,26 @@
             if (data) {
                 data.forEach((item) => {
                     let newRow = {};
+                    let countTK = 0;
                     newRow.StudentID = item.StudentID;
                     newRow.StudentName = item.StudentName;
                     subjectList.forEach((s) => {
                         item.SubjectScores.forEach((score) => {
                             if (score.SubjectID == s.SubjectID) {
                                 score.Score.TK = caculateScore(score.Score);
-                                newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
+                                if (score.Score.TK != 'x') {
+                                    countTK++;
+                                }
+                                newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score}
                             }
                         });
                     });
+                    //Tính điểm tổng kết tất cả các môn
+                    //Đủ điểm tổng kết các môn mới tính
+                    if (subjectList.length == countTK) {
+                        let finalScoreTK = caculateFinalScore(item.SubjectScores);
+                        newRow.finalScore = finalScoreTK;
+                    }
                     rowData.push(newRow);
                 });
                 new agGrid.Grid(eGridDiv, gridOptions);
@@ -168,17 +180,28 @@
             if (data) {
                 data.forEach((item) => {
                     let newRow = {};
+                    let countTK = 0;
                     newRow.StudentID = item.StudentID;
                     newRow.StudentName = item.StudentName;
                     subjectList.forEach((s) => {
                         item.SubjectScores.forEach((score) => {
                             if (score.SubjectID == s.SubjectID) {
                                 score.Score.TK = caculateScore(score.Score);
-                                newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
+                                if (score.Score.TK != 'x') {
+                                    countTK++;
+                                }
+                                newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score}
                             }
                         });
                     });
+                    //Tính điểm tổng kết tất cả các môn
+                    //Đủ điểm tổng kết các môn mới tính
+                    if (subjectList.length == countTK) {
+                        let finalScoreTK = caculateFinalScore(item.SubjectScores);
+                        newRow.finalScore = finalScoreTK;
+                    }
                     rowData2.push(newRow);
+                    
                 });
                 new agGrid.Grid(eGridDiv2, gridOptions2);
             }
