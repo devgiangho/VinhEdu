@@ -48,6 +48,7 @@ namespace VinhEdu.Models
 
         [Required]
         public DateTime DateOfBirth { get; set; }
+        public bool canGradeUp { get; set; } 
 
         public DateTime CreateDate { get; set; } = DateTime.Now;
 
