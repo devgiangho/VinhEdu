@@ -18,7 +18,16 @@ namespace VinhEdu.Controllers
         EduVinhContext Context = new EduVinhContext();
         public ActionResult Index()
         {
-            
+            int configID = (int)Session["ConfigID"];
+            int UserID = (int)Session["UserID"];
+            ViewBag.countSchool = db.SchoolRepository.GetAll().Count();
+            ViewBag.countClass = db.ClassRepository.GetAll().Count();
+            ViewBag.countStudent = db.UserRepository.AllUser()
+                .Where(c => c.Type == UserType.Student)
+                .Count();
+            ViewBag.countTeacher = db.UserRepository.AllUser()
+                .Where(c => c.Type == UserType.Teacher)
+                .Count();
             return View();
         }
         public ActionResult CreateStudent()
