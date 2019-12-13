@@ -64,6 +64,7 @@ namespace VinhEdu.Controllers
             }
             ViewBag.ClassID = ClassID.Value;
             ViewBag.ClassName = db.ClassRepository.FindByID(ClassID.Value).ClassName;
+            ViewBag.Semester = db.context.Settings.FirstOrDefault().Semester.ToString();
             return View();
         }
         /// <summary>
@@ -172,105 +173,17 @@ namespace VinhEdu.Controllers
                 return Json(false, JsonRequestBehavior.AllowGet);
             }
         }
-        public CheckMark CaculateScore(List<int> studentList, int ClassID)
+        public JsonResult UpdateGradeUpStatus(List<GradeUpViewModel> studentList)
         {
             int configID = (int)Session["ConfigID"];
-            List<int> subjectList = db.SubjectRepository.GetAll().Select(c => c.ID).ToList();
-            List<MarkStudent> studentMarks = new List<MarkStudent>();
-            foreach (var studentID in studentList)
+            foreach(var item in studentList)
             {
-                List<SubjectScore> lstSubjectScores = new List<SubjectScore>();
-                foreach (var subjectID in subjectList)
-                {
-                    SubjectScore mark = new SubjectScore();
-                    bool HasMark = db.context.PointBoards
-                        .Any(e => e.ClassID == ClassID && e.Semester == Semester.HK1 &&
-                        e.StudentID == studentID && e.SubjectID == subjectID && e.ConfigureID == configID);
-                    if (HasMark)
-                    {
-                        mark = (from m in db.context.ClassMembers
-                                join p in db.context.PointBoards on m.UserID equals p.StudentID into pm
-                                from p in pm.DefaultIfEmpty()
-                                where m.UserID == studentID
-                                where m.ClassID == ClassID
-                                where p.SubjectID == subjectID
-                                where p.ConfigureID == configID
-                                where p.Semester == Semester.HK1
-                                select new SubjectScore
-                                {
-                                    SubjectID = subjectID,
-                                    SubjectName = p.Subject.SubjectName,
-                                    TempScore = p.Score,
-                                }).First();
-                        if (mark.TempScore != null)
-                        {
-                            mark.Score = JsonConvert.DeserializeObject<Score>(mark.TempScore);
-                            mark.TempScore = null;
-                            mark.finalScore = CaculateFinalSubjectScore(mark.Score);
-                        }
-                        else
-                        {
-                            mark.finalScore = "x";
-                        }
-                    }
-                    else
-                    {
-                        return new CheckMark
-                        {
-                            isFinished = false,
-                            markStudents = null,
-                        };
-                    }
-                    lstSubjectScores.Add(mark);
-                }
-                studentMarks.Add(new MarkStudent
-                {
-                    StudentID = studentID,
-                    SubjectScores = lstSubjectScores,
-                });
+                User u = db.UserRepository.FindByID(item.studentID);
+                u.canGradeUp = item.canGradeUp;
             }
-            return new CheckMark {
-                isFinished = true,
-                markStudents = studentMarks,
-            };
+            db.SaveChanges();
+            return Json("Cập nhật thành công");
         }
-        public string CaculateFinalSubjectScore(Score score)
-        {
-            var checkM = score.M1 != "x" || score.M2 != "x" || score.M3 != "x" || score.M4 != "x";
-            var checkP = score.P1 != "x" && score.P2 != "x" && score.P3 != "x";
-            var checkT = score.T1 != "x" && score.T2 != "x" && score.T3 != "x";
-            var checkHK = score.K1 != "x";
 
-            if (checkHK && checkM && checkP && checkT)
-            {
-                string[] x1Score = { score.M1, score.M2, score.M3, score.M4, score.P1, score.P2, score.P3 };
-                string[] x2Score = {score.T1, score.T2, score.T3} ;
-                var scoreCount = 0;
-                double x1Count = 0;
-                double x2Count = 0;
-                foreach(string x1 in x1Score)
-                {
-                    if(x1 != "x")
-                    {
-                        scoreCount++;
-                        x1Count += Convert.ToDouble(x1);
-                    }
-                }
-                foreach (string x2 in x2Score)
-                {
-                    if (x2 != "x")
-                    {
-                        scoreCount++;
-                        x2Count += Convert.ToDouble(x2);
-                    }
-                }
-                //let countX1 = x1Score.reduce(reducer, 0);
-                //let countX2 = x2Score.reduce(reducer2, 0);
-                double finalX1andX2 = x1Count + x2Count + (Convert.ToDouble(score.K1) * 3);
-                scoreCount += 3; // hệ số điểm học kì
-                return (finalX1andX2 / scoreCount).ToString("0.##");
-            }
-            return "x";
-        }
     }
 }

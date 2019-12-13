@@ -232,6 +232,7 @@
     <Compile Include="ViewModels\ClassSelect.cs" />
     <Compile Include="ViewModels\EditMark.cs" />
     <Compile Include="ViewModels\GradeUp.cs" />
+    <Compile Include="ViewModels\GradeUpViewModel.cs" />
     <Compile Include="ViewModels\SchoolListViewModel.cs" />
     <Compile Include="ViewModels\ShowHomeClass.cs" />
     <Compile Include="ViewModels\StudentList.cs" />

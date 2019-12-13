@@ -16,10 +16,16 @@
 </div>
 <div id="myGrid2" style="height: 300px;width:100%;" class="ag-theme-balham"></div>
 <hr />
-<table class="table table-striped" id="table">
-</table>
+<div id="gradeUp" class="d-none">
+    <div class="title">
+        Xét lên lớp: <button class="hidden btn btn-danger float-right " id="btnUpdate" onclick="updateGradeUpStatus()">Cập nhật trạng thái</button>
+    </div>
+    <table class="table table-striped" id="table">
+    </table>
+</div>
 <script>
-    var classID = @ViewBag.ClassID;
+    const classID = @ViewBag.ClassID;
+    const semester = "@ViewBag.Semester";
 </script>
 <script>
     let studentToGradeUp = [];
@@ -229,7 +235,12 @@
 
                 });
                 new agGrid.Grid(eGridDiv2, gridOptions2);
-                constructTable('#table');
+                if (semester == "HK2") {
+                    constructTable('#table');
+                    $('#gradeUp').removeClass("d-none");
+                    $('#btnUpdate').removeClass("d-none");
+                }
+                
             }
         });
     }
@@ -362,8 +373,23 @@
             return "ID";
         }
         if (data == "canGradeUp") {
-            return "Có thể lên lớp ?";
+            return "Đủ điều kiện lên lớp ?";
         }
         return data;
     }
 </script>  
+<script>
+    function updateGradeUpStatus() {
+        $("#overlay").fadeIn();
+        let lstStudent = studentToGradeUp.map((item) => {
+            return { studentID: item.studentID, canGradeUp: item.canGradeUp }
+        });
+        axios.post("/HeadMaster/UpdateGradeUpStatus", { studentList: lstStudent }).then(resp => {
+            swal("Thành công", resp.data, "success");
+            $("#overlay").fadeOut();
+        }).catch((e) => {
+            swal("Lỗi", "Lỗi hệ thống", "error");
+            $("#overlay").fadeOut();
+        })
+    }
+</script>
