@@ -204,6 +204,10 @@
     <Compile Include="Migrations\201912120610358_addCanGradeUp.Designer.cs">
       <DependentUpon>201912120610358_addCanGradeUp.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912130645535_addfinished.cs" />
+    <Compile Include="Migrations\201912130645535_addfinished.Designer.cs">
+      <DependentUpon>201912130645535_addfinished.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\SeedData.cs" />
     <Compile Include="Models\AdditionalDefinition.cs" />
@@ -1330,6 +1334,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912120610358_addCanGradeUp.resx">
       <DependentUpon>201912120610358_addCanGradeUp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912130645535_addfinished.resx">
+      <DependentUpon>201912130645535_addfinished.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

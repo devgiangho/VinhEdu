@@ -48,8 +48,8 @@ namespace VinhEdu.Models
 
         [Required]
         public DateTime DateOfBirth { get; set; }
-        public bool canGradeUp { get; set; } 
-
+        public bool canGradeUp { get; set; }
+        public bool isFinished { get; set; } = false;
         public DateTime CreateDate { get; set; } = DateTime.Now;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -41,7 +41,7 @@ namespace VinhEdu.App_Start
                         //Nếu là học sinh thì lấy lớp học hiện tại
                         HttpContext.Current.Session["ClassName"] = user.ClassMembers
                             .Where(c => c.ConfigureID == currentconfig.ID &&
-                            c.LearnStatus != LearnStatus.Finished && c.LearnStatus != LearnStatus.Switched)
+                            (c.LearnStatus == LearnStatus.Learning || c.LearnStatus == LearnStatus.Duplicated))
                             .Select(c => c.Class.ClassName)
                             .FirstOrDefault();
                         HttpContext.Current.Session["SchoolName"] = user.ClassMembers
