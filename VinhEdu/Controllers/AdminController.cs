@@ -201,7 +201,7 @@ namespace VinhEdu.Controllers
                                     };
                                     db.context.ClassMembers.Add(newMem);
                                 }
-                                //GradeUp(item.ID, Grade.G8, member.Class.ClassName,configure.ID, db.context);
+                                item.canGradeUp = false;
                                 break;
                             case Grade.G7:
                                 member.LearnStatus = LearnStatus.Finished;
@@ -231,7 +231,7 @@ namespace VinhEdu.Controllers
                                     };
                                     db.context.ClassMembers.Add(newMem);
                                 }
-                                //GradeUp(item.ID, Grade.G7, member.Class.ClassName, configure.ID, db.context);
+                                item.canGradeUp = false;
                                 break;
                             case Grade.G6:
                                 member.LearnStatus = LearnStatus.Finished;
@@ -261,7 +261,7 @@ namespace VinhEdu.Controllers
                                     };
                                     db.context.ClassMembers.Add(newMem);
                                 }
-                                //GradeUp(item.ID, Grade.G6, member.Class.ClassName, configure.ID, db.context);
+                                item.canGradeUp = false;
                                 break;
                         }
                     }

@@ -52,6 +52,10 @@
                     $('#overlay').fadeIn();
                     axios.post('/Admin/NextYear').then(resp => {
                         $('#overlay').fadeOut();
+                        swal("Thành công", "Chúc mừng năm học mới", "success").then(resp => {
+                            
+                        location.reload();
+                        })
                     })
                 }
             });

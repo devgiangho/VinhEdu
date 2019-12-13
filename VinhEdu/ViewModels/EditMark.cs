@@ -48,26 +48,26 @@ namespace VinhEdu.ViewModels
     public class Score
     {
         [CustomScoreRequired]
-        public string M1 { get; set; } = "8.3";
+        public string M1 { get; set; } = "x";
         [CustomScoreRequired]
-        public string M2 { get; set; } = "8.3";
+        public string M2 { get; set; } = "x";
         [CustomScoreRequired]
-        public string M3 { get; set; } = "8.3";
+        public string M3 { get; set; } = "x";
         [CustomScoreRequired]
-        public string M4 { get; set; } = "8.3";
+        public string M4 { get; set; } = "x";
         [CustomScoreRequired]
-        public string P1 { get; set; } = "8.3";
+        public string P1 { get; set; } = "x";
         [CustomScoreRequired]
-        public string P2 { get; set; } = "8.3";
+        public string P2 { get; set; } = "x";
         [CustomScoreRequired]
-        public string P3 { get; set; } = "8.3";
+        public string P3 { get; set; } = "x";
         [CustomScoreRequired]
-        public string T1 { get; set; } = "8.3";
+        public string T1 { get; set; } = "x";
         [CustomScoreRequired]
-        public string T2 { get; set; } = "8.3";
+        public string T2 { get; set; } = "x";
         [CustomScoreRequired]
-        public string T3 { get; set; } = "8.3";
+        public string T3 { get; set; } = "x";
         [CustomScoreRequired]
-        public string K1 { get; set; } = "8.3";
+        public string K1 { get; set; } = "x";
     }
 }
