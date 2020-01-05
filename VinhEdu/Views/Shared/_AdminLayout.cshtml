@@ -4,6 +4,16 @@
 <head>
     <style>
         /*//Notify*/
+        body {
+            background: url('../../Content/images/footer.png') no-repeat center;
+        }
+        
+
+        .login-box-msg {
+            font-size: 16px;
+            color: darkred;
+        }
+
         [data-notify="progressbar"] {
             margin-bottom: 0px;
             position: absolute;
@@ -11,6 +21,9 @@
             left: 0px;
             width: 100%;
             height: 5px;
+        }
+        .mautrang{
+            color:rgb(255, 255, 238);
         }
 
         @@import url(http://fonts.googleapis.com/css?family=Old+Standard+TT:400,700);
@@ -87,12 +100,12 @@
 
         </nav>
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#20c997!important;">
             <!-- Brand Logo -->
             <a href="/" class="brand-link">
                 <img src="~/Content/images/apple-icon-120x120.png" alt=" Logo" class="brand-image img-circle elevation-3"
                      style="opacity: .8">
-                <span class="brand-text font-weight-light">Vinh Edu</span>
+                <span class="brand-text font-weight-light mautrang">Vinh Edu</span>
             </a>
 
             <!-- Sidebar -->
@@ -103,7 +116,7 @@
                         <img src="~/Content/images/user.png" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">@Session["Name"]</a>
+                        <a href="#" class="d-block" style="color:rgb(255, 255, 238)">@Session["Name"]</a>
                         @{
                             var role = "";
                             if (User.IsInRole("admin"))
@@ -141,8 +154,8 @@
 
                         <li class="nav-item">
                             <a href="/Admin" class="nav-link">
-                                <i class="nav-icon fa fa-home"></i>
-                                <p>
+                                <i class="nav-icon fa fa-home mautrang"></i>
+                                <p class="mautrang">
                                     Dashboard
                                 </p>
                             </a>
@@ -151,8 +164,8 @@
                         {
                             <li class="nav-item">
                                 <a href="/HeadMaster/ClassRoomList" class="nav-link">
-                                    <i class="nav-icon fa fa-tasks text-info"></i>
-                                    <p>Danh sách lớp</p>
+                                    <i class="nav-icon fa fa-tasks text-info mautrang" style="color:rgb(255, 255, 238)!important;"></i>
+                                    <p class="mautrang">Danh sách lớp</p>
                                 </a>
                             </li>
                         }
@@ -160,8 +173,8 @@
                         {
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-edit"></i>
-                                    <p>
+                                    <i class="nav-icon fa fa-edit mautrang"></i>
+                                    <p class="mautrang">
                                         Quản Lý Học Sinh
                                         <i class="right fa fa-angle-left"></i>
                                     </p>
@@ -243,8 +256,8 @@
                         }
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fa fa-user-circle"></i>
-                                <p>
+                                <i class="nav-icon fa fa-user-circle mautrang"></i>
+                                <p class="mautrang">
                                     Tài khoản
                                     <i class="fa fa-angle-left right"></i>
                                 </p>
@@ -253,25 +266,25 @@
                                 <li class="nav-item">
                                     <a href="/Auth/ChangePass" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon text-danger"></i>
-                                        <p>Đổi mật khẩu</p>
+                                        <p class="mautrang">Đổi mật khẩu</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-header" style="font-size:1.1rem">Công cụ</li>
+                        <li class="nav-header" style="font-size:1.1rem; color:rgb(255, 255, 238)!important;">Công cụ</li>
                         @if (User.IsInRole("admin"))
                         {
                             <li class="nav-item">
                                 <a href="/Admin/Setting" class="nav-link">
                                     <i class="nav-icon fa fa-cogs text-info"></i>
-                                    <p>Thiết Lập</p>
+                                    <p class="mautrang">Thiết Lập</p>
                                 </a>
                             </li>
                         }
                         <li class="nav-item">
                             <a href="/Auth/Logout" class="nav-link">
                                 <i class="nav-icon fa fa-sign-out text-danger"></i>
-                                <p>Đăng xuất</p>
+                                <p class="mautrang">Đăng xuất</p>
                             </a>
                         </li>
                     </ul>

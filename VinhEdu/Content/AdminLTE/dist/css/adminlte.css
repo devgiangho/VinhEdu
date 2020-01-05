@@ -4570,7 +4570,7 @@ input[type="button"].btn-block {
 
 .badge-success {
   color: #ffffff;
-  background-color: #28a745;
+  background-color: #ffc107;
 }
 
 .badge-success[href]:hover, .badge-success[href]:focus {
@@ -4580,8 +4580,15 @@ input[type="button"].btn-block {
 }
 
 .badge-info {
-  color: #ffffff;
-  background-color: #17a2b8;
+    color: red !important;
+    background-color: red;
+}
+.badge-info2 {
+    color: red !important;
+    background-color: red;
+}
+span.badge {
+    color: red !important;
 }
 
 .badge-info[href]:hover, .badge-info[href]:focus {
@@ -12682,11 +12689,11 @@ a.text-muted:hover {
   color: #ffffff !important;
 }
 
-.bg-warning, .alert-warning, .label-warning,
+ .alert-warning, .label-warning,
 .bg-warning a,
 .alert-warning a,
 .label-warning a {
-  color: #1F2D3D !important;
+  color: #1F2D3D;
 }
 
 .bg-danger, .alert-danger,

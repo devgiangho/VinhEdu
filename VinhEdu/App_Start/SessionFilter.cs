@@ -36,18 +36,25 @@ namespace VinhEdu.App_Start
                         HttpContext.Current.Session["SubjectName"] = user.Subject.SubjectName;
                         
                     }
-                    if (user.Type == UserType.Student)
+                    if (user.Type == UserType.Student && user.School != null)
                     {
-                        //Nếu là học sinh thì lấy lớp học hiện tại
-                        HttpContext.Current.Session["ClassName"] = user.ClassMembers
-                            .Where(c => c.ConfigureID == currentconfig.ID &&
-                            (c.LearnStatus == LearnStatus.Learning || c.LearnStatus == LearnStatus.Duplicated))
-                            .Select(c => c.Class.ClassName)
-                            .FirstOrDefault();
-                        HttpContext.Current.Session["SchoolName"] = user.ClassMembers
+                        bool hasClass = user.ClassMembers
+                            .Any(c => c.ConfigureID == currentconfig.ID &&
+                            (c.LearnStatus == LearnStatus.Learning || c.LearnStatus == LearnStatus.Duplicated));
+                        if(hasClass)
+                        {
+                            //Nếu là học sinh thì lấy lớp học hiện tại
+                            HttpContext.Current.Session["ClassName"] = user.ClassMembers
                                 .Where(c => c.ConfigureID == currentconfig.ID &&
-                                c.LearnStatus != LearnStatus.Switched)
-                                .Select(c => c.Class.School.SchoolName).First();
+                                (c.LearnStatus == LearnStatus.Learning || c.LearnStatus == LearnStatus.Duplicated))
+                                .Select(c => c.Class.ClassName)
+                                .FirstOrDefault();
+                            HttpContext.Current.Session["SchoolName"] = user.ClassMembers
+                                    .Where(c => c.ConfigureID == currentconfig.ID &&
+                                    c.LearnStatus != LearnStatus.Switched)
+                                    .Select(c => c.Class.School.SchoolName).First();
+                        }
+                        
                     }
                     if (user.Type == UserType.HeadMaster || user.Type == UserType.Teacher)
                     {

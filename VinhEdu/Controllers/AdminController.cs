@@ -33,7 +33,8 @@ namespace VinhEdu.Controllers
         public ActionResult CreateStudent()
         {
             List<School> lst = db.SchoolRepository.GetAll().ToList();
-            List<Configure> configures = db.ConfigRepository.GetAll().ToList();
+            List<Configure> configures = db.ConfigRepository.GetAll()
+                .OrderByDescending(c =>c.IsActive).ToList();
             ViewBag.Config = new SelectList(configures, "ID", "SchoolYear");
             ViewBag.SchoolList = new SelectList(lst, "SchoolID", "SchoolName");
             return View();

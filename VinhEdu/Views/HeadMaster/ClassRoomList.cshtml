@@ -12,7 +12,10 @@
         font-size: 40px;
     }
     .inner {
-        height:90px
+        height:90px;
+    }
+    .m-t{
+        color:#fff !important;
     }
 </style>
     <div class="container-fluid mt-3">
@@ -35,15 +38,15 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box @bg">
                         <div class="inner">
-                            <p>GVCN: @item.HomeTeacher</p>
-                            <p>@item.StudentCount học sinh</p>
+                            <p class="m-t">GVCN: @item.HomeTeacher</p>
+                            <p class="m-t">@item.StudentCount học sinh</p>
                         </div>
                         <div class="icon text-white">
                             @item.ClassName
                         </div>
                         @{
                             var link = item.StudentCount > 0 ? "/HeadMaster/GradeUpManage?ClassID=" + @item.ClassID : "#";
-                            <a href="@link" class="small-box-footer">Xem / xét điểm <i class="fa fa-arrow-circle-up"></i></a>
+                            <a href="@link" class="small-box-footer m-t">Xem / xét điểm <i class="fa fa-arrow-circle-up"></i></a>
                         }
                     </div>
                 </div>

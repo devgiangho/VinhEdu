@@ -8,6 +8,7 @@ using VinhEdu.Repository;
 using VinhEdu.ViewModels;
 using Newtonsoft.Json;
 using static VinhEdu.Models.AdditionalDefinition;
+using System.Data.Entity;
 
 namespace VinhEdu.Controllers
 {
@@ -269,7 +270,7 @@ namespace VinhEdu.Controllers
             List<EditMark> editMarks = new List<EditMark>();
             List<int> lstStudent = db.MemberRepository.GetAll()
                    .Where(c => c.LearnStatus != LearnStatus.Finished
-                   && c.ClassID == ClassID && CurrentConfig == c.ConfigureID)
+                   && c.ClassID == ClassID && CurrentConfig == c.ConfigureID && c.User.Status == UserStatus.Activated)
                    .Select(c => c.UserID).ToList();
             foreach (int studentID in lstStudent)
             {
@@ -337,7 +338,9 @@ namespace VinhEdu.Controllers
                         var dumpData = JsonConvert.SerializeObject(mark.Score);
 
                         CurrentMark.Score = dumpData;
-                        db.SaveChanges();
+
+                        db.context.Entry(CurrentMark).State = EntityState.Modified;
+                        db.context.SaveChanges();
                     }
                     else
                     {

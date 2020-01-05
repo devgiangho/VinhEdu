@@ -116,6 +116,7 @@ namespace VinhEdu.Controllers
         {
             try
             {
+                int SchoolID = db.ClassRepository.FindByID(ClassID).SchoolID;
                 List<User> lst = new List<User>();
                 foreach (StudentList item in students)
                 {
@@ -129,6 +130,7 @@ namespace VinhEdu.Controllers
                     }
                     else
                     {
+
                         std = new User
                         {
                             DateOfBirth = item.DateOfBirth,
@@ -140,6 +142,7 @@ namespace VinhEdu.Controllers
                             Status = AdditionalDefinition.UserStatus.Activated,
                             Type = AdditionalDefinition.UserType.Student,
                             Gender = item.Gender,
+                            SchoolID = SchoolID,
                         };
                         lst.Add(std);
                     }
@@ -148,16 +151,17 @@ namespace VinhEdu.Controllers
                 db.UserRepository.AddRangeUser(lst);
                 db.SaveChanges();
                 //Thêm vào lớp
-                lst.ForEach(e =>
+                foreach(var hs in lst)
                 {
+                    int StudentId = db.UserRepository.FindByIdentifier(hs.Identifier).ID;
                     db.MemberRepository.Add(new ClassMember
                     {
                         ClassID = ClassID,
                         ConfigureID = ConfigureID,
-                        UserID = e.ID,
+                        UserID = StudentId,
                         LearnStatus = LearnStatus.Learning,
                     });
-                });
+                }
                 db.SaveChanges();
                 return Json(new { message = "Thêm thành công!" }, JsonRequestBehavior.AllowGet);
             }

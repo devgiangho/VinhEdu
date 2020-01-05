@@ -20,10 +20,16 @@
                 Niên khóa:
                 @Html.DropDownList("ConfigureID", (IEnumerable<SelectListItem>)ViewBag.Config, new { @class = "form-control" })
             </div>
+            <div class="col-md-4">
+                Tên giáo viên: 
+                <input oninput="search()" name="teacherName" id="teacherName" class="form-control" type="text" placeholder="Tên giáo viên" />
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-5 pt-4">
                 <button class="btn btn-outline-danger" onclick="WarnDelete()">Xóa</button>
                 <button class="btn btn-outline-primary" onclick="ChangePassWord()">Đổi mật khẩu</button>
-                <button class="btn btn-outline-warning float-right" onclick="Submit()">Cập nhật</button>
+                <button class="btn btn-outline-warning" onclick="Submit()">Cập nhật</button>
             </div>
         </div>
     </div>
@@ -365,5 +371,39 @@
             swal("Lỗi", "Lỗi hệ thống", "error");
             ChangePassModal.modal('hide');
         })
+    }
+</script>
+<script>
+    function search() {
+        classID = $('#ClassID').children("option:selected").val();
+        Config = $('#ConfigureID').children("option:selected").val();
+        schoolID = $('#SchoolID').children("option:selected").val();
+        let name = $('#teacherName').val()
+        axios.post('/AdTeacher/GetTeacherByName', {name:name, ClassID: classID, ConfigureID: Config, SchoolID: schoolID }).then(resp => {
+            ClearData();
+            let newdata = [];
+            resp.data.forEach((e) => {
+                newRow = {
+                    Identifier: e.Identifier,
+                    FullName: e.FullName,
+                    DateOfBirth: ToJavaScriptDate(e.DateOfBirth),
+                    Subject: e.SubjectName,
+                    IsHomeTeacher: e.IsHomeTeacher ? "Yes" : "No", 
+                    Gender: e.Gender == 0 ? 'Nam' : 'Nữ',
+                    Status: e.Status == 0 ? 'Non-Active' : 'Active'
+                };
+                newdata.push({ ...e, DateOfBirth: ToJavaScriptDate(e.DateOfBirth) });
+                gridOptions.api.updateRowData({ add: [newRow] });
+            });
+            CurrentData = newdata;
+            gridOptions.api.sizeColumnsToFit();
+        }).catch((err) => {
+            //swal("Lỗi", "Lỗi hệ thống", "error");
+            var notify = $.notify('<strong>Lỗi</strong><br/>Lỗi hệ thống<br />', {
+                type: 'pastel-danger',
+                allow_dismiss: false,
+                timer: 1000,
+            });
+        });
     }
 </script>

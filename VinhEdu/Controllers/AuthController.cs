@@ -97,20 +97,29 @@ namespace VinhEdu.Controllers
                         }
                         if(user.Type == UserType.Student)
                         {
+                            bool isInClass = user.ClassMembers
+                                .Any(c => c.ConfigureID == currentconfig.ID &&
+                                c.LearnStatus != LearnStatus.Finished && c.LearnStatus != LearnStatus.Switched);
                             //Nếu là học sinh thì lấy lớp học hiện tại
-                            Session["ClassName"] = user.ClassMembers
-                                .Where(c => c.ConfigureID == currentconfig.ID &&
-                                c.LearnStatus != LearnStatus.Finished && c.LearnStatus != LearnStatus.Switched)
-                                .Select(c => c.Class.ClassName)
-                                .FirstOrDefault();
-                            Session["SchoolName"] = user.ClassMembers
-                                .Where(c => c.ConfigureID == currentconfig.ID &&
-                                c.LearnStatus != LearnStatus.Switched)
-                                .Select(c => c.Class.School.SchoolName).First();
+                           if(isInClass)
+                            {
+                                Session["ClassName"] = user.ClassMembers
+                               .Where(c => c.ConfigureID == currentconfig.ID &&
+                               c.LearnStatus != LearnStatus.Finished && c.LearnStatus != LearnStatus.Switched)
+                               .Select(c => c.Class.ClassName)
+                               .FirstOrDefault();
+                            }
+                            if (user.School != null)
+                            {
+                                Session["SchoolName"] = user.School.SchoolName;
+                            }
                         }
                         if (user.Type == UserType.Teacher)
                         {
-                            Session["SchoolName"] = user.School.SchoolName;
+                            if(user.School != null)
+                            {
+                                Session["SchoolName"] = user.School.SchoolName;
+                            }
                         }
                         if (user.Type == UserType.HeadMaster)
                         {

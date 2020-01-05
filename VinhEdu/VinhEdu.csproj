@@ -1056,6 +1056,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\images\apple-icon-120x120.png" />
     <Content Include="Content\images\default-avatar.jpg" />
+    <Content Include="Content\images\footer.png" />
     <Content Include="Content\images\login-bg.jpg" />
     <Content Include="Content\images\main-logo.png" />
     <Content Include="Content\images\ui-icons_444444_256x240.png" />

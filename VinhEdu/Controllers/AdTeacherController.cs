@@ -115,6 +115,91 @@ namespace VinhEdu.Controllers
             
             return Json(q, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult GetTeacherByName(string name, int ClassID, int ConfigureID, int SchoolID = -1)
+        {
+            var q = new List<TeacherList>();
+            if(String.IsNullOrWhiteSpace(name))
+            {
+                if (ClassID != 0)
+                {
+                    q = (from u in Context.Users
+                         join a in Context.ClassMembers
+                         on u.ID equals a.UserID
+                         where a.ConfigureID == ConfigureID && u.Type == AdditionalDefinition.UserType.Teacher && a.ClassID == ClassID
+                         && u.Status != AdditionalDefinition.UserStatus.Deleted && u.SchoolID == SchoolID
+                         select new TeacherList
+                         {
+                             Identifier = u.Identifier,
+                             DateOfBirth = u.DateOfBirth,
+                             FullName = u.FullName,
+                             Gender = u.Gender,
+                             Status = u.Status,
+                             SubjectName = u.Subject.SubjectName,
+                             IsHomeTeacher = a.IsHomeTeacher,
+                         }).ToList();
+                }
+                else
+                {
+                    q = (from u in Context.Users
+                         where u.Type == AdditionalDefinition.UserType.Teacher
+                         && u.Status != AdditionalDefinition.UserStatus.Deleted
+                         && u.SchoolID == SchoolID
+                         select new TeacherList
+                         {
+                             Identifier = u.Identifier,
+                             DateOfBirth = u.DateOfBirth,
+                             FullName = u.FullName,
+                             Gender = u.Gender,
+                             Status = u.Status,
+                             SubjectName = u.Subject.SubjectName,
+                             IsHomeTeacher = false,
+                         }).ToList();
+                }
+            }
+            else
+            {
+                if (ClassID != 0)
+                {
+                    q = (from u in Context.Users
+                         join a in Context.ClassMembers
+                         on u.ID equals a.UserID
+                         where a.ConfigureID == ConfigureID && u.Type == AdditionalDefinition.UserType.Teacher && a.ClassID == ClassID
+                         && u.Status != AdditionalDefinition.UserStatus.Deleted && u.SchoolID == SchoolID
+                         && u.FullName.Contains(name)
+                         select new TeacherList
+                         {
+                             Identifier = u.Identifier,
+                             DateOfBirth = u.DateOfBirth,
+                             FullName = u.FullName,
+                             Gender = u.Gender,
+                             Status = u.Status,
+                             SubjectName = u.Subject.SubjectName,
+                             IsHomeTeacher = a.IsHomeTeacher,
+                         }).ToList();
+                }
+                else
+                {
+                    q = (from u in Context.Users
+                         where u.Type == AdditionalDefinition.UserType.Teacher
+                         && u.Status != AdditionalDefinition.UserStatus.Deleted
+                         && u.SchoolID == SchoolID
+                         && u.FullName.Contains(name)
+                         select new TeacherList
+                         {
+                             Identifier = u.Identifier,
+                             DateOfBirth = u.DateOfBirth,
+                             FullName = u.FullName,
+                             Gender = u.Gender,
+                             Status = u.Status,
+                             SubjectName = u.Subject.SubjectName,
+                             IsHomeTeacher = false,
+                         }).ToList();
+                }
+            }
+
+            return Json(q, JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// Lấy danh sách giáo viên đứng lớp
         /// </summary>

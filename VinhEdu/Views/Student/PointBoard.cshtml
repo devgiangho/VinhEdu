@@ -3,23 +3,30 @@
     ViewBag.Title = "Bảng điểm của tôi";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-@Html.Partial("_PartialGrid")
-    <div class="container-fluid" style="margin-top:15px;padding-top:15px;">
-        <h3 style="TEXT-TRANSFORM: uppercase;
-    font-family: serif;">
-            Điểm của tôi - lớp @Session["ClassName"] - HỌC KỲ I
-        </h3>
-        <input type="hidden" id="ClassID" value="@ViewBag.ClassID" />
-        <div id="myGrid" style="height: 340px;width:100%;" class="ag-theme-balham"></div>
-        <hr/>
-        <h3 style="TEXT-TRANSFORM: uppercase;
-        font-family: serif;">
-            Lớp @Session["ClassName"] - HỌC KỲ II
-        </h3>
-        <input type="hidden" id="ClassID" value="@ViewBag.ClassID" />
-        <div id="myGrid2" style="height: 340px;width:100%;" class="ag-theme-balham"></div>
+<style>
+    .content {
+        background-image: url('../../Content/images/footer.png');
+        min-height: 620px;
+    }
+</style>
 
-    </div>
+@Html.Partial("_PartialGrid")
+<div class="container-fluid" style="margin-top:15px;padding-top:15px;">
+    <h3 style="TEXT-TRANSFORM: uppercase;
+    font-family: serif;">
+        Điểm của tôi - lớp @Session["ClassName"] - HỌC KỲ I
+    </h3>
+    <input type="hidden" id="ClassID" value="@ViewBag.ClassID" />
+    <div id="myGrid" style="height: 340px;width:100%;" class="ag-theme-balham"></div>
+    <hr />
+    <h3 style="TEXT-TRANSFORM: uppercase;
+        font-family: serif;">
+        Lớp @Session["ClassName"] - HỌC KỲ II
+    </h3>
+    <input type="hidden" id="ClassID" value="@ViewBag.ClassID" />
+    <div id="myGrid2" style="height: 340px;width:100%;" class="ag-theme-balham"></div>
+
+</div>
 
 <script>
     // specify the columns
@@ -117,7 +124,7 @@
         GetData();
     });
     /*
-     * Hàm ajax lấy dữ liệu từ server về, 
+     * Hàm ajax lấy dữ liệu từ server về,
      */
     function GetData() {
         ClassID = $('#ClassID').val();
@@ -245,7 +252,7 @@
         return 'x';
     }
     /*
-     * Hàm tính điểm tổng kết tất cả  
+     * Hàm tính điểm tổng kết tất cả
      */
     function caculateFinalScore(arrayTK) {
         let countSubject = arrayTK.length + 2;
@@ -269,5 +276,5 @@
     function ClearData2() {
         gridOptions2.api.setRowData([]);
     }
-    
+
 </script>

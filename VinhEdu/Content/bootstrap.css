@@ -4824,7 +4824,7 @@ input[type="button"].btn-block {
 
 .badge-info {
   color: #fff;
-  background-color: #17a2b8;
+  background-color: red;
 }
 
 .badge-info[href]:hover, .badge-info[href]:focus {

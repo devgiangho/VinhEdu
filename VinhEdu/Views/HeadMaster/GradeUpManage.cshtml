@@ -223,13 +223,13 @@
                         newRow.finalScore = finalScoreTK;
                         let x = checkAbleToGradeUp(item.SubjectScores);
                         if (x == false) {
-                            let objIndex = studentToGradeUp.findIndex((obj => obj.id == 1));
-                            studentToGradeUp[objIndex].x = false;
+                            let objIndex = studentToGradeUp.findIndex((obj => obj.studentID == item.StudentID));
+                            studentToGradeUp[objIndex].canGradeUp = false;
                         }
                     }
                     else {
-                        let objIndex = studentToGradeUp.findIndex((obj => obj.id == 1));
-                        studentToGradeUp[objIndex].x = false;
+                        let objIndex = studentToGradeUp.findIndex((obj => obj.studentID == item.StudentID));
+                        studentToGradeUp[objIndex].canGradeUp = false;
                     }
                     rowData2.push(newRow);
 
