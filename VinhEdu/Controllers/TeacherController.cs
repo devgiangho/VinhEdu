@@ -311,6 +311,66 @@ namespace VinhEdu.Controllers
             }
             return Json(editMarks, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult GetStudentMarkByName(int ClassID,string name)
+        {
+            var CurrentConfig = (int)Session["ConfigID"];
+            var SubjectID = (int)Session["SubjectID"];
+            var CurrentSemester = db.context.Settings.FirstOrDefault().Semester;
+            List<EditMark> editMarks = new List<EditMark>();
+            List<int> lstStudent = new List<int>();
+            if (String.IsNullOrEmpty(name))
+            {
+               lstStudent = db.MemberRepository.GetAll()
+                   .Where(c => c.LearnStatus != LearnStatus.Finished
+                   && c.ClassID == ClassID && CurrentConfig == c.ConfigureID && c.User.Status == UserStatus.Activated)
+                   .Select(c => c.UserID).ToList();
+            }
+            else
+            {
+                lstStudent = db.MemberRepository.GetAll()
+                   .Where(c => c.LearnStatus != LearnStatus.Finished && c.User.FullName.Contains(name)
+                   && c.ClassID == ClassID && CurrentConfig == c.ConfigureID && c.User.Status == UserStatus.Activated)
+                   .Select(c => c.UserID).ToList();
+            }
+            foreach (int studentID in lstStudent)
+            {
+                bool HasMark = db.context.PointBoards
+                        .Any(e => e.ClassID == ClassID &&
+                        e.StudentID == studentID && e.SubjectID == SubjectID && e.Semester == CurrentSemester);
+                if (!HasMark)
+                {
+                    Score emptyScore = new Score();
+                    PointBoard NewMark = new PointBoard
+                    {
+                        ClassID = ClassID,
+                        Score = JsonConvert.SerializeObject(emptyScore),
+                        StudentID = studentID,
+                        SubjectID = SubjectID,
+                        ConfigureID = CurrentConfig,
+                        Semester = CurrentSemester
+                    };
+                    db.context.PointBoards.Add(NewMark);
+                    db.SaveChanges();
+                }
+                EditMark editItem = db.context.PointBoards
+                .Where(c => c.ClassID == ClassID && c.ConfigureID == c.ConfigureID
+                && c.Semester == CurrentSemester && c.SubjectID == SubjectID && c.StudentID == studentID)
+                .Select(c => new EditMark
+                {
+                    SubjectID = c.SubjectID,
+                    StudentName = c.User.FullName,
+                    TempScore = c.Score,
+                    StudentID = c.StudentID
+                }).FirstOrDefault();
+                if (editItem.TempScore != null)
+                {
+                    editItem.Score = JsonConvert.DeserializeObject<Score>(editItem.TempScore);
+                    editItem.TempScore = null;
+                }
+                editMarks.Add(editItem);
+            }
+            return Json(editMarks, JsonRequestBehavior.AllowGet);
+        }
         /// <summary>
         /// Cập nhật bảng điểm
         /// </summary>

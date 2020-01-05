@@ -5,9 +5,15 @@
 <div class="container-fluid" style="margin-top:15px;padding-top:15px;">
     <h3>Quản lý điểm lớp @ViewBag.ClassName - @ViewBag.Semester - môn @ViewBag.SubjectName</h3>
     <div class="card-header">
-        <div class="row mb-2">
-             <button class="btn btn-outline-warning float-right" onclick="Submit()">Cập nhật</button>
-        </div>
+        <div class="row">
+            <div class="col-md-4">
+                Tên học sinh:
+                <input oninput="searchByName()" name="studentName" id="studentName" class="form-control" type="text" placeholder="Tên học sinh" />
+            </div>
+            <div class="col-md-2 mt-4">
+                <button class="btn btn-outline-warning float-right" onclick="Submit()">Cập nhật</button>
+            </div>
+        </div>  
     </div>
     <input type="hidden" id="ClassID" value="@ViewBag.ClassID"/>
     <div id="myGrid" style="height: 400px;width:100%;" class="ag-theme-balham"></div>
@@ -232,4 +238,37 @@
         return 'x';
     }
     
+</script>
+<script>
+    function searchByName() {
+        ClassID = $('#ClassID').val();
+        let name = $('#studentName').val();
+        axios.post('/Teacher/GetStudentMarkByName', { ClassID: ClassID,name: name }).then(resp => {
+            ClearData();
+            resp.data.forEach((e) => {
+                let hs = {
+                    ...e, Score: e.Score ? e.Score : {
+                        M1: 'x',
+                        M2: 'x',
+                        M3: 'x',
+                        M4: 'x',
+                        P1: 'x',
+                        P2: 'x',
+                        P3: 'x',
+                        T1: 'x',
+                        T2: 'x',
+                        T3: 'x',
+                        K1: 'x',
+                        TK: 'x',
+                    }
+                };
+                let finalScore = caculateScore(hs.Score);
+                hs.Score.TK = finalScore;
+                gridOptions.api.updateRowData({ add: [hs] });
+            });
+            gridOptions.api.sizeColumnsToFit();
+        }).catch((e) => {
+            swal('Lỗi', 'Lỗi hệ thống', 'error');
+        })
+    }
 </script>
