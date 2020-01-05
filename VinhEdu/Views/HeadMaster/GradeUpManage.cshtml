@@ -6,6 +6,15 @@
 @Html.Partial("_PartialGrid")
 <div class="card-header">
     Quản lý xét điểm lên lớp - lớp @ViewBag.ClassName
+    <div class="row">
+        <div class="col-md-4">
+            Tên học sinh:
+            <input name="studentName" id="studentName" class="form-control" type="text" placeholder="Tên học sinh" />
+        </div>
+        <div class="col-md-2 mt-4">
+            <button class="btn btn-outline-warning float-right" onclick="searchByName()">Tìm kiếm</button>
+        </div>
+    </div>
 </div>
 <div class="card-header">
     Bảng điểm học kỳ 1:
@@ -240,7 +249,7 @@
                     $('#gradeUp').removeClass("d-none");
                     $('#btnUpdate').removeClass("d-none");
                 }
-                
+
             }
         });
     }
@@ -362,11 +371,11 @@
             return "Không";
         }
         return data;
-        
+
     }
     function printHeader(data) {
         if (data == "studentName") {
-            
+
             return "Tên Học Sinh";
         }
         if (data == "studentID") {
@@ -377,7 +386,7 @@
         }
         return data;
     }
-</script>  
+</script>
 <script>
     function updateGradeUpStatus() {
         $("#overlay").fadeIn();
@@ -391,5 +400,95 @@
             swal("Lỗi", "Lỗi hệ thống", "error");
             $("#overlay").fadeOut();
         })
+    }
+</script>
+<script>
+    function searchByName() {
+        let name = $('#studentName').val();
+        axios.post('/HeadMaster/GetStudentClassMarkByName', { classID: classID, semester: 1, name: name }).then(resp => {
+            let data = resp.data;
+            gridOptions.api.setRowData([]);
+            if (data) {
+                data.forEach((item) => {
+                    let newRow = {};
+                    let countTK = 0;
+                    newRow.StudentID = item.StudentID;
+                    newRow.StudentName = item.StudentName;
+                    subjectList.forEach((s) => {
+                        item.SubjectScores.forEach((score) => {
+                            if (score.SubjectID == s.SubjectID) {
+                                score.Score.TK = caculateScore(score.Score);
+                                if (score.Score.TK != 'x') {
+                                    countTK++;
+                                }
+                                newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
+                            }
+                        });
+                    });
+                    //Tính điểm tổng kết tất cả các môn
+                    //Đủ điểm tổng kết các môn mới tính
+                    if (subjectList.length == countTK) {
+                        let finalScoreTK = caculateFinalScore(item.SubjectScores);
+                        newRow.finalScore = finalScoreTK;
+                        studentToGradeUp.push({
+                            studentID: item.StudentID,
+                            studentName: item.StudentName,
+                            canGradeUp: checkAbleToGradeUp(item.SubjectScores),
+                        })
+                    }
+                    else {
+                        studentToGradeUp.push({
+                            studentID: item.StudentID,
+                            studentName: item.StudentName,
+                            canGradeUp: false,
+                        })
+                    }
+                    gridOptions.api.updateRowData({ add: [newRow] });
+                });
+                //hk2
+                axios.post('/HeadMaster/GetStudentClassMarkByName', { classID: classID, semester: 2,name:name }).then(resp => {
+                    let data = resp.data;
+                    gridOptions2.api.setRowData([]);
+                    if (data) {
+                        data.forEach((item) => {
+                            let newRow = {};
+                            let countTK = 0;
+                            newRow.StudentID = item.StudentID;
+                            newRow.StudentName = item.StudentName;
+                            subjectList.forEach((s) => {
+                                item.SubjectScores.forEach((score) => {
+                                    if (score.SubjectID == s.SubjectID) {
+                                        score.Score.TK = caculateScore(score.Score);
+                                        if (score.Score.TK != 'x') {
+                                            countTK++;
+                                        }
+                                        newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
+                                    }
+                                });
+                            });
+                            //Tính điểm tổng kết tất cả các môn
+                            //Đủ điểm tổng kết các môn mới tính
+                            if (subjectList.length == countTK) {
+                                let finalScoreTK = caculateFinalScore(item.SubjectScores);
+                                newRow.finalScore = finalScoreTK;
+                                let x = checkAbleToGradeUp(item.SubjectScores);
+                                if (x == false) {
+                                    let objIndex = studentToGradeUp.findIndex((obj => obj.studentID == item.StudentID));
+                                    studentToGradeUp[objIndex].canGradeUp = false;
+                                }
+                            }
+                            else {
+                                let objIndex = studentToGradeUp.findIndex((obj => obj.studentID == item.StudentID));
+                                studentToGradeUp[objIndex].canGradeUp = false;
+                            }
+                            gridOptions2.api.updateRowData({ add: [newRow] });
+                        });
+
+
+                    }
+                });
+            }
+
+        });
     }
 </script>
