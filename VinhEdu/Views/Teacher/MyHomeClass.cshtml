@@ -10,58 +10,67 @@
             <div class="col-md-2">
                 Học sinh lớp chủ nhiệm
             </div>
-            <div class="col-md-2">
-                <button class="btn btn-outline-warning float-right" onclick="sendMessage()">Gửi tin nhắn báo điểm</button>
+            <div class="col-md-4">
+                <button class="btn btn-outline-warning" onclick="sendMessage()">Gửi tin nhắn báo điểm</button>
             </div>
         </div>
-        </div>
-        <div class="card-body">
-            <table id="lstPost" class="table table-bordered table-striped">
-                <thead>
+    </div>
+    <div class="card-body">
+        <table id="lstPost" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Học sinh</th>
+                    <th>Giới tính</th>
+                    <th>Ngày sinh</th>
+                    @*<th>Hành động</th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
                     <tr>
-                        <th>ID</th>
-                        <th>Học sinh</th>
-                        <th>Giới tính</th>
-                        <th>Ngày sinh</th>
-                        @*<th>Hành động</th>*@
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                <p>@item.ID</p>
-                            </td>
-                            <td>
-                                <p>@item.FullName</p>
-                            </td>
-                            <td>
-                                @item.Gender.GetDisplayName()
-                            </td>
-                            <td>
-                                @item.DateOfBirth.ToString("dd/MM/yyyy")
-                            </td>
-                            @*<td>
+                        <td>
+                            <p>@item.ID</p>
+                        </td>
+                        <td>
+                            <p>@item.FullName</p>
+                        </td>
+                        <td>
+                            @item.Gender.GetDisplayName()
+                        </td>
+                        <td>
+                            @item.DateOfBirth.ToString("dd/MM/yyyy")
+                        </td>
+                        @*<td>
                                 <span class="badge badge-info" style="cursor:pointer" onclick="openContact(@ViewBag.ClassID,@item.ID,'@item.FullName')">
                                     Gửi tin nhắn
                                 </span>
                             </td>*@
-                        </tr>
-                    }
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>ID</th>
-                        <th>Học sinh</th>
-                        <th>Giới tính</th>
-                        <th>Ngày sinh</th>
-                        @*<th>Hành động</th>*@
                     </tr>
-                </tfoot>
-            </table>
-        </div>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Học sinh</th>
+                    <th>Giới tính</th>
+                    <th>Ngày sinh</th>
+                    @*<th>Hành động</th>*@
+                </tr>
+            </tfoot>
+        </table>
     </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        Tên học sinh:
+        <input name="studentName" id="studentName" class="form-control" type="text" placeholder="Tên học sinh" />
+    </div>
+    <div class="col-md-4 mt-4">
+        <button class="btn btn-outline-success" onclick="searchByName()">Tìm kiếm</button>
+    </div>
+</div>
 <div class="card-header">
     Bảng điểm học kỳ 1:
 </div>
@@ -98,7 +107,7 @@
     };
     // lookup the container we want the Grid to use
     var eGridDiv = document.querySelector('#myGrid');
-    
+
     // specify the data
     var rowData2 = [];
 
@@ -189,7 +198,7 @@
         });
     }
     function GetAllScore() {
-        axios.post('/Teacher/GetHomeClassScoreBoard',{semester:1}).then(resp => {
+        axios.post('/Teacher/GetHomeClassScoreBoard', { semester: 1 }).then(resp => {
             let data = resp.data;
             if (data) {
                 data.forEach((item) => {
@@ -208,12 +217,12 @@
                 new agGrid.Grid(eGridDiv, gridOptions);
                 getHK2();
             }
-            
+
         });
-        
+
     }
     function getHK2() {
-        axios.post('/Teacher/GetHomeClassScoreBoard',{semester:2}).then(resp => {
+        axios.post('/Teacher/GetHomeClassScoreBoard', { semester: 2 }).then(resp => {
             let data = resp.data;
             if (data) {
                 data.forEach((item) => {
@@ -256,13 +265,61 @@
                     }
                     else {
                         swal('Lỗi', 'Lỗi hệ thống', 'error');
+                        $('#overlay').fadeOut();
                     }
                 }).catch((e) => {
+                    $('#overlay').fadeOut();
                     swal('Lỗi', 'Lỗi hệ thống', 'error');
                 })
             } else {
+                $('#overlay').fadeOut();
             }
         });
 
+    }
+    function searchByName() {
+        let name = $('#studentName').val();
+        axios.post('/Teacher/GetHomeClassScoreBoardByName', {semester: 1, name: name }).then(resp => {
+            let data = resp.data;
+            gridOptions.api.setRowData([]);
+            if (data) {
+                data.forEach((item) => {
+                    let newRow = {};
+                    newRow.StudentID = item.StudentID;
+                    newRow.StudentName = item.StudentName;
+                    subjectList.forEach((s) => {
+                        item.SubjectScores.forEach((score) => {
+                            if (score.SubjectID == s.SubjectID) {
+                                newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
+                            }
+                        });
+                    });
+                    gridOptions.api.updateRowData({ add: [newRow] });
+                });
+                //hk2
+                axios.post('/Teacher/GetHomeClassScoreBoardByName', {semester: 2, name: name }).then(resp => {
+                    let data = resp.data;
+                    gridOptions2.api.setRowData([]);
+                    if (data) {
+                        data.forEach((item) => {
+                            let newRow = {};
+                            newRow.StudentID = item.StudentID;
+                            newRow.StudentName = item.StudentName;
+                            subjectList.forEach((s) => {
+                                item.SubjectScores.forEach((score) => {
+                                    if (score.SubjectID == s.SubjectID) {
+                                        newRow = { ...newRow, [`S${s.SubjectID}Score`]: score.Score }
+                                    }
+                                });
+                            });
+                            gridOptions2.api.updateRowData({ add: [newRow] });
+                        });
+
+
+                    }
+                });
+            }
+
+        });
     }
 </script>
