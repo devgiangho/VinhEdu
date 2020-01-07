@@ -6,55 +6,62 @@
 @Html.Partial("_PartialGrid")
 <div class="card  mt-3">
     <div class="card-header">
-        Học sinh lớp chủ nhiệm
-    </div>
-    <div class="card-body">
-        <table id="lstPost" class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Học sinh</th>
-                    <th>Giới tính</th>
-                    <th>Ngày sinh</th>
-                    @*<th>Hành động</th>*@
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+        <div class="row">
+            <div class="col-md-2">
+                Học sinh lớp chủ nhiệm
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-outline-warning float-right" onclick="sendMessage()">Gửi tin nhắn báo điểm</button>
+            </div>
+        </div>
+        </div>
+        <div class="card-body">
+            <table id="lstPost" class="table table-bordered table-striped">
+                <thead>
                     <tr>
-                        <td>
-                            <p>@item.ID</p>
-                        </td>
-                        <td>
-                            <p>@item.FullName</p>
-                        </td>
-                        <td>
-                            @item.Gender.GetDisplayName()
-                        </td>
-                        <td>
-                            @item.DateOfBirth.ToString("dd/MM/yyyy")
-                        </td>
-                        @*<td>
-                            <span class="badge badge-info" style="cursor:pointer" onclick="openContact(@ViewBag.ClassID,@item.ID,'@item.FullName')">
-                                Gửi tin nhắn
-                            </span>
-                        </td>*@
+                        <th>ID</th>
+                        <th>Học sinh</th>
+                        <th>Giới tính</th>
+                        <th>Ngày sinh</th>
+                        @*<th>Hành động</th>*@
                     </tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>ID</th>
-                    <th>Học sinh</th>
-                    <th>Giới tính</th>
-                    <th>Ngày sinh</th>
-                    @*<th>Hành động</th>*@
-                </tr>
-            </tfoot>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <p>@item.ID</p>
+                            </td>
+                            <td>
+                                <p>@item.FullName</p>
+                            </td>
+                            <td>
+                                @item.Gender.GetDisplayName()
+                            </td>
+                            <td>
+                                @item.DateOfBirth.ToString("dd/MM/yyyy")
+                            </td>
+                            @*<td>
+                                <span class="badge badge-info" style="cursor:pointer" onclick="openContact(@ViewBag.ClassID,@item.ID,'@item.FullName')">
+                                    Gửi tin nhắn
+                                </span>
+                            </td>*@
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>ID</th>
+                        <th>Học sinh</th>
+                        <th>Giới tính</th>
+                        <th>Ngày sinh</th>
+                        @*<th>Hành động</th>*@
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
-</div>
 <div class="card-header">
     Bảng điểm học kỳ 1:
 </div>
@@ -63,37 +70,6 @@
     Bảng điểm học kỳ 2:
 </div>
 <div id="myGrid2" style="height: 400px;width:100%;" class="ag-theme-balham"></div>
-<div class="modal fade" id="messageModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Gửi tin nhắn: </h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Modal body -->
-            <div class="modal-body">
-                <div class="row">
-                    <p class="col-2">Gửi tới: </p>
-                    <p class="col-10" id="stdName"></p>
-                </div>
-                <div class="row">
-                    <p class="ml-1">Nội dung:</p>
-                    <textarea id="messageContent" class="form-control"></textarea>
-                </div>
-            </div>
-
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" onclick="sendMessage()" class="btn btn-primary">Gửi</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-            </div>
-
-        </div>
-    </div>
-</div>
 <script src="~/Content/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="~/Content/AdminLTE/plugins/datatables/dataTables.bootstrap4.min.js"></script>
 <script>
@@ -260,33 +236,33 @@
 </script>
 <script>
     let storeObj = {
-        classID: -1,
-        studentID: -1,
+        classID: '@ViewBag.ClassID',
     };
-    //Gửi tin nhắn liên hệ
-    function openContact(classID, studentID, studentName) {
-        storeObj.classID = classID;
-        storeObj.studentID = studentID;
-        let modal = $('#messageModal');
-        $('#messageContent').val('');
-        modal.find('#stdName').text(studentName);
-        modal.modal('show');
-    }
     function sendMessage() {
         $('#overlay').fadeIn();
-        let message = $('#messageContent').val();
-        axios.post('/Teacher/SendContact', { classID: storeObj.classID, studentID: storeObj.studentID, message: message }).then(resp => {
-            let data = resp.data;
-            if (data.success) {
-                swal('Thành công', data.message, 'success');
-                $('#messageModal').modal('hide');
-                $('#overlay').fadeOut();
+        swal({
+            title: "Bạn chắc chứ ?",
+            text: "Bạn có chắc muốn gửi tin nhắn thông báo có điểm",
+            icon: "warning",
+            buttons: true,
+            dangerMode: false,
+        }).then((willDelete) => {
+            if (willDelete) {
+                axios.post('/Teacher/SendContact', { classID: storeObj.classID}).then(resp => {
+                    let data = resp.data;
+                    if (data.success) {
+                        swal('Thành công', data.message, 'success');
+                        $('#overlay').fadeOut();
+                    }
+                    else {
+                        swal('Lỗi', 'Lỗi hệ thống', 'error');
+                    }
+                }).catch((e) => {
+                    swal('Lỗi', 'Lỗi hệ thống', 'error');
+                })
+            } else {
             }
-            else {
-                swal('Lỗi', 'Lỗi hệ thống', 'error');
-            }
-        }).catch((e) => {
-            swal('Lỗi', 'Lỗi hệ thống', 'error');
-        })
+        });
+
     }
 </script>

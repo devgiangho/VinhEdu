@@ -9,6 +9,7 @@ using VinhEdu.ViewModels;
 using Newtonsoft.Json;
 using static VinhEdu.Models.AdditionalDefinition;
 using System.Data.Entity;
+using VinhEdu.Utilities;
 
 namespace VinhEdu.Controllers
 {
@@ -456,24 +457,31 @@ namespace VinhEdu.Controllers
         /// <param name="classID"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public JsonResult SendContact(int studentID,int classID,string message)
+        public JsonResult SendContact(int classID)
         {
             var CurrentConfig = (int)Session["ConfigID"];
-            var UserID = (int)Session["UserID"];
             try
             {
-                Contact contact = new Contact
+                List<string> phoneList = db.MemberRepository.GetAll()
+                    .Where(c => c.ConfigureID == CurrentConfig && c.ClassID == classID)
+                    .Select(c => c.User.Identifier)
+                    .ToList();
+                if (phoneList.Count() > 0)
                 {
-                    ClassID = classID,
-                    ConfigureID = CurrentConfig,
-                    Message = message,
-                    SendFrom = SendFrom.FromTeacher,
-                    TeacherID = UserID,
-                    SendTime = DateTime.Now,
-                    StudentID = studentID,
-                };
-                db.context.Contacts.Add(contact);
-                db.SaveChanges();
+                    SpeedSMSAPI api = new SpeedSMSAPI();
+                    String[] phones = phoneList.ToArray(); //{ "0368273672" };
+                    String content = "Da co diem tren he thong VinhEdu, moi ban truy cap website de xem.";
+                    int type = 4;
+                    /**
+                    sms_type có các giá trị như sau:
+                    2: tin nhắn gửi bằng đầu số ngẫu nhiên
+                    3: tin nhắn gửi bằng brandname
+                    4: tin nhắn gửi bằng brandname mặc định (Verify hoặc Notify)
+                    5: tin nhắn gửi bằng app android
+                    */
+                    String sender = "VinhEdu";
+                    String response = api.sendSMS(phones, content, type, sender);
+                }
                 return Json(new { success = true, message = "Đã gửi tin nhắn thành công" }, JsonRequestBehavior.AllowGet);
             }
             catch

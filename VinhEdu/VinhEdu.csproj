@@ -230,6 +230,7 @@
     <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="Utilities\Common.cs" />
     <Compile Include="Utilities\EnumFunction.cs" />
+    <Compile Include="Utilities\SpeedSMS.cs" />
     <Compile Include="ViewModels\ChangePassViewModel.cs" />
     <Compile Include="ViewModels\ClassList.cs" />
     <Compile Include="ViewModels\ClassListHeadMaster.cs" />
