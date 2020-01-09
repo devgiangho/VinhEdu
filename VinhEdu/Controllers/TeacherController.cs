@@ -93,8 +93,8 @@ namespace VinhEdu.Controllers
                    .GetAll().Where(c => c.UserID == UserID && c.IsHomeTeacher == true && c.ConfigureID == configID)
                    .First().ClassID;
                 List<int> lstStudent = db.MemberRepository.GetAll()
-                    .Where(c => c.LearnStatus  != LearnStatus.Finished
-                    && c.ClassID == ClassID && configID == c.ConfigureID)
+                    .Where(c => c.ClassID == ClassID && c.ConfigureID == configID
+                    && c.User.Type == UserType.Student && c.LearnStatus == LearnStatus.Learning && c.User.Status == UserStatus.Activated)
                     .Select(c => c.UserID).ToList();
                 List<MarkStudent> markList = new List<MarkStudent>();
                 List<int> subjectList = db.SubjectRepository.GetAll().Select(c => c.ID).ToList();
@@ -200,15 +200,16 @@ namespace VinhEdu.Controllers
                 if (String.IsNullOrWhiteSpace(name))
                 {
                     lstStudent =  db.MemberRepository.GetAll()
-                   .Where(c => c.LearnStatus != LearnStatus.Finished
-                   && c.ClassID == ClassID && configID == c.ConfigureID)
+                   .Where(c => c.ClassID == ClassID && c.ConfigureID == configID
+                    && c.User.Type == UserType.Student && c.LearnStatus == LearnStatus.Learning && c.User.Status == UserStatus.Activated)
                    .Select(c => c.UserID).ToList();
                 }
                 else
                 {
                     lstStudent = db.MemberRepository.GetAll()
-                   .Where(c => c.LearnStatus != LearnStatus.Finished
-                   && c.ClassID == ClassID && configID == c.ConfigureID && c.User.FullName.Contains(name))
+                   .Where(c => c.ClassID == ClassID && c.ConfigureID == configID
+                    && c.User.Type == UserType.Student && c.LearnStatus == LearnStatus.Learning && c.User.Status == UserStatus.Activated && c.User.FullName.Contains(name))
+                   
                    .Select(c => c.UserID).ToList();
                 }
                 List<MarkStudent> markList = new List<MarkStudent>();
