@@ -13,9 +13,9 @@
             <div class="col-md-2 mt-4">
                 <button class="btn btn-outline-warning float-right" onclick="Submit()">Cập nhật</button>
             </div>
-        </div>  
+        </div>
     </div>
-    <input type="hidden" id="ClassID" value="@ViewBag.ClassID"/>
+    <input type="hidden" id="ClassID" value="@ViewBag.ClassID" />
     <div id="myGrid" style="height: 400px;width:100%;" class="ag-theme-balham"></div>
 
 </div>
@@ -24,7 +24,7 @@
     // specify the columns
     var columnDefs = [
         { headerName: "StudentID", field: "StudentID", hide: true, editable: false, resizable: true },
-        { headerName: "Học sinh", field: "StudentName", editable: false, resizable: true,suppressSizeToFit: true },
+        { headerName: "Học sinh", field: "StudentName", editable: false, resizable: true, suppressSizeToFit: true },
         {
             headerName: "M1",
             field: "Score.M1",
@@ -48,7 +48,7 @@
         {
             headerName: "P1",
             field: "Score.P1",
-           editable: true, resizable: true,
+            editable: true, resizable: true,
         },
         {
             headerName: "P2",
@@ -166,31 +166,32 @@
                 $('#overlay').fadeOut();
                 swal('Thành công', data.Message, 'success');
                 ClearData();
-                data.Member.forEach((e) => {
-                let hs = {
-                    ...e, Score: e.Score ? e.Score : {
-                        M1: 'x',
-                        M2: 'x',
-                        M3: 'x',
-                        M4: 'x',
-                        P1: 'x',
-                        P2: 'x',
-                        P3: 'x',
-                        T1: 'x',
-                        T2: 'x',
-                        T3: 'x',
-                        K1: 'x',
-                        TK: 'x',
-                    }
-                };
-                let finalScore = caculateScore(hs.Score);
-                hs.Score.TK = finalScore;
-                gridOptions.api.updateRowData({ add: [hs] });
-            });
+                GetData();
+                //    data.Member.forEach((e) => {
+                //    let hs = {
+                //        ...e, Score: e.Score ? e.Score : {
+                //            M1: 'x',
+                //            M2: 'x',
+                //            M3: 'x',
+                //            M4: 'x',
+                //            P1: 'x',
+                //            P2: 'x',
+                //            P3: 'x',
+                //            T1: 'x',
+                //            T2: 'x',
+                //            T3: 'x',
+                //            K1: 'x',
+                //            TK: 'x',
+                //        }
+                //    };
+                //    let finalScore = caculateScore(hs.Score);
+                //    hs.Score.TK = finalScore;
+                //    gridOptions.api.updateRowData({ add: [hs] });
+                //});
             }
             else {
                 $('#overlay').fadeOut();
-                swal('Thất bại',data.Message,'warning')
+                swal('Thất bại', data.Message, 'warning')
             }
         })
     }
@@ -204,8 +205,8 @@
      */
     function caculateScore(score) {
         let tk = 'x'
-        checkM = score.M1 != 'x' || score.M2 != 'x'|| score.M3  != 'x' || score.M4 != 'x';
-        checkP = score.P1 != 'x'&& score.P2 != 'x' && score.P3 != 'x';
+        checkM = score.M1 != 'x' || score.M2 != 'x' || score.M3 != 'x' || score.M4 != 'x';
+        checkP = score.P1 != 'x' && score.P2 != 'x' && score.P3 != 'x';
         checkT = score.T1 != 'x' && score.T2 != 'x' && score.T3 != 'x';
         checkHK = score.K1 != 'x';
 
@@ -237,13 +238,13 @@
         }
         return 'x';
     }
-    
+
 </script>
 <script>
     function searchByName() {
         ClassID = $('#ClassID').val();
         let name = $('#studentName').val();
-        axios.post('/Teacher/GetStudentMarkByName', { ClassID: ClassID,name: name }).then(resp => {
+        axios.post('/Teacher/GetStudentMarkByName', { ClassID: ClassID, name: name }).then(resp => {
             ClearData();
             resp.data.forEach((e) => {
                 let hs = {

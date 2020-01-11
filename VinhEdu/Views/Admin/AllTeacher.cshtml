@@ -21,8 +21,17 @@
                 @Html.DropDownList("ConfigureID", (IEnumerable<SelectListItem>)ViewBag.Config, new { @class = "form-control" })
             </div>
             <div class="col-md-4">
-                Tên giáo viên: 
-                <input oninput="search()" name="teacherName" id="teacherName" class="form-control" type="text" placeholder="Tên giáo viên" />
+                <div class="row">
+                    <div class="col-md-8">
+                        <form name="fsearch">
+                            Tìm theo giáo viên:
+                            <input name="steacherName" id="steacherName" class="form-control" type="text" placeholder="Nhập tên giáo viên" />
+                        </form>
+                    </div>
+                    <div class="col-md-4 mt-4">
+                        <button onclick="search()" class="btn btn-outline-primary">Tìm</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -141,6 +150,8 @@
     var schoolID, classID, Config;
     var confirmModal = $('#deleteModal');
     $(document).ready(function () {
+        
+        //$("input[name=steacherName]").val("");
         schoolID = $('#SchoolID').children("option:selected").val();
         classID = $('#ClassID').children("option:selected").val();
         Config = $('#ConfigureID').children("option:selected").val();
@@ -378,7 +389,7 @@
         classID = $('#ClassID').children("option:selected").val();
         Config = $('#ConfigureID').children("option:selected").val();
         schoolID = $('#SchoolID').children("option:selected").val();
-        let name = $('#teacherName').val()
+        let name = $('#steacherName').val()
         axios.post('/AdTeacher/GetTeacherByName', {name:name, ClassID: classID, ConfigureID: Config, SchoolID: schoolID }).then(resp => {
             ClearData();
             let newdata = [];

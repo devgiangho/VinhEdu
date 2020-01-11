@@ -36,6 +36,7 @@ namespace VinhEdu.ViewModels
     }
     public class EditMark
     {
+        public int PointID { get; set; }
         public int StudentID { get; set; }
         public string StudentName { get; set; }
         public string ClassName { get; set; }
